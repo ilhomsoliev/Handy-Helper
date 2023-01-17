@@ -1,13 +1,14 @@
 package com.ikcollab.handyhelper.navigation
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,7 +25,7 @@ fun Navigation() {
     Scaffold(scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(title = {
-                Text(text =
+                Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,text =
                     when(currentScreen) {
                         Screens.GoalsScreen.route -> "Goals"
                         Screens.ChoresScreen.route -> "To-Do list"
@@ -76,6 +77,9 @@ fun Navigation() {
             })
         }, drawerGesturesEnabled = true, drawerContent = {
             DrawerContent()
+        },
+        bottomBar = {
+            com.ikcollab.handyhelper.navigation.bottomBar.BottomNavigation(navController = navController)
         }
     ) {
         NavHost(
