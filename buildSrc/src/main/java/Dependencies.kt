@@ -86,7 +86,7 @@ object CoroutinesDependencies {
 
 object RoomDependencies {
     const val runtime = "androidx.room:room-runtime:${Versions.android.room.room}"
-    const val   compiler = "androidx.room:room-compiler:${Versions.android.room.room}"
+    const val compiler = "androidx.room:room-compiler:${Versions.android.room.room}"
     const val ktx = "androidx.room:room-ktx:${Versions.android.room.room}"
     const val paging = "androidx.room:room-paging:${Versions.android.room.room}"
 }
