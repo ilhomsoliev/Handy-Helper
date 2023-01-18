@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":features:notes")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)

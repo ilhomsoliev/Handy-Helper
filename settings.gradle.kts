@@ -14,14 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Handy Helper"
 include (":app")
-include(":features:settings")
-include(":features:pick_theme")
-include(":features:goals")
-include(":features:chores")
-include(":features:tracker")
-include(":features:notes")
-include(":features:budget")
 include(":data:local")
 include(":data:model")
 include(":data:repository")
 include(":domain")
+include(":features:notes")
