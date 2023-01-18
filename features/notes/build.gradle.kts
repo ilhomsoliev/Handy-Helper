@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id(GradlePlugin.ANDROID_LIBRARY)
     id(GradlePlugin.ORG_KOTLIN_ANDROID)
@@ -35,16 +33,26 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose.compose
+    }
+/*    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.3"
+    }*/
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Android
+    implementation(Dependencies.android.lifecycleRuntime)
+    implementation(Dependencies.android.navigationRuntime)
+    implementation(Dependencies.android.dataStore)
+    implementation(Dependencies.android.lifecycleViewmodel)
+    implementation(Dependencies.android.ktx)
+    implementation(Dependencies.android.material)
     // Compose
     implementation(Dependencies.compose.icons)
     implementation(Dependencies.compose.material)
