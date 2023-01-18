@@ -1,9 +1,7 @@
 package com.ikcollab.domain.usecase.notes.folder
 
 import com.ikcollab.model.dao.note.FolderDto
-import com.ikcollab.model.dao.note.NoteDto
-import com.ikcollab.model.dao.note.toFolderDto
-import com.ikcollab.model.dao.note.toNoteDto
+import com.ikcollab.model.dao.toFolderDto
 import com.ikcollab.repository.notes.NotesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
