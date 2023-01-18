@@ -16,7 +16,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ikcollab.notes.NotesScreen
+import com.ikcollab.notes.presentation.NotesScreen
+import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -86,6 +87,11 @@ fun Navigation() {
         },
         bottomBar = {
             com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
+        },
+        floatingActionButton = {
+            when(currentScreen){
+                Screens.NotesScreen.route -> CustomFloatingActionButton()
+            }
         }
     ) {
         NavHost(
