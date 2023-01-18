@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.ikcollab.local.dao.ext.BaseDao
 import com.ikcollab.model.local.note.NoteEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao : BaseDao<NoteEntity> {
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME}")
-    suspend fun getNotes(): List<NoteEntity>
+    suspend fun getNotes(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME} WHERE id = :noteId")
     suspend fun getNoteById(noteId: Int): NoteEntity?
@@ -20,6 +21,6 @@ interface NoteDao : BaseDao<NoteEntity> {
     suspend fun deleteNoteById(noteId: Int)
 
     @Query("DELETE FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
-    suspend fun getNotesByFolderId(folderId: Int):List<NoteEntity>
+    suspend fun getNotesByFolderId(folderId: Int): Flow<List<NoteEntity>>
 
 }

@@ -5,11 +5,12 @@ import androidx.room.Query
 import com.ikcollab.local.dao.ext.BaseDao
 import com.ikcollab.model.local.note.FolderEntity
 import com.ikcollab.model.local.note.NoteEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FolderDao : BaseDao<FolderEntity> {
     @Query("SELECT * FROM ${FolderEntity.TABLE_NAME}")
-    suspend fun getFolders(): List<FolderEntity>
+    suspend fun getFolders(): Flow<List<FolderEntity>>
 
     @Query("SELECT * FROM ${FolderEntity.TABLE_NAME} WHERE id = :folderId")
     suspend fun getFolderById(folderId: Int): FolderEntity?
