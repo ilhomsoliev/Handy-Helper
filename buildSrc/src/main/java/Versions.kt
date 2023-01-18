@@ -63,7 +63,7 @@ object ComposeVersions {
     const val compose = "1.1.0"
     const val constraintLayout = "1.0.0-beta02"
     const val composeNav = "2.4.2"
-    const val composeVm = "1.0.0-alpha07"
+    const val composeVm = "1.3"
     const val composeActivity = "1.3.1"
 }
 

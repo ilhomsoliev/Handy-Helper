@@ -1,6 +1,5 @@
 package com.ikcollab.notes
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,7 @@ fun NotesScreen(openNoteDetails:()->Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(painter = painterResource(androidx.core.R.drawable.notification_bg_low), contentDescription = null)
+            Image(imageVector = Icons.Default.Notifications, contentDescription = null)
             Text(text="title", fontWeight = FontWeight.Bold)
         }
         Text("number", color = Gray)
