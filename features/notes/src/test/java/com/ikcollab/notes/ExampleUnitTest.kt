@@ -1,4 +1,4 @@
-package com.notes.notes
+package com.ikcollab.notes
 
 import org.junit.Test
 
