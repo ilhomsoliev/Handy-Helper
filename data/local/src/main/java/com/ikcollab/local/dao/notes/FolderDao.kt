@@ -1,4 +1,4 @@
-package com.ikcollab.local.dao
+package com.ikcollab.local.dao.notes
 
 import androidx.room.Dao
 import androidx.room.Query

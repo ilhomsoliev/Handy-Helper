@@ -89,8 +89,8 @@ object RoomVersions {
 
 object HiltVersions {
     const val navigation = "1.0.0"
-    const val android = "2.41"
-    const val androidCompiler = "2.41"
+    const val android = "2.44"
+    const val androidCompiler = "2.44"
     const val compiler = "1.0.0"
 }
 

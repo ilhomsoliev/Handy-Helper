@@ -2,8 +2,10 @@ package com.ikcollab.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ikcollab.local.dao.FolderDao
-import com.ikcollab.local.dao.NoteDao
+import com.ikcollab.local.dao.goals.GoalDao
+import com.ikcollab.local.dao.goals.StepGoalDao
+import com.ikcollab.local.dao.notes.FolderDao
+import com.ikcollab.local.dao.notes.NoteDao
 import com.ikcollab.local.db.HandyHelperDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,6 +27,7 @@ class LocalModule {
     fun provideDatabaseName(): String {
         return "handy_helper_db"//BuildConfig.DB_NAME
     }
+
     @Provides
     @Singleton
     fun provideDatabase(
@@ -41,10 +44,23 @@ class LocalModule {
     fun provideNoteDao(appDatabase: HandyHelperDatabase): NoteDao {
         return appDatabase.noteDao()
     }
+
     @Provides
     @Singleton
     fun provideFolderDao(appDatabase: HandyHelperDatabase): FolderDao {
         return appDatabase.folderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoalDao(appDatabase: HandyHelperDatabase): GoalDao {
+        return appDatabase.goalDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStepGoalDao(appDatabase: HandyHelperDatabase): StepGoalDao {
+        return appDatabase.stepGoalDao()
     }
 
 
