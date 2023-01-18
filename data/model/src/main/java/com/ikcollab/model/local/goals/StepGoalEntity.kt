@@ -14,7 +14,7 @@ data class StepGoalEntity(
     @ColumnInfo(name = COLUMN_IS_COMPLETED) val isCompleted: Boolean,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
     @ColumnInfo(name = COLUMN_DEADLINE) val deadline: Long,
-
+    @ColumnInfo(name = COLUMN_GOAL_ID) val goalId: Int,
 ) {
     companion object{
         const val TABLE_NAME = "step_goal_table"
@@ -23,5 +23,6 @@ data class StepGoalEntity(
         const val COLUMN_IS_COMPLETED = "is_completed"
         const val COLUMN_DATE_CREATED = "date_created"
         const val COLUMN_DEADLINE = "deadline"
+        const val COLUMN_GOAL_ID = "goal_id"
     }
 }

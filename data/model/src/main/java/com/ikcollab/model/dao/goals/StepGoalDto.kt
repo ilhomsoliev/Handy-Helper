@@ -6,4 +6,5 @@ data class StepGoalDto(
     val isCompleted: Boolean,
     val dateCreated: Long,
     val deadline: Long,
+    val goalId:Int
 )

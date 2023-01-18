@@ -61,6 +61,7 @@ fun StepGoalEntity.toStepGoalDto(stepsCount: Int, completedStepsCount: Int) = St
     dateCreated = dateCreated,
     deadline = deadline,
     isCompleted = isCompleted,
+    goalId = goalId,
 )
 
 fun StepGoalDto.toStepGoalEntity() = StepGoalEntity(
@@ -69,4 +70,5 @@ fun StepGoalDto.toStepGoalEntity() = StepGoalEntity(
     dateCreated = dateCreated,
     deadline = deadline,
     isCompleted = isCompleted,
+    goalId = goalId,
 )
