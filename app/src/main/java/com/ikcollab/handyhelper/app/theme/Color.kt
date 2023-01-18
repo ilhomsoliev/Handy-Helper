@@ -1,4 +1,4 @@
-package com.ikcollab.handyhelper.ui.theme
+package com.ikcollab.handyhelper.app.theme
 
 import androidx.compose.ui.graphics.Color
 

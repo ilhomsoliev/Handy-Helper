@@ -1,6 +1,10 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id(GradlePlugin.ANDROID_LIBRARY)
+    id(GradlePlugin.ORG_KOTLIN_ANDROID)
+    id(GradlePlugin.KAPT)
+    id(GradlePlugin.DAGGER_HILT)
 }
 
 android {
@@ -50,4 +54,9 @@ dependencies {
     implementation(Dependencies.compose.uiToolingPreview)
     implementation(Dependencies.compose.ui)
     implementation(Dependencies.compose.uiTest)
+    // Hilt
+    implementation(Dependencies.android.hilt.android)
+    kapt(Dependencies.android.hilt.androidCompiler)
+    kapt(Dependencies.android.hilt.compiler)
+    implementation(Dependencies.android.hilt.navigation)
 }

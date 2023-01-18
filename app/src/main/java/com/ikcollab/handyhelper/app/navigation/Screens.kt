@@ -1,4 +1,4 @@
-package com.ikcollab.handyhelper.navigation
+package com.ikcollab.handyhelper.app.navigation
 
 sealed class Screens(val route: String) {
     object BudgetScreen : Screens("HomeScreen")

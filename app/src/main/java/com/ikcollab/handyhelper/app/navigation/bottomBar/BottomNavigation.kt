@@ -1,7 +1,5 @@
-package com.ikcollab.handyhelper.navigation.bottomBar
+package com.ikcollab.handyhelper.app.navigation.bottomBar
 
-import android.R
-import android.R.id
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text

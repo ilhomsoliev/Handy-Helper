@@ -1,5 +1,8 @@
-package com.ikcollab.handyhelper.navigation
+package com.ikcollab.handyhelper.app.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -13,8 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.notes.notes.presentation.notes_screen.NotesScreen
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -79,7 +85,7 @@ fun Navigation() {
             DrawerContent()
         },
         bottomBar = {
-            com.ikcollab.handyhelper.navigation.bottomBar.BottomNavigation(navController = navController)
+            com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
         }
     ) {
         NavHost(
@@ -97,7 +103,7 @@ fun Navigation() {
 
             }
             composable(route = Screens.NotesScreen.route) {
-
+                NotesScreen(navController)
             }
             composable(route = Screens.PickThemeScreen.route) {
 
