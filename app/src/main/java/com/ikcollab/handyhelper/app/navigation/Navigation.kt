@@ -91,7 +91,7 @@ fun Navigation() {
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
-            startDestination = Screens.ChoresScreen.route
+            startDestination = Screens.NotesScreen.route
         ) {
             composable(route = Screens.BudgetScreen.route) {
 

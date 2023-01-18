@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ilhomsoliev.notes"
+    namespace = "com.ikcollab.notes"
     compileSdk = 32
 
     defaultConfig {
