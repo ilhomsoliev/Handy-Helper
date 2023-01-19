@@ -61,9 +61,11 @@ object TestVersions {
 
 object ComposeVersions {
     const val compose = "1.1.0"
+    const val material = "1.3.1"
+    const val ui = "1.3.3"
     const val constraintLayout = "1.0.0-beta02"
-    const val composeNav = "2.4.2"
-    const val composeVm = "1.0.0-alpha07"
+    const val composeNav = "2.5.1"
+    const val composeVm = "1.3"
     const val composeActivity = "1.3.1"
 }
 
@@ -89,8 +91,8 @@ object RoomVersions {
 
 object HiltVersions {
     const val navigation = "1.0.0"
-    const val android = "2.41"
-    const val androidCompiler = "2.41"
+    const val android = "2.44"
+    const val androidCompiler = "2.44"
     const val compiler = "1.0.0"
 }
 
@@ -110,6 +112,6 @@ object PagingVersions {
 }
 
 object Releases {
-    const val versionCode = 5
-    const val versionName = "1.0.3"
+    const val versionCode = 1
+    const val versionName = "1.0.0"
 }

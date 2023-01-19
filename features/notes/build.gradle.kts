@@ -1,10 +1,12 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id(GradlePlugin.ANDROID_LIBRARY)
+    id(GradlePlugin.ORG_KOTLIN_ANDROID)
+    id(GradlePlugin.KAPT)
+    id(GradlePlugin.DAGGER_HILT)
 }
 
 android {
-    namespace = "com.ilhomsoliev.notes"
+    namespace = "com.ikcollab.notes"
     compileSdk = 32
 
     defaultConfig {
@@ -31,14 +33,39 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose.compose
+    }
+/*    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.3"
+    }*/
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Android
+    implementation(Dependencies.android.lifecycleRuntime)
+    implementation(Dependencies.android.navigationRuntime)
+    implementation(Dependencies.android.dataStore)
+    implementation(Dependencies.android.lifecycleViewmodel)
+    implementation(Dependencies.android.ktx)
+    implementation(Dependencies.android.material)
+    // Compose
+    implementation(Dependencies.compose.icons)
+    implementation(Dependencies.compose.material)
+    implementation(Dependencies.compose.activity)
+    implementation(Dependencies.compose.navigation)
+    implementation(Dependencies.compose.viewModel)
+    implementation(Dependencies.compose.constraintLayout)
+    implementation(Dependencies.compose.uiToolingPreview)
+   // implementation(Dependencies.compose.ui)
+    //implementation(Dependencies.compose.uiTest)
+    // Hilt
+    implementation(Dependencies.android.hilt.android)
+    kapt(Dependencies.android.hilt.androidCompiler)
+    kapt(Dependencies.android.hilt.compiler)
+    implementation(Dependencies.android.hilt.navigation)
 }

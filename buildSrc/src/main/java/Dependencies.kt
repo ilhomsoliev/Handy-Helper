@@ -39,7 +39,7 @@ object AndroidDependencies {
     const val lifecycleRuntime =
         "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.android.lifecycleRuntime}"
     const val lifecycleViewmodel =
-        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.android.lifecycleRuntime}"
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.android.lifecycleRuntime}"
     const val material = "com.google.android.material:material:${Versions.android.material}"
     const val ktx = "androidx.core:core-ktx:${Versions.android.ktx}"
     const val playCore = "com.google.android.play:core:${Versions.android.playCore}"
@@ -86,13 +86,13 @@ object CoroutinesDependencies {
 
 object RoomDependencies {
     const val runtime = "androidx.room:room-runtime:${Versions.android.room.room}"
-    const val   compiler = "androidx.room:room-compiler:${Versions.android.room.room}"
+    const val compiler = "androidx.room:room-compiler:${Versions.android.room.room}"
     const val ktx = "androidx.room:room-ktx:${Versions.android.room.room}"
     const val paging = "androidx.room:room-paging:${Versions.android.room.room}"
 }
 
 object ComposeDependencies {
-    const val ui = "androidx.compose.ui:ui:${Versions.compose.compose}"
+    const val ui = "androidx.compose.ui:ui:${Versions.compose.ui}"
     const val material = "androidx.compose.material:material:${Versions.compose.compose}"
     const val googleMaterial = "com.google.android.material:material:1.4.0"
     const val tooling = "androidx.compose.ui:ui-tooling:${Versions.compose.compose}"

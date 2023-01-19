@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":features:notes")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)
@@ -58,7 +59,6 @@ dependencies {
     implementation(Dependencies.android.material)
     // Hilt
     implementation(Dependencies.android.hilt.android)
-    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.8.1")
     kapt(Dependencies.android.hilt.androidCompiler)
     kapt(Dependencies.android.hilt.compiler)
     implementation(Dependencies.android.hilt.navigation)
@@ -82,8 +82,8 @@ dependencies {
     implementation(Dependencies.compose.navigation)
     implementation(Dependencies.compose.constraintLayout)
     implementation(Dependencies.compose.uiToolingPreview)
-    implementation(Dependencies.compose.ui)
-    implementation(Dependencies.compose.uiTest)
+    //implementation(Dependencies.compose.ui)
+    //implementation(Dependencies.compose.uiTest)
     // Test
     implementation(Dependencies.test.core)
     implementation(Dependencies.test.coreKtx)
