@@ -1,13 +1,17 @@
-package com.ikcollab.model.dao
+package com.ikcollab.model.dto
 
-import com.ikcollab.model.dao.goals.GoalDto
-import com.ikcollab.model.dao.goals.StepGoalDto
-import com.ikcollab.model.dao.note.FolderDto
-import com.ikcollab.model.dao.note.NoteDto
+import com.ikcollab.model.dto.goals.GoalDto
+import com.ikcollab.model.dto.goals.StepGoalDto
+import com.ikcollab.model.dto.note.FolderDto
+import com.ikcollab.model.dto.note.NoteDto
+import com.ikcollab.model.dto.todo_list.TodoCategoryDto
+import com.ikcollab.model.dto.todo_list.TodoDto
 import com.ikcollab.model.local.goals.GoalEntity
 import com.ikcollab.model.local.goals.StepGoalEntity
 import com.ikcollab.model.local.note.FolderEntity
 import com.ikcollab.model.local.note.NoteEntity
+import com.ikcollab.model.local.todo_list.TodoCategoryEntity
+import com.ikcollab.model.local.todo_list.TodoEntity
 
 fun NoteEntity.toNoteDto() = NoteDto(
     id = id,
@@ -71,4 +75,35 @@ fun StepGoalDto.toStepGoalEntity() = StepGoalEntity(
     deadline = deadline,
     isCompleted = isCompleted,
     goalId = goalId,
+)
+
+fun TodoDto.toTodoEntity() = TodoEntity(
+    id = id,
+    title = title,
+    dateCreated = dateCreated,
+    deadline = deadline,
+    priority = priority,
+    repeatStatus = repeatStatus,
+)
+
+fun TodoEntity.toTodoDto() = TodoDto(
+    id = id,
+    title = title,
+    dateCreated = dateCreated,
+    deadline = deadline,
+    priority = priority,
+    repeatStatus = repeatStatus,
+)
+
+fun TodoCategoryDto.toTodoCategoryEntity() = TodoCategoryEntity(
+    id = id,
+    title = title,
+    dateCreated = dateCreated,
+)
+
+fun TodoCategoryEntity.toTodoCategoryDto(todosCount: Int) = TodoCategoryDto(
+    id = id,
+    title = title,
+    dateCreated = dateCreated,
+    todosCount = todosCount,
 )

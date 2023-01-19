@@ -1,17 +1,15 @@
 plugins {
-    id(GradlePlugin.ANDROID_LIBRARY)
-    id(GradlePlugin.ORG_KOTLIN_ANDROID)
-    id(GradlePlugin.KAPT)
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
 }
 
-
 android {
-    namespace = "com.ikcollab.model"
-    compileSdk = 33
+    namespace = "com.ikcollab.core"
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,13 +33,12 @@ android {
     }
 }
 
-
 dependencies {
-    implementation(project(mapOf("path" to ":core")))
 
-    // Room
-    implementation(Dependencies.android.room.ktx)
-    implementation(Dependencies.android.room.runtime)
-    kapt(Dependencies.android.room.compiler)
-    implementation(Dependencies.android.room.paging)
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.6.0")
+    implementation("com.google.android.material:material:1.7.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
