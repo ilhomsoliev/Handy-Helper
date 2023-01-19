@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FolderDao : BaseDao<FolderEntity> {
     @Query("SELECT * FROM ${FolderEntity.TABLE_NAME}")
-    suspend fun getFolders(): Flow<List<FolderEntity>>
+    fun getFolders(): Flow<List<FolderEntity>>
 
     @Query("SELECT * FROM ${FolderEntity.TABLE_NAME} WHERE id = :folderId")
     suspend fun getFolderById(folderId: Int): FolderEntity?

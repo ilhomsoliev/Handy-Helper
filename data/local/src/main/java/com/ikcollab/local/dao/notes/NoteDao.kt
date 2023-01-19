@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao : BaseDao<NoteEntity> {
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME}")
-    suspend fun getNotes(): Flow<List<NoteEntity>>
+    fun getNotes(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME} WHERE id = :noteId")
     suspend fun getNoteById(noteId: Int): NoteEntity?
@@ -21,6 +21,6 @@ interface NoteDao : BaseDao<NoteEntity> {
     suspend fun deleteNoteById(noteId: Int)
 
     @Query("DELETE FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
-    suspend fun getNotesByFolderId(folderId: Int): Flow<List<NoteEntity>>
+    fun getNotesByFolderId(folderId: Int): Flow<List<NoteEntity>>
 
 }
