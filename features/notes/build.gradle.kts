@@ -58,10 +58,11 @@ dependencies {
     implementation(Dependencies.compose.material)
     implementation(Dependencies.compose.activity)
     implementation(Dependencies.compose.navigation)
+    implementation(Dependencies.compose.viewModel)
     implementation(Dependencies.compose.constraintLayout)
     implementation(Dependencies.compose.uiToolingPreview)
-    implementation(Dependencies.compose.ui)
-    implementation(Dependencies.compose.uiTest)
+   // implementation(Dependencies.compose.ui)
+    //implementation(Dependencies.compose.uiTest)
     // Hilt
     implementation(Dependencies.android.hilt.android)
     kapt(Dependencies.android.hilt.androidCompiler)

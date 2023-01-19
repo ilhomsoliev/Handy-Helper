@@ -6,7 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NotesScreenViewModel @Inject constructor():ViewModel() {
+class NotesScreenViewModel @Inject constructor(
+
+):ViewModel() {
     private val _stateSearchNotes = mutableStateOf("")
     val stateSearchNotes = _stateSearchNotes
     private val _stateNumberCategoriesNote = mutableStateOf(0)

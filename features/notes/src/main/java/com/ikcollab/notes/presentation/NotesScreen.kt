@@ -20,11 +20,10 @@ import com.ikcollab.notes.presentation.theme.WhiteRed
 @Composable
 fun NotesScreen(
    openNoteDetails:()->Unit,
-//   viewModel: NotesScreenViewModel = hiltViewModel()
+   viewModel: NotesScreenViewModel = hiltViewModel()
 ) {
    val stateNumberCategoriesNote by remember {
-      mutableStateOf(0)
-//      viewModel.stateNumberCategoriesNote
+      viewModel.stateNumberCategoriesNote
    }
    val listOfCategory = listOf("Diary","Success diary","Thanks","My mistakes","Diary of happiness")
    Column(modifier=Modifier.fillMaxSize().background(WhiteRed)) {

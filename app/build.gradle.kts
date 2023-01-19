@@ -82,8 +82,8 @@ dependencies {
     implementation(Dependencies.compose.navigation)
     implementation(Dependencies.compose.constraintLayout)
     implementation(Dependencies.compose.uiToolingPreview)
-    implementation(Dependencies.compose.ui)
-    implementation(Dependencies.compose.uiTest)
+    //implementation(Dependencies.compose.ui)
+    //implementation(Dependencies.compose.uiTest)
     // Test
     implementation(Dependencies.test.core)
     implementation(Dependencies.test.coreKtx)
