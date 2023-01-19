@@ -55,7 +55,7 @@ fun GoalDto.toGoalEntity() = GoalEntity(
     dateEnd = dateEnd,
 )
 
-fun StepGoalEntity.toStepGoalDto(stepsCount: Int, completedStepsCount: Int) = StepGoalDto(
+fun StepGoalEntity.toStepGoalDto() = StepGoalDto(
     id = id,
     name = name,
     dateCreated = dateCreated,

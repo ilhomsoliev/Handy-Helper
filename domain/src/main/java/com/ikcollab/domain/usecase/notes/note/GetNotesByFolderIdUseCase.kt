@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetNotesByFolderIdUseCase @Inject constructor(
     private val repository: NotesRepository
 ){
-    suspend operator fun invoke(folderId:Int): Flow<List<NoteDto>> {
+    operator fun invoke(folderId:Int): Flow<List<NoteDto>> {
         return repository.getNoteSByFolderId(folderId = folderId).map { notes ->
             notes.sortedBy { it.dateCreated }.map { it.toNoteDto() }
         }
