@@ -76,4 +76,11 @@ dependencies {
     // Paging
     implementation(Dependencies.paging.compose)
     implementation(Dependencies.paging.runtime)
+    // Accompanist
+    implementation(Dependencies.accompanist.animation)
+    implementation(Dependencies.accompanist.flowRow)
+    implementation(Dependencies.accompanist.systemUiController)
+    // Pretty time
+    implementation(Dependencies.android.prettyTime)
+    implementation(Dependencies.android.dataStore)
 }

@@ -7,4 +7,7 @@ data class FolderDto(
 ){
     //fun init():FolderDto =
 }
+data class FolderDtoState(
+    val folders:List<FolderDto> = emptyList()
+)
 
