@@ -1,10 +1,11 @@
 package com.ikcollab.handyhelper.app.navigation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -12,28 +13,82 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ikcollab.notes.presentation.NotesScreen
+import com.ikcollab.notes.presentation.NotesScreenViewModel
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
+import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route?:""
+    val notesScreenViewModel:NotesScreenViewModel = hiltViewModel()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(
+            initialValue = BottomSheetValue.Collapsed
+        )
+    )
+    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
+    val stateFolderName = notesScreenViewModel.stateFolderName
+
+    val focus = remember {
+        mutableStateOf(true)
+    }
+
+    var folderid by remember {
+        mutableStateOf(0)
+    }
+    val sheetPeekHeight by remember {
+        mutableStateOf(0)
+    }
+
+    BottomSheetScaffold(
+        sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            when(currentScreen) {
+                Screens.NotesScreen.route -> {
+                    CustomInsertFolderItem(
+                        value = stateFolderName.value,
+                        onValueChange = {
+                            notesScreenViewModel.setFolderName(it)
+                        },
+                        onClick = {
+                            if (stateFolderName.value != "") {
+                                notesScreenViewModel.insertFolder(
+                                    folderid,
+                                    stateFolderName.value
+                                )
+                                folderid++
+                            }
+                        },
+                        placeholder = "Name of Folder...",
+                        focus = focus,
+                        modifier = Modifier.padding(bottom = 150.dp)
+                    )
+                }
+            }
+        },
+        sheetPeekHeight = sheetPeekHeight.dp
+    ) {
     Scaffold(scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(title = {
-                Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,text =
-                    when(currentScreen) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text =
+                    when (currentScreen) {
                         Screens.GoalsScreen.route -> "Goals"
                         Screens.ChoresScreen.route -> "To-Do list"
                         Screens.TrackerScreen.route -> "Habit Tracker"
@@ -50,7 +105,7 @@ fun Navigation() {
                 }) {
                     Icon(Icons.Filled.Menu, null)
                 }
-            },actions = {
+            }, actions = {
                 IconButton(onClick = {
 
                 }) {
@@ -89,38 +144,49 @@ fun Navigation() {
             com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
         },
         floatingActionButton = {
-            when(currentScreen){
-                Screens.NotesScreen.route -> CustomFloatingActionButton()
+            when (currentScreen) {
+                Screens.NotesScreen.route -> CustomFloatingActionButton(
+                    onInsertFolder = {
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                    },
+                    onEdit = {
+
+                    }
+                )
             }
         }
     ) {
-        NavHost(
-            modifier = Modifier.padding(it),
-            navController = navController,
-            startDestination = Screens.NotesScreen.route
-        ) {
-            composable(route = Screens.BudgetScreen.route) {
 
-            }
-            composable(route = Screens.ChoresScreen.route) {
+            NavHost(
+                modifier = Modifier.padding(it),
+                navController = navController,
+                startDestination = Screens.NotesScreen.route
+            ) {
+                composable(route = Screens.BudgetScreen.route) {
 
-            }
-            composable(route = Screens.GoalsScreen.route) {
+                }
+                composable(route = Screens.ChoresScreen.route) {
 
-            }
-            composable(route = Screens.NotesScreen.route) {
-                NotesScreen(openNoteDetails = {
-                    //navController.navigate()
-                })
-            }
-            composable(route = Screens.PickThemeScreen.route) {
+                }
+                composable(route = Screens.GoalsScreen.route) {
 
-            }
-            composable(route = Screens.SettingsScreen.route) {
+                }
+                composable(route = Screens.NotesScreen.route) {
+                    NotesScreen(openNoteDetails = {
+                        //navController.navigate()
+                    })
+                }
+                composable(route = Screens.PickThemeScreen.route) {
 
-            }
-            composable(route = Screens.TrackerScreen.route) {
+                }
+                composable(route = Screens.SettingsScreen.route) {
 
+                }
+                composable(route = Screens.TrackerScreen.route) {
+
+                }
             }
         }
     }

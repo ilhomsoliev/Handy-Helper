@@ -45,7 +45,8 @@ android {
 }
 
 dependencies {
-
+    implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":data:model")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)
@@ -68,4 +69,18 @@ dependencies {
     kapt(Dependencies.android.hilt.androidCompiler)
     kapt(Dependencies.android.hilt.compiler)
     implementation(Dependencies.android.hilt.navigation)
+    //Coroutines
+    implementation(Dependencies.coroutines.android)
+    implementation(Dependencies.coroutines.test)
+    implementation(Dependencies.coroutines.core)
+    // Paging
+    implementation(Dependencies.paging.compose)
+    implementation(Dependencies.paging.runtime)
+    // Accompanist
+    implementation(Dependencies.accompanist.animation)
+    implementation(Dependencies.accompanist.flowRow)
+    implementation(Dependencies.accompanist.systemUiController)
+    // Pretty time
+    implementation(Dependencies.android.prettyTime)
+    implementation(Dependencies.android.dataStore)
 }
