@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StepGoalDao : BaseDao<StepGoalEntity> {
     @Query("SELECT * FROM ${StepGoalEntity.TABLE_NAME}")
-    suspend fun getStepsGoal(): Flow<List<StepGoalEntity>>
+    fun getStepsGoal(): Flow<List<StepGoalEntity>>
 
     @Query("SELECT * FROM ${StepGoalEntity.TABLE_NAME} WHERE id = :stepGoalId")
     suspend fun getStepGoalById(stepGoalId: Int): StepGoalEntity?
@@ -21,7 +21,7 @@ interface StepGoalDao : BaseDao<StepGoalEntity> {
     suspend fun deleteStepGoalById(stepGoalId: Int)
 
     @Query("SELECT * FROM ${StepGoalEntity.TABLE_NAME} WHERE goal_id = :goalId")
-    suspend fun getStepsGoalByGoalId(goalId: Int): StepGoalEntity?
+    fun getStepsGoalByGoalId(goalId: Int): Flow<List<StepGoalEntity>>
 
     @Query("SELECT COUNT(*) FROM ${StepGoalEntity.TABLE_NAME} WHERE goal_id = :goalId")
     suspend fun getGoalsStepsCount(goalId: Int): Int

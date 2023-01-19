@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetFoldersUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
-    suspend operator fun invoke(): Flow<List<FolderDto>> {
+    operator fun invoke(): Flow<List<FolderDto>> {
         return repository.getFolders().map { folders ->
             folders.sortedBy { it.dateCreated }.map { it.toFolderDto() }
         }

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GoalDao : BaseDao<GoalEntity> {
     @Query("SELECT * FROM ${GoalEntity.TABLE_NAME}")
-    suspend fun getGoals(): Flow<List<GoalEntity>>
+    fun getGoals(): Flow<List<GoalEntity>>
 
     @Query("SELECT * FROM ${GoalEntity.TABLE_NAME} WHERE id = :goalId")
     suspend fun getGoalById(goalId: Int): GoalEntity?
