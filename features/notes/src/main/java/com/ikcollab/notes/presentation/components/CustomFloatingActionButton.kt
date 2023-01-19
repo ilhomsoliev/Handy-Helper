@@ -2,6 +2,9 @@ package com.ikcollab.notes.presentation.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.*
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -19,30 +22,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "UnrememberedMutableState")
 @Composable
-fun CustomFloatingActionButton() {
+fun CustomFloatingActionButton(
+    onInsertFolder:()->Unit,
+    onEdit:()->Unit
+) {
     var scope = rememberCoroutineScope()
     var shapeState by remember { mutableStateOf(RoundedCornerShape(18.dp)) }
     var isSortVisible by remember {
         mutableStateOf(false)
     }
-    Column() {
-        AnimatedVisibility(visible = isSortVisible) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+        AnimatedVisibility(
+            visible = isSortVisible,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 150, easing = LinearOutSlowInEasing)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { 250 },
+                animationSpec = tween(durationMillis = 200, easing = FastOutLinearInEasing)
+            )
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,) {
                 FloatingActionButton(
                     backgroundColor = Color.White,
                     contentColor = Color.Yellow,
                     modifier = Modifier.size(50.dp),
-                    onClick = { /*TODO*/ }) {
+                    onClick = onInsertFolder) {
                     Icon(imageVector = Icons.Default.Folder, contentDescription = null)
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 FloatingActionButton(
                     backgroundColor = Color.White,
                     contentColor = Color.Red,
                     modifier = Modifier.size(45.dp),
-                    onClick = { /*TODO*/ }) {
+                    onClick = onEdit) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -64,7 +81,10 @@ fun CustomFloatingActionButton() {
             onClick = { isSortVisible = !isSortVisible },
             shape = shapeState
         ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            Icon(
+                imageVector = if (!isSortVisible) Icons.Default.Add else Icons.Default.Remove,
+                contentDescription = null
+            )
         }
     }
 }
