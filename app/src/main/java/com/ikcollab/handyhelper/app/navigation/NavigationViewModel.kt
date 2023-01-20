@@ -35,7 +35,7 @@ class NavigationViewModel @Inject constructor(
         _newGoalEndDate.value = value
     }
 
-    fun addGoalToDatabase() {
+    fun addGoalToDatabase(onDone:()->Unit) {
         if (_newGoalName.value.isEmpty()) return
 
         viewModelScope.launch {
@@ -50,6 +50,10 @@ class NavigationViewModel @Inject constructor(
                     dateEnd = _newGoalEndDate.value,
                 )
             )
+            _newGoalEndDate.value = System.currentTimeMillis()
+            _newGoalStartDate.value = System.currentTimeMillis()
+            _newGoalName.value = ""
+            onDone()
         }
     }
 
