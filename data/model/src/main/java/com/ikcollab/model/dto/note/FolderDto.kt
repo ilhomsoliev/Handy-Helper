@@ -1,7 +1,7 @@
 package com.ikcollab.model.dto.note
 
 data class FolderDto(
-    val id:Int,
+    val id: Int?,
     val name:String,
     val dateCreated: Long,
 ){
