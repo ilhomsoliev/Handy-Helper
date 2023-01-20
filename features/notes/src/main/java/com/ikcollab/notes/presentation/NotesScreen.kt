@@ -9,14 +9,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.theme.WhiteRed
-import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -27,37 +25,26 @@ fun NotesScreen(
       viewModel.stateNumberCategoriesNote
    }
    val coroutineScope = rememberCoroutineScope()
-   val bottomSheetScaffoldState = rememberModalBottomSheetState(
-      initialValue = ModalBottomSheetValue.Hidden,
-      confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
-   )
-   val listOfCategory = listOf("Diary","Success diary","Thanks","My mistakes","Diary of happiness")
-   ModalBottomSheetLayout(
-      sheetState = bottomSheetScaffoldState,
-      sheetContent = {
-      Column(modifier = Modifier
+
+   val stateFolder = viewModel.stateFolder.value.folders
+   Column(
+      modifier = Modifier
          .fillMaxSize()
-         .background(WhiteRed)) {
-         Button(onClick = { coroutineScope.launch {
-            bottomSheetScaffoldState.hide()
-         } }) {
-         }
-         LazyColumn(
-            modifier = Modifier
-               .padding(top = 10.dp)
-         ) {
-            items(listOfCategory) { category ->
-               CustomNotesCategory(
-                  onClick = { /*TODO*/ },
-                  icon = Icons.Default.Folder,
-                  title = category,
-                  number = stateNumberCategoriesNote
-               )
-               Spacer(modifier = Modifier.height(10.dp))
-            }
+         .background(WhiteRed)
+   ) {
+      LazyColumn(
+         modifier = Modifier
+            .padding(top = 10.dp)
+      ) {
+         items(stateFolder) { folder ->
+            CustomNotesCategory(
+               onClick = { /*TODO*/ },
+               icon = Icons.Default.Folder,
+               title = folder.name,
+               number = stateNumberCategoriesNote
+            )
+            Spacer(modifier = Modifier.height(10.dp))
          }
       }
-   }){
-
    }
 }

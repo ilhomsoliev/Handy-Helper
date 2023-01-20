@@ -7,4 +7,3 @@ data class FolderDto(
 ){
     //fun init():FolderDto =
 }
-
