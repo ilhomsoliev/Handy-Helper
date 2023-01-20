@@ -37,6 +37,8 @@ android {
 
 
 dependencies {
+    implementation(project(mapOf("path" to ":core")))
+
     // Room
     implementation(Dependencies.android.room.ktx)
     implementation(Dependencies.android.room.runtime)

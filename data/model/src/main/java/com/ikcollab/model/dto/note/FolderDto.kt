@@ -1,4 +1,4 @@
-package com.ikcollab.model.dao.note
+package com.ikcollab.model.dto.note
 
 data class FolderDto(
     val id:Int,
@@ -7,4 +7,3 @@ data class FolderDto(
 ){
     //fun init():FolderDto =
 }
-

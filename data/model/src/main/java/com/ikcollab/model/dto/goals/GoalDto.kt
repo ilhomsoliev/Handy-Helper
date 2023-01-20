@@ -1,4 +1,4 @@
-package com.ikcollab.model.dao.goals
+package com.ikcollab.model.dto.goals
 
 data class GoalDto(
     val id: Int,
