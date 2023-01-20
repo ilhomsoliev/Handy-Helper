@@ -20,7 +20,7 @@ interface NoteDao : BaseDao<NoteEntity> {
     @Query("DELETE FROM ${NoteEntity.TABLE_NAME} WHERE id = :noteId")
     suspend fun deleteNoteById(noteId: Int)
 
-    @Query("DELETE FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
+    @Query("SELECT * FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
     fun getNotesByFolderId(folderId: Int): Flow<List<NoteEntity>>
 
 }

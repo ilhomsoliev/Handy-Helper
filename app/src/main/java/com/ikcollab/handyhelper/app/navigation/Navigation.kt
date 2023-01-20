@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,20 +21,24 @@ import com.ikcollab.notes.presentation.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route?:""
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
+    )
+    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
     Scaffold(scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(title = {
-                Text(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,text =
-                    when(currentScreen) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text =
+                    when (currentScreen) {
                         Screens.GoalsScreen.route -> "Goals"
                         Screens.ChoresScreen.route -> "To-Do list"
                         Screens.TrackerScreen.route -> "Habit Tracker"
@@ -50,7 +55,7 @@ fun Navigation() {
                 }) {
                     Icon(Icons.Filled.Menu, null)
                 }
-            },actions = {
+            }, actions = {
                 IconButton(onClick = {
 
                 }) {
@@ -89,11 +94,23 @@ fun Navigation() {
             com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
         },
         floatingActionButton = {
-            when(currentScreen){
-                Screens.NotesScreen.route -> CustomFloatingActionButton()
+            when (currentScreen) {
+                Screens.NotesScreen.route -> CustomFloatingActionButton(
+                    onInsertFolder = {
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    },
+                    onEdit = {
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                    }
+                )
             }
         }
     ) {
+
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
