@@ -12,6 +12,9 @@ interface BudgetStoryDao : BaseDao<BudgetStoryEntity> {
     @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
     fun getBudgetStoriesByType(type:String): Flow<List<BudgetStoryEntity>>
 
+    @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE category_id = :categoryId")
+    fun getBudgetStoriesByCategoryId(categoryId:Int): Flow<List<BudgetStoryEntity>>
+
     @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE id = :storyId")
     suspend fun getBudgetStoryById(storyId: Int): BudgetStoryEntity?
 

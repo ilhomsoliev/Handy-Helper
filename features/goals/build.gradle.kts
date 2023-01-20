@@ -1,31 +1,29 @@
 plugins {
-    id(GradlePlugin.ANDROID_APPLICATION)
-    id(GradlePlugin.KOTLIN_ANDROID)
+    id(GradlePlugin.ANDROID_LIBRARY)
+    id(GradlePlugin.ORG_KOTLIN_ANDROID)
     id(GradlePlugin.KAPT)
     id(GradlePlugin.DAGGER_HILT)
 }
 
 android {
-    namespace = "com.ikcollab.handyhelper"
+    namespace = "com.ikcollab.goals"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.ikcollab.handyhelper"
         minSdk = 21
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            /* minifyEnabled = false*/
-            proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -41,16 +39,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.compose.compose
     }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":features:notes")))
-    implementation(project(mapOf("path" to ":features:goals")))
+    implementation(project(mapOf("path" to ":common:components")))
+    implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":data:model")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)
@@ -58,37 +52,28 @@ dependencies {
     implementation(Dependencies.android.lifecycleViewmodel)
     implementation(Dependencies.android.ktx)
     implementation(Dependencies.android.material)
-    // Hilt
-    implementation(Dependencies.android.hilt.android)
-    kapt(Dependencies.android.hilt.androidCompiler)
-    kapt(Dependencies.android.hilt.compiler)
-    implementation(Dependencies.android.hilt.navigation)
-    // Room
-    implementation(Dependencies.android.room.ktx)
-    implementation(Dependencies.android.room.runtime)
-    kapt(Dependencies.android.room.compiler)
-    implementation(Dependencies.android.room.paging)
-    // Paging
-    implementation(Dependencies.paging.compose)
-    implementation(Dependencies.paging.runtime)
-    // Retrofit
-    implementation(Dependencies.network.retrofit.base)
-    implementation(Dependencies.network.retrofit.gsonConverter)
-    implementation(Dependencies.network.okHttp.base)
-    implementation(Dependencies.network.okHttp.interceptor)
     // Compose
     implementation(Dependencies.compose.icons)
     implementation(Dependencies.compose.material)
     implementation(Dependencies.compose.activity)
     implementation(Dependencies.compose.navigation)
+    implementation(Dependencies.compose.viewModel)
     implementation(Dependencies.compose.constraintLayout)
     implementation(Dependencies.compose.uiToolingPreview)
-    //implementation(Dependencies.compose.ui)
+    // implementation(Dependencies.compose.ui)
     //implementation(Dependencies.compose.uiTest)
-    // Test
-    implementation(Dependencies.test.core)
-    implementation(Dependencies.test.coreKtx)
-    implementation(Dependencies.test.junit)
+    // Hilt
+    implementation(Dependencies.android.hilt.android)
+    kapt(Dependencies.android.hilt.androidCompiler)
+    kapt(Dependencies.android.hilt.compiler)
+    implementation(Dependencies.android.hilt.navigation)
+    //Coroutines
+    implementation(Dependencies.coroutines.android)
+    implementation(Dependencies.coroutines.test)
+    implementation(Dependencies.coroutines.core)
+    // Paging
+    implementation(Dependencies.paging.compose)
+    implementation(Dependencies.paging.runtime)
     // Accompanist
     implementation(Dependencies.accompanist.animation)
     implementation(Dependencies.accompanist.flowRow)
