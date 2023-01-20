@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ikcollab.components.ModalSheetDefaultStick
 
 @Composable
 fun CustomInsertFolderItem(
@@ -24,7 +25,8 @@ fun CustomInsertFolderItem(
     focus:MutableState<Boolean>,
     modifier: Modifier
 ) {
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
+        ModalSheetDefaultStick()
         Row(
             modifier = Modifier
                 .fillMaxWidth()

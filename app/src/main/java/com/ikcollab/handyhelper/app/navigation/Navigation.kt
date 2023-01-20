@@ -38,13 +38,12 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    val notesScreenViewModel: NotesScreenViewModel = hiltViewModel()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
-    val stateFolderName = notesScreenViewModel.stateFolderName
+    val stateFolderName = viewModel.stateFolderName
     val focus = remember { mutableStateOf(true) }
 
     BackHandler(modalSheetState.isVisible) {
@@ -61,11 +60,11 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         CustomInsertFolderItem(
                             value = stateFolderName.value,
                             onValueChange = {
-                                notesScreenViewModel.setFolderName(it)
+                                viewModel.setFolderName(it)
                             },
                             onClick = {
                                 if (stateFolderName.value != "") {
-                                    notesScreenViewModel.insertFolder(
+                                    viewModel.insertFolder(
                                         stateFolderName.value
                                     )
                                 }
