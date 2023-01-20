@@ -50,8 +50,6 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateFolderName = notesScreenViewModel.stateFolderName
     val focus = remember { mutableStateOf(true) }
-    var folderid by remember { mutableStateOf(0) }
-    val sheetPeekHeight by remember { mutableStateOf(0) }
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
@@ -72,10 +70,8 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             onClick = {
                                 if (stateFolderName.value != "") {
                                     notesScreenViewModel.insertFolder(
-                                        folderid,
                                         stateFolderName.value
                                     )
-                                    folderid++
                                 }
                             },
                             placeholder = "Name of Folder...",
@@ -199,7 +195,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     GoalsScreen()
                 }
                 composable(route = Screens.NotesScreen.route) {
-                    NotesScreen(openNoteDetails = {
+                    NotesScreen(openFolderDetails = {
                         //navController.navigate()
                     })
                 }
