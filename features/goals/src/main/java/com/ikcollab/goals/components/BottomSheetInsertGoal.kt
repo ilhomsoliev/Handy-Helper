@@ -2,6 +2,8 @@ package com.ikcollab.goals.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ikcollab.components.ModalSheetDefaultStick
@@ -18,5 +20,10 @@ fun BottomSheetInsertGoal(
     Column(modifier = Modifier.fillMaxWidth()) {
         ModalSheetDefaultStick()
         ModalSheetTextField(value = goalValue, hint = "Enter a goal", onValueChange = onGoalValueChange)
+        Button(onClick = {
+            onAddClick()
+        }) {
+            Text(text = "Add")
+        }
     }
 }

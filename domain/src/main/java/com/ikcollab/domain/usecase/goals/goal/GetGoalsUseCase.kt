@@ -7,15 +7,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetFoldersUseCase @Inject constructor(
+class GetGoalsUseCase @Inject constructor(
     private val repository: GoalsRepository
 ) {
     operator fun invoke(): Flow<List<GoalDto>> {
         return repository.getGoals().map { goals ->
             goals.sortedBy { it.dateCreated }.map {
                 it.toGoalDto(
-                    stepsCount = repository.getGoalStepsCount(it.id),
-                    completedStepsCount = repository.getGoalCompletedStepsCount(it.id)
+                    stepsCount = repository.getGoalStepsCount(it.id!!),
+                    completedStepsCount = repository.getGoalCompletedStepsCount(it.id!!)
                 )
             }
         }

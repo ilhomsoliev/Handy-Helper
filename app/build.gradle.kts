@@ -49,6 +49,8 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":data:model")))
     implementation(project(mapOf("path" to ":features:notes")))
     implementation(project(mapOf("path" to ":features:goals")))
     // Android

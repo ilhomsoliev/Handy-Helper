@@ -3,12 +3,16 @@ package com.ikcollab.handyhelper.app.navigation
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ikcollab.domain.usecase.goals.goal.InsertGoalUseCase
+import com.ikcollab.model.dto.goals.GoalDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-
+    private val insertGoalUseCase: InsertGoalUseCase
 ) : ViewModel() {
     private val _newGoalName = mutableStateOf("")
     val newGoalName: State<String> = _newGoalName
@@ -31,8 +35,22 @@ class NavigationViewModel @Inject constructor(
         _newGoalEndDate.value = value
     }
 
-    fun addGoalToDatabase(){
+    fun addGoalToDatabase() {
+        if (_newGoalName.value.isEmpty()) return
 
+        viewModelScope.launch {
+            insertGoalUseCase(
+                GoalDto(
+                    id = null,
+                    name = _newGoalName.value,
+                    stepsCount = 0,
+                    completedStepsCount = 0,
+                    dateCreated = System.currentTimeMillis(),
+                    dateStart = _newGoalStartDate.value,
+                    dateEnd = _newGoalEndDate.value,
+                )
+            )
+        }
     }
 
 }

@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = NoteEntity.TABLE_NAME)
 data class NoteEntity(
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+
+    
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_TITLE) val title: String,
     @ColumnInfo(name = COLUMN_DESCRIPTION) val description: String,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
