@@ -25,15 +25,16 @@ import kotlinx.coroutines.launch
 @SuppressLint("CoroutineCreationDuringComposition", "UnrememberedMutableState")
 @Composable
 fun CustomFloatingActionButton(
-    onInsertFolder:()->Unit,
-    onEdit:()->Unit
+    isMultiple: Boolean = false,
+    onInsert: () -> Unit,
+    onEdit: () -> Unit = {}
 ) {
     var scope = rememberCoroutineScope()
     var shapeState by remember { mutableStateOf(RoundedCornerShape(18.dp)) }
     var isSortVisible by remember {
         mutableStateOf(false)
     }
-    Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         AnimatedVisibility(
             visible = isSortVisible,
             enter = slideInVertically(
@@ -45,12 +46,13 @@ fun CustomFloatingActionButton(
                 animationSpec = tween(durationMillis = 200, easing = FastOutLinearInEasing)
             )
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 FloatingActionButton(
                     backgroundColor = Color.White,
                     contentColor = Color.Yellow,
                     modifier = Modifier.size(50.dp),
-                    onClick = onInsertFolder) {
+                    onClick = onInsert
+                ) {
                     Icon(imageVector = Icons.Default.Folder, contentDescription = null)
                 }
 
@@ -59,7 +61,8 @@ fun CustomFloatingActionButton(
                     backgroundColor = Color.White,
                     contentColor = Color.Red,
                     modifier = Modifier.size(45.dp),
-                    onClick = onEdit) {
+                    onClick = onEdit
+                ) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -78,7 +81,13 @@ fun CustomFloatingActionButton(
             backgroundColor = Color.Red,
             modifier = Modifier
                 .size(60.dp),
-            onClick = { isSortVisible = !isSortVisible },
+            onClick = {
+                if (isMultiple) {
+                    isSortVisible = !isSortVisible
+                } else {
+                    onInsert()
+                }
+            },
             shape = shapeState
         ) {
             Icon(
