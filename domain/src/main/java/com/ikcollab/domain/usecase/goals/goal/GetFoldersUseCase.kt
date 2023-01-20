@@ -1,12 +1,8 @@
 package com.ikcollab.domain.usecase.goals.goal
 
-import com.ikcollab.local.dao.goals.GoalDao
-import com.ikcollab.model.dao.goals.GoalDto
-import com.ikcollab.model.dao.note.FolderDto
-import com.ikcollab.model.dao.toFolderDto
-import com.ikcollab.model.dao.toGoalDto
+import com.ikcollab.model.dto.goals.GoalDto
+import com.ikcollab.model.dto.toGoalDto
 import com.ikcollab.repository.goals.GoalsRepository
-import com.ikcollab.repository.notes.NotesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

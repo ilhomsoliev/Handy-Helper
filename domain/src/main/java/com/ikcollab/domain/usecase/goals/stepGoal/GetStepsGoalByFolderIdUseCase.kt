@@ -1,7 +1,7 @@
 package com.ikcollab.domain.usecase.goals.stepGoal
 
-import com.ikcollab.model.dao.goals.StepGoalDto
-import com.ikcollab.model.dao.toStepGoalDto
+import com.ikcollab.model.dto.goals.StepGoalDto
+import com.ikcollab.model.dto.toStepGoalDto
 import com.ikcollab.repository.goals.GoalsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

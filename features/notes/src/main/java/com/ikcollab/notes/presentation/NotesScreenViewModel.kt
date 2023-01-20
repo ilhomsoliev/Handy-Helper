@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
 import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
-import com.ikcollab.model.dao.note.FolderDto
-import com.ikcollab.model.dao.note.FolderState
+import com.ikcollab.model.dto.note.FolderDto
+import com.ikcollab.model.dto.note.FolderState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
