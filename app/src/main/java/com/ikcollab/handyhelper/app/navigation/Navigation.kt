@@ -195,7 +195,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     GoalsScreen()
                 }
                 composable(route = Screens.NotesScreen.route) {
-                    NotesScreen(openNoteDetails = {
+                    NotesScreen(openFolderDetails = {
                         //navController.navigate()
                     })
                 }
