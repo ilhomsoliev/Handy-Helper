@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoCategoryDao : BaseDao<TodoCategoryEntity> {
     @Query("SELECT * FROM ${TodoCategoryEntity.TABLE_NAME}")
-    fun getTodoCategory(): Flow<List<TodoCategoryEntity>>
+    fun getTodoCategories(): Flow<List<TodoCategoryEntity>>
 
     @Query("SELECT * FROM ${TodoCategoryEntity.TABLE_NAME} WHERE id = :todoCategoryId")
     suspend fun getTodoCategoryById(todoCategoryId: Int): TodoCategoryEntity?
