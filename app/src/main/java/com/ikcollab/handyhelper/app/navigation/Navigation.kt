@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ikcollab.goals.GoalsScreen
+import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.notes.presentation.NotesScreen
 import com.ikcollab.notes.presentation.NotesScreenViewModel
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
-fun Navigation() {
+fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -48,16 +49,9 @@ fun Navigation() {
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateFolderName = notesScreenViewModel.stateFolderName
-    val focus = remember {
-        mutableStateOf(true)
-    }
-
-    var folderid by remember {
-        mutableStateOf(0)
-    }
-    val sheetPeekHeight by remember {
-        mutableStateOf(0)
-    }
+    val focus = remember { mutableStateOf(true) }
+    var folderid by remember { mutableStateOf(0) }
+    val sheetPeekHeight by remember { mutableStateOf(0) }
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
@@ -90,7 +84,13 @@ fun Navigation() {
                         )
                     }
                     Screens.GoalsScreen.route -> {
-
+                        BottomSheetInsertGoal(
+                            goalValue = viewModel.newGoalName.value,
+                            onGoalValueChange = viewModel::changeNewGoalName,
+                            start = viewModel.newGoalStartDate.value,
+                            deadline = viewModel.newGoalEndDate.value,
+                            onAddClick = viewModel::addGoalToDatabase
+                        )
                     }
                 }
             }
