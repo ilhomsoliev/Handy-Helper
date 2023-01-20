@@ -55,7 +55,7 @@ class NavigationViewModel @Inject constructor(
         _stateFolderName.value = ""
     }
 
-    fun addGoalToDatabase() {
+    fun addGoalToDatabase(onDone:()->Unit) {
         if (_newGoalName.value.isEmpty()) return
 
         viewModelScope.launch {
