@@ -24,8 +24,9 @@ import androidx.navigation.compose.rememberNavController
 import com.ikcollab.goals.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
+import com.ikcollab.notes.presentation.AddNoteScreen
+import com.ikcollab.notes.presentation.FoldersNoteScreen
 import com.ikcollab.notes.presentation.NotesScreen
-import com.ikcollab.notes.presentation.NotesScreenViewModel
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import kotlinx.coroutines.launch
@@ -44,12 +45,10 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateFolderName = viewModel.stateFolderName
-    val focus = remember { mutableStateOf(true) }
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
     }
-
     ModalBottomSheetLayout(
         sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
         sheetState = modalSheetState,
@@ -70,7 +69,6 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 }
                             },
                             placeholder = "Name of Folder...",
-                            focus = focus,
                             modifier = Modifier.padding(bottom = 150.dp)
                         )
                     }
@@ -105,12 +103,14 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 Screens.TrackerScreen.route -> "Habit Tracker"
                                 Screens.NotesScreen.route -> "Notes"
                                 Screens.BudgetScreen.route -> "Budget"
+                                Screens.FoldersNoteScreen.route -> "Folder"
+                                Screens.AddNoteScreen.route -> "Add note"
                                 else -> ""
                             }
                         )
                     }
                 }, navigationIcon = {
-                    if (currentScreen != Screens.GoalsListScreen.route) {
+                    if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.FoldersNoteScreen.route) {
                         IconButton(onClick = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
@@ -122,6 +122,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
+                            if(currentScreen == Screens.FoldersNoteScreen.route)
+                                Icon(Icons.Filled.Close, null)
+                            else
                             Icon(Icons.Filled.ArrowBack, null)
                         }
                     }
@@ -135,6 +138,8 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         }
                         Screens.GoalsListScreen.route -> {}
+                        Screens.FoldersNoteScreen.route ->{}
+                        Screens.AddNoteScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
 
@@ -145,12 +150,14 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     }
                 })
             },
-            drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route,
+            drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
+                    currentScreen != Screens.FoldersNoteScreen.route &&
+                    currentScreen !=Screens.AddNoteScreen.route,
             drawerContent = {
                 DrawerContent()
             },
             bottomBar = {
-                if (currentScreen != Screens.GoalsListScreen.route) {
+                if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.AddNoteScreen.route) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -174,14 +181,17 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         },
                     )
+                    Screens.FoldersNoteScreen.route -> CustomFloatingActionButton(onInsert = {
+                        navController.navigate(Screens.AddNoteScreen.route)
+                    })
                 }
             }
         ) {
 
             NavHost(
                 modifier = Modifier
-                    .padding(it)
-                    .background(Color(0xFF34568B)),
+                    .padding(it),
+//                    .background(Color(0xFF34568B)),
                 navController = navController,
                 startDestination = Screens.GoalsScreen.route
             ) {
@@ -199,8 +209,15 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.NotesScreen.route) {
                     NotesScreen(openFolderDetails = {
-                        //navController.navigate()
+
+                        navController.navigate(Screens.FoldersNoteScreen.route)
                     })
+                }
+                composable(route = Screens.FoldersNoteScreen.route) {
+                    FoldersNoteScreen()
+                }
+                composable(route = Screens.AddNoteScreen.route) {
+                    AddNoteScreen(onGoBack = {})
                 }
                 composable(route = Screens.PickThemeScreen.route) {
 
