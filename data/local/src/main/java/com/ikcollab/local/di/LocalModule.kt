@@ -6,6 +6,8 @@ import com.ikcollab.local.dao.goals.GoalDao
 import com.ikcollab.local.dao.goals.StepGoalDao
 import com.ikcollab.local.dao.notes.FolderDao
 import com.ikcollab.local.dao.notes.NoteDao
+import com.ikcollab.local.dao.todo_list.TodoCategoryDao
+import com.ikcollab.local.dao.todo_list.TodoDao
 import com.ikcollab.local.db.HandyHelperDatabase
 import dagger.Module
 import dagger.Provides
@@ -61,6 +63,19 @@ class LocalModule {
     @Singleton
     fun provideStepGoalDao(appDatabase: HandyHelperDatabase): StepGoalDao {
         return appDatabase.stepGoalDao()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideTodoDao(appDatabase: HandyHelperDatabase): TodoDao {
+        return appDatabase.todoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTodoCategoryDao(appDatabase: HandyHelperDatabase): TodoCategoryDao {
+        return appDatabase.todoCategoryDao()
     }
 
 
