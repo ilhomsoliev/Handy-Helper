@@ -1,11 +1,15 @@
 package com.ikcollab.model.dto
 
+import com.ikcollab.model.dto.budget.BudgetCategoryDto
+import com.ikcollab.model.dto.budget.BudgetStoryDto
 import com.ikcollab.model.dto.goals.GoalDto
 import com.ikcollab.model.dto.goals.StepGoalDto
 import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.model.dto.note.NoteDto
 import com.ikcollab.model.dto.todo_list.TodoCategoryDto
 import com.ikcollab.model.dto.todo_list.TodoDto
+import com.ikcollab.model.local.budget.BudgetCategoryEntity
+import com.ikcollab.model.local.budget.BudgetStoryEntity
 import com.ikcollab.model.local.goals.GoalEntity
 import com.ikcollab.model.local.goals.StepGoalEntity
 import com.ikcollab.model.local.note.FolderEntity
@@ -84,7 +88,7 @@ fun TodoDto.toTodoEntity() = TodoEntity(
     deadline = deadline,
     priority = priority,
     repeatStatus = repeatStatus,
-    categoryId =categoryId,
+    categoryId = categoryId,
     isCompleted = isCompleted,
 )
 
@@ -110,4 +114,37 @@ fun TodoCategoryEntity.toTodoCategoryDto(todosCount: Int) = TodoCategoryDto(
     title = title,
     dateCreated = dateCreated,
     todosCount = todosCount,
+)
+
+fun BudgetStoryEntity.toBudgetStoryDto(categoryName: String) = BudgetStoryDto(
+    id = id,
+    comment = comment,
+    value = value,
+    type = type,
+    dateCreated = dateCreated,
+    categoryId = categoryId,
+    categoryName = categoryName,
+)
+
+fun BudgetStoryDto.toBudgetStoryEntity() = BudgetStoryEntity(
+    id = id,
+    comment = comment,
+    value = value,
+    type = type,
+    dateCreated = dateCreated,
+    categoryId = categoryId,
+)
+
+fun BudgetCategoryEntity.toBudgetCategoryDto() = BudgetCategoryDto(
+    id = id,
+    name = name,
+    dateCreated = dateCreated,
+    type = type,
+)
+
+fun BudgetCategoryDto.toBudgetCategoryEntity() = BudgetCategoryEntity(
+    id = id,
+    name = name,
+    dateCreated = dateCreated,
+    type = type,
 )

@@ -38,6 +38,9 @@ class BudgetRepository @Inject constructor(
     suspend fun getCategoryById(categoryId: Int): BudgetCategoryEntity? =
         budgetCategoryDao.getBudgetCategoryById(categoryId)
 
+    fun getCategoriesByType(type: String): Flow<List<BudgetCategoryEntity>> =
+        budgetCategoryDao.getBudgetCategoriesByType(type)
+
     fun getStoriesByCategoryId(categoryId: Int): Flow<List<BudgetStoryEntity>> =
         budgetStoryDao.getBudgetStoriesByCategoryId(categoryId)
 
