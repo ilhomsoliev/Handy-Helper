@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class FolderEntity(
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_NAME) val name: String,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
 ) {

@@ -49,12 +49,11 @@ class NotesScreenViewModel @Inject constructor(
     }
 
     fun insertFolder(
-        id:Int,
         name:String,
         dateCreated:Long = System.currentTimeMillis()
     ){
         viewModelScope.launch {
-            insertFolderUseCase(FolderDto(id,name,dateCreated))
+            insertFolderUseCase(FolderDto(name = name, dateCreated = dateCreated, id = null))
         }
         _stateFolderName.value = ""
     }

@@ -18,7 +18,7 @@ import com.ikcollab.notes.presentation.theme.WhiteRed
 
 @Composable
 fun NotesScreen(
-   openNoteDetails:()->Unit,
+   openFolderDetails:()->Unit,
    viewModel: NotesScreenViewModel = hiltViewModel()
 ) {
    val stateNumberCategoriesNote by remember {
@@ -38,7 +38,7 @@ fun NotesScreen(
       ) {
          items(stateFolder) { folder ->
             CustomNotesCategory(
-               onClick = { /*TODO*/ },
+               onClick =  openFolderDetails ,
                icon = Icons.Default.Folder,
                title = folder.name,
                number = stateNumberCategoriesNote
