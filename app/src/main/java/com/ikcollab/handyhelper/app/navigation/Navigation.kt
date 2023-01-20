@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -23,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ikcollab.goals.GoalsListScreen
-import com.ikcollab.goals.GoalsScreen
+import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.notes.presentation.NotesScreen
 import com.ikcollab.notes.presentation.NotesScreenViewModel
@@ -82,7 +81,11 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             onGoalValueChange = viewModel::changeNewGoalName,
                             start = viewModel.newGoalStartDate.value,
                             deadline = viewModel.newGoalEndDate.value,
-                            onAddClick = viewModel::addGoalToDatabase
+                            onAddClick = {
+                                viewModel.addGoalToDatabase(onDone = {
+                                    coroutineScope.launch {  modalSheetState.hide()}
+                                })
+                            }
                         )
                     }
                 }
