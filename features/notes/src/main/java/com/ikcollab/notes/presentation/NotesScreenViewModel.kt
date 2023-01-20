@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
 import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
 import com.ikcollab.model.dao.note.FolderDto
-import com.ikcollab.model.dao.note.FolderDtoState
+import com.ikcollab.model.dao.note.FolderState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -28,7 +28,7 @@ class NotesScreenViewModel @Inject constructor(
     private val _stateNumberCategoriesNote = mutableStateOf(0)
     val stateNumberCategoriesNote = _stateNumberCategoriesNote
 
-    private val _stateFolder = mutableStateOf(FolderDtoState())
+    private val _stateFolder = mutableStateOf(FolderState())
     val stateFolder = _stateFolder
 
     private var getFolderJob: Job? = null
