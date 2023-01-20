@@ -7,4 +7,6 @@ data class TodoDto(
     val deadline: Long,
     val priority: String,
     val repeatStatus: String,
+    val categoryId: Int,
+    val isCompleted: Boolean,
 )

@@ -84,6 +84,8 @@ fun TodoDto.toTodoEntity() = TodoEntity(
     deadline = deadline,
     priority = priority,
     repeatStatus = repeatStatus,
+    categoryId =categoryId,
+    isCompleted = isCompleted,
 )
 
 fun TodoEntity.toTodoDto() = TodoDto(
@@ -93,6 +95,8 @@ fun TodoEntity.toTodoDto() = TodoDto(
     deadline = deadline,
     priority = priority,
     repeatStatus = repeatStatus,
+    categoryId = categoryId,
+    isCompleted = isCompleted,
 )
 
 fun TodoCategoryDto.toTodoCategoryEntity() = TodoCategoryEntity(

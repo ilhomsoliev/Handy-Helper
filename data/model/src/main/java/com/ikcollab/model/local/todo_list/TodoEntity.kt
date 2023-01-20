@@ -16,6 +16,7 @@ data class TodoEntity(
     @ColumnInfo(name = COLUMN_PRIORITY) val priority: String,
     @ColumnInfo(name = COLUMN_REPEAT_STATUS) val repeatStatus: String,
     @ColumnInfo(name = COLUMN_CATEGORY_ID) val categoryId: Int,
+    @ColumnInfo(name = COLUMN_IS_COMPLETED) val isCompleted: Boolean,
 ) {
     companion object {
         const val TABLE_NAME = "todo_table"
