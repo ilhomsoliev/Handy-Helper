@@ -21,7 +21,7 @@ import com.ikcollab.model.local.todo_list.TodoEntity
 
 @Database(
     entities = [NoteEntity::class, FolderEntity::class, StepGoalEntity::class, GoalEntity::class, TodoCategoryEntity::class, TodoEntity::class, BudgetCategoryEntity::class, BudgetStoryEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class HandyHelperDatabase : RoomDatabase() {
