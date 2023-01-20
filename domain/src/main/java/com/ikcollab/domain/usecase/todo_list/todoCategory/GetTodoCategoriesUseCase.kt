@@ -15,7 +15,7 @@ class GetTodoCategoriesUseCase @Inject constructor(
     operator fun invoke(): Flow<List<TodoCategoryDto>> {
         return repository.getCategories().map { todos ->
             todos.sortedBy { it.dateCreated }.map {
-                it.toTodoCategoryDto(todosCount = repository.getCategoryTodosCount(it.id))
+                it.toTodoCategoryDto(todosCount = repository.getCategoryTodosCount(it.id!!))
             }
         }
     }

@@ -5,7 +5,7 @@ import com.ikcollab.model.dto.toGoalEntity
 import com.ikcollab.repository.goals.GoalsRepository
 import javax.inject.Inject
 
-class InsertFolderUseCase @Inject constructor(
+class InsertGoalUseCase @Inject constructor(
     private val repository: GoalsRepository
 ) {
     suspend operator fun invoke(goalDto: GoalDto) {

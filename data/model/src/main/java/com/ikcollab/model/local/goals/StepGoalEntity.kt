@@ -7,9 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = StepGoalEntity.TABLE_NAME)
 data class StepGoalEntity(
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_NAME) val name: String,
     @ColumnInfo(name = COLUMN_IS_COMPLETED) val isCompleted: Boolean,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,

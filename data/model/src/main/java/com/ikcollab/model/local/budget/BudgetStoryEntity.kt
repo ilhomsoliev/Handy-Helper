@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = BudgetStoryEntity.TABLE_NAME)
 data class BudgetStoryEntity(
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_COMMENT) val comment: String,
     @ColumnInfo(name = COLUMN_VALUE) val value: String,
     @ColumnInfo(name = COLUMN_TYPE) val type: String,

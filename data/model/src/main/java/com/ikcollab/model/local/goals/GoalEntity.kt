@@ -9,9 +9,8 @@ import com.ikcollab.model.local.note.NoteEntity
 
 @Entity(tableName = GoalEntity.TABLE_NAME)
 data class GoalEntity(
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_NAME) val name: String,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
     @ColumnInfo(name = COLUMN_DATE_START) val dateStart: Long,
