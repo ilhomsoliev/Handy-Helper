@@ -3,6 +3,7 @@ package com.ikcollab.notes.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ikcollab.domain.usecase.notes.folder.DeleteFolderByIdUseCase
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
 import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
 import com.ikcollab.model.dto.note.FolderDto
@@ -16,11 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesScreenViewModel @Inject constructor(
-    private val insertFolderUseCase: InsertFolderUseCase,
-    private val getFoldersUseCase: GetFoldersUseCase
+    private val getFoldersUseCase: GetFoldersUseCase,
+    private val deleteFolderByIdUseCase: DeleteFolderByIdUseCase
 ):ViewModel() {
-    private val _stateFolderName = mutableStateOf("")
-    val stateFolderName = _stateFolderName
+
 
     private val _stateSearchNotes = mutableStateOf("")
     val stateSearchNotes = _stateSearchNotes
@@ -41,21 +41,20 @@ class NotesScreenViewModel @Inject constructor(
         _stateSearchNotes.value = search
     }
 
-    fun setFolderName(folder:String){
-        _stateFolderName.value = folder
-    }
+
     fun updateNumberCategoriesNote(number:Int){
         _stateNumberCategoriesNote.value = number
     }
 
-    fun insertFolder(
+
+    fun deleteFolder(
+        id:Int,
         name:String,
-        dateCreated:Long = System.currentTimeMillis()
-    ){
+        dateCreated: Long
+    ) {
         viewModelScope.launch {
-            insertFolderUseCase(FolderDto(name = name, dateCreated = dateCreated, id = null))
+            deleteFolderByIdUseCase(FolderDto(id, name, dateCreated))
         }
-        _stateFolderName.value = ""
     }
     private fun getFolders(){
         getFolderJob?.cancel()
