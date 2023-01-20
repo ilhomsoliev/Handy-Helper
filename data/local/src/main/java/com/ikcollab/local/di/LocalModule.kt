@@ -2,6 +2,8 @@ package com.ikcollab.local.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ikcollab.local.dao.budget.BudgetCategoryDao
+import com.ikcollab.local.dao.budget.BudgetStoryDao
 import com.ikcollab.local.dao.goals.GoalDao
 import com.ikcollab.local.dao.goals.StepGoalDao
 import com.ikcollab.local.dao.notes.FolderDao
@@ -76,6 +78,18 @@ class LocalModule {
     @Singleton
     fun provideTodoCategoryDao(appDatabase: HandyHelperDatabase): TodoCategoryDao {
         return appDatabase.todoCategoryDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBudgetStoryDao(appDatabase: HandyHelperDatabase): BudgetStoryDao {
+        return appDatabase.budgetStoryDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBudgetCategoryDao(appDatabase: HandyHelperDatabase): BudgetCategoryDao {
+        return appDatabase.budgetCategoryDao()
     }
 
 

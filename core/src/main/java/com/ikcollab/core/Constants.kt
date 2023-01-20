@@ -11,5 +11,8 @@ object Constants {
     const val REPEAT_WEEKLY = "Weekly"
     const val REPEAT_MONTHLY = "Monthly"
     const val REPEAT_DO_NOT_REPEAT = "Do not repeat"
+    // Budget Category Type
+    const val BUDGET_CATEGORY_EXPENSE = "Expense"
+    const val BUDGET_CATEGORY_INCOME = "Income"
 
 }
