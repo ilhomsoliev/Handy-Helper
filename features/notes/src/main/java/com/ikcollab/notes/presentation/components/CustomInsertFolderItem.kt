@@ -22,7 +22,6 @@ fun CustomInsertFolderItem(
     onValueChange:(String)->Unit,
     onClick:()->Unit,
     placeholder: String,
-    focus:MutableState<Boolean>,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
@@ -37,8 +36,7 @@ fun CustomInsertFolderItem(
             CustomInsertFolderTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = placeholder,
-                focus = focus
+                placeholder = placeholder
             )
             FloatingActionButton(
                 backgroundColor= Color.Red,

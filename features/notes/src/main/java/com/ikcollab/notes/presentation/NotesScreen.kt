@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.components.DraggableCard.*
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.theme.WhiteRed
+import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -57,7 +58,7 @@ fun NotesScreen(
                         onEdit = {}
                     )
                     //for advanced cases use DraggableCardComplex
-                    DraggableCardComplex(
+                    DraggableCard(
                         isRevealed = cardsScreenViewModel.revealedCardIdsList.value.contains(
                             folder.id
                         ),
@@ -67,7 +68,12 @@ fun NotesScreen(
                         onCollapse = { folder.id?.let { cardsScreenViewModel.onItemCollapsed(it) } },
                         content = {
                             CustomNotesCategory(
-                                onClick = openFolderDetails,
+                                onClick = {
+                                    coroutineScope.launch {
+                                            folder.id?.let { viewModel.updateNotesFolderIdAndName(it,folder.name) }
+                                        openFolderDetails()
+                                    }
+                                },
                                 icon = Icons.Default.Folder,
                                 title = folder.name,
                                 number = stateNumberCategoriesNote
@@ -76,7 +82,7 @@ fun NotesScreen(
                        backgroundColor = Color.Transparent
                     )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(5.dp))
             }
         }
     }

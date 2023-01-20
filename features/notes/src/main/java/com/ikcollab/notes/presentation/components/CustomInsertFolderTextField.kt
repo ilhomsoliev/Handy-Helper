@@ -35,18 +35,7 @@ fun CustomInsertFolderTextField(
     value:String,
     onValueChange:(String)->Unit,
     placeholder:String,
-    focus:MutableState<Boolean>
 ) {
-//    val inputService = LocalTextInputService.current
-//    val scope = rememberCoroutineScope()
-//    scope.launch{
-//        if(focus.value){
-//            inputService?.showSoftwareKeyboard()
-//        }
-//        else {
-//            inputService?.hideSoftwareKeyboard()
-//        }
-//    }
     TextField(
         modifier=Modifier.fillMaxWidth(0.8f).padding(start = 15.dp),
         value = value,
