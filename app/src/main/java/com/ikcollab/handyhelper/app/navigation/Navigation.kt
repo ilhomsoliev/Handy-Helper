@@ -10,19 +10,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ikcollab.goals.GoalsScreen
+import com.ikcollab.goals.GoalsListScreen
+import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.notes.presentation.NotesScreen
 import com.ikcollab.notes.presentation.NotesScreenViewModel
@@ -41,10 +41,6 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
-        //skipHalfExpanded = true,
-        /*bottomSheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed
-        )*/
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateFolderName = viewModel.stateFolderName
@@ -84,74 +80,79 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             onGoalValueChange = viewModel::changeNewGoalName,
                             start = viewModel.newGoalStartDate.value,
                             deadline = viewModel.newGoalEndDate.value,
-                            onAddClick = viewModel::addGoalToDatabase
+                            onAddClick = {
+                                viewModel.addGoalToDatabase(onDone = {
+                                    coroutineScope.launch {  modalSheetState.hide()}
+                                })
+                            }
                         )
                     }
                 }
             }
         },
         sheetElevation = 12.dp,
-        //sheetPeekHeight = sheetPeekHeight.dp
     ) {
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 TopAppBar(title = {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text =
-                        when (currentScreen) {
-                            Screens.GoalsScreen.route -> "Goals"
-                            Screens.ChoresScreen.route -> "To-Do list"
-                            Screens.TrackerScreen.route -> "Habit Tracker"
-                            Screens.NotesScreen.route -> "Notes"
-                            Screens.BudgetScreen.route -> "Budget"
-                            else -> ""
-                        }
-                    )
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text =
+                            when (currentScreen) {
+                                Screens.GoalsScreen.route -> "Goals"
+                                Screens.GoalsListScreen.route -> "Goals"
+                                Screens.ChoresScreen.route -> "To-Do list"
+                                Screens.TrackerScreen.route -> "Habit Tracker"
+                                Screens.NotesScreen.route -> "Notes"
+                                Screens.BudgetScreen.route -> "Budget"
+                                else -> ""
+                            }
+                        )
+                    }
                 }, navigationIcon = {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.open()
+                    if (currentScreen != Screens.GoalsListScreen.route) {
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        }) {
+                            Icon(Icons.Filled.Menu, null)
                         }
-                    }) {
-                        Icon(Icons.Filled.Menu, null)
+                    } else {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, null)
+                        }
                     }
                 }, actions = {
-                    IconButton(onClick = {
+                    when (currentScreen) {
+                        Screens.GoalsScreen.route -> {
+                            IconButton(onClick = {
+                                navController.navigate(Screens.GoalsListScreen.route)
+                            }) {
+                                Icon(Icons.Filled.ListAlt, null)
+                            }
+                        }
+                        Screens.GoalsListScreen.route -> {}
+                        else -> {
+                            IconButton(onClick = {
 
-                    }) {
-                        Icon(Icons.Filled.Search, null)
+                            }) {
+                                Icon(Icons.Filled.Search, null)
+                            }
+                        }
                     }
-                    /*when (currentScreen) {
-
-                        Screens.HomeScreen.route -> {
-                            IconButton(onClick = {
-
-                            }) {
-                                Icon(Icons.Filled.Search, null)
-                            }
-                        }
-                        Screens.TrashScreen.route -> {
-                            IconButton(onClick = {
-
-                            }) {
-                                Icon(Icons.Filled.Search, null)
-                            }
-                        }
-                        Screens.LabelScreen.route -> {
-                            IconButton(onClick = {
-                                isCreateLabelDialogActive = true
-                            }) {
-                                Icon(Icons.Filled.Add, null)
-                            }
-                        }
-                        else -> {}
-                    }*/
                 })
-            }, drawerGesturesEnabled = true, drawerContent = {
+            },
+            drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route,
+            drawerContent = {
                 DrawerContent()
             },
             bottomBar = {
-                com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
+                if (currentScreen != Screens.GoalsListScreen.route) {
+                    com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
+                }
             },
             floatingActionButton = {
                 when (currentScreen) {
@@ -192,6 +193,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.GoalsScreen.route) {
                     GoalsScreen()
+                }
+                composable(route = Screens.GoalsListScreen.route) {
+                    GoalsListScreen()
                 }
                 composable(route = Screens.NotesScreen.route) {
                     NotesScreen(openFolderDetails = {
