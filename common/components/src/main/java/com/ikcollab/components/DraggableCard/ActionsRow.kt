@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.RestoreFromTrash
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +28,8 @@ fun ActionsRow(
             onClick = onDelete,
             content = {
                 Icon(
-                    imageVector = Icons.Outlined.RestoreFromTrash,
-                    tint = Color.Gray,
+                    imageVector = Icons.Filled.Delete,
+                    tint = Color.Red,
                     contentDescription = "delete action",
                 )
             }

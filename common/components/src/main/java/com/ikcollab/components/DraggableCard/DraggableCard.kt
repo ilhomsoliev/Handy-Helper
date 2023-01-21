@@ -73,8 +73,8 @@ fun DraggableCardComplex(
                         onCollapse()
                         return@detectHorizontalDragGestures
                     }
-                    if (change.positionChange() != Offset.Zero) change.consume()
-                    offsetX = newValue.x
+//                    if (change.positionChange() != Offset.Zero) change.consume()
+//                    offsetX = newValue.x
                 }
             },
         backgroundColor = backgroundColor,
@@ -89,7 +89,6 @@ fun DraggableCardComplex(
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun DraggableCard(
-    cardHeight: Dp,
     isRevealed: Boolean,
     cardOffset: Float,
     onExpand: () -> Unit,
@@ -120,7 +119,6 @@ fun DraggableCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(cardHeight)
             .offset { IntOffset(offsetTransition.roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { _, dragAmount ->

@@ -40,7 +40,7 @@ fun NotesScreen(
     ) {
         LazyColumn(
             modifier = Modifier
-                .padding(top = 10.dp)
+//                .padding(top = 10.dp)
         ) {
             items(stateFolder) { folder ->
                 Box(Modifier.fillMaxWidth()) {
@@ -63,7 +63,6 @@ fun NotesScreen(
                         isRevealed = cardsScreenViewModel.revealedCardIdsList.value.contains(
                             folder.id
                         ),
-                        cardHeight = 56.dp,
                         cardOffset = 168f,
                         onExpand = { folder.id?.let { cardsScreenViewModel.onItemExpanded(it) } },
                         onCollapse = { folder.id?.let { cardsScreenViewModel.onItemCollapsed(it) } },
@@ -83,7 +82,7 @@ fun NotesScreen(
                        backgroundColor = Color.Transparent
                     )
                 }
-                Spacer(modifier = Modifier.height(5.dp))
+//                Spacer(modifier = Modifier.height(5.dp))
             }
         }
     }
