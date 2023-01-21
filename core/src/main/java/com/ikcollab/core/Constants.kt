@@ -15,6 +15,9 @@ object Constants {
     const val BUDGET_CATEGORY_EXPENSE = "Expense"
     const val BUDGET_CATEGORY_INCOME = "Income"
 
+
+    //Category of notes by folderName
+    var FOLDER_NAME = "FOLDER_NAME"
     // ID ARGS
     const val FOLDER_ID_ARG = "NOTE_ID_ARG"
 

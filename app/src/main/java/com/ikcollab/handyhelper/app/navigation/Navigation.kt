@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ikcollab.core.Constants
+import com.ikcollab.core.Constants.FOLDER_NAME
 import com.ikcollab.goals.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
@@ -104,7 +105,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 Screens.TrackerScreen.route -> "Habit Tracker"
                                 Screens.NotesScreen.route -> "Notes"
                                 Screens.BudgetScreen.route -> "Budget"
-                                Screens.FoldersNoteScreen.route -> "Folder"
+                                Screens.FoldersNoteScreen.route -> FOLDER_NAME
                                 Screens.AddNoteScreen.route -> "Add note"
                                 else -> ""
                             }
@@ -213,7 +214,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         navController.navigate(
                             Screens.FoldersNoteScreen.route.replace(
                                 "{${Constants.FOLDER_ID_ARG}}",
-                                it.toString()
+                                it.toString(),
                             )
                         )
                     })

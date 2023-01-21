@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.components.DraggableCard.*
+import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.theme.WhiteRed
 import kotlinx.coroutines.launch
@@ -71,6 +72,7 @@ fun NotesScreen(
                                 onClick = {
                                     coroutineScope.launch {
                                         openFolderDetails(folder.id!!)
+                                        Constants.FOLDER_NAME = folder.name
                                     }
                                 },
                                 icon = Icons.Default.Folder,

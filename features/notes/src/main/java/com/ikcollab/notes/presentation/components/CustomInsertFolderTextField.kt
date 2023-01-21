@@ -35,9 +35,15 @@ fun CustomInsertFolderTextField(
     value:String,
     onValueChange:(String)->Unit,
     placeholder:String,
+    width:Float = 0.8f,
+    height:Int = 55,
+    paddingEnd:Int = 0,
+    paddingStart:Int = 15
 ) {
     TextField(
-        modifier=Modifier.fillMaxWidth(0.8f).padding(start = 15.dp),
+        modifier=Modifier.fillMaxWidth(width)
+            .padding(start = 15.dp, end = paddingEnd.dp)
+            .height(height = height.dp),
         value = value,
         placeholder = { Text(text = placeholder) },
         onValueChange =  onValueChange,
