@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -14,19 +13,21 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.ikcollab.core.Constants
 import com.ikcollab.goals.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
-import com.ikcollab.notes.presentation.AddNoteScreen
-import com.ikcollab.notes.presentation.FoldersNoteScreen
-import com.ikcollab.notes.presentation.NotesScreen
+import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreen
+import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreen
+import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import kotlinx.coroutines.launch
@@ -80,7 +81,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             deadline = viewModel.newGoalEndDate.value,
                             onAddClick = {
                                 viewModel.addGoalToDatabase(onDone = {
-                                    coroutineScope.launch {  modalSheetState.hide()}
+                                    coroutineScope.launch { modalSheetState.hide() }
                                 })
                             }
                         )
@@ -122,10 +123,10 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
-                            if(currentScreen == Screens.FoldersNoteScreen.route)
+                            if (currentScreen == Screens.FoldersNoteScreen.route)
                                 Icon(Icons.Filled.Close, null)
                             else
-                            Icon(Icons.Filled.ArrowBack, null)
+                                Icon(Icons.Filled.ArrowBack, null)
                         }
                     }
                 }, actions = {
@@ -138,7 +139,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         }
                         Screens.GoalsListScreen.route -> {}
-                        Screens.FoldersNoteScreen.route ->{}
+                        Screens.FoldersNoteScreen.route -> {}
                         Screens.AddNoteScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
@@ -152,7 +153,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
             },
             drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                     currentScreen != Screens.FoldersNoteScreen.route &&
-                    currentScreen !=Screens.AddNoteScreen.route,
+                    currentScreen != Screens.AddNoteScreen.route,
             drawerContent = {
                 DrawerContent()
             },
@@ -181,9 +182,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         },
                     )
-                    Screens.FoldersNoteScreen.route -> CustomFloatingActionButton(onInsert = {
+                    /*Screens.FoldersNoteScreen.route -> CustomFloatingActionButton(onInsert = {
                         navController.navigate(Screens.AddNoteScreen.route)
-                    })
+                    })*/
                 }
             }
         ) {
@@ -209,15 +210,40 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.NotesScreen.route) {
                     NotesScreen(openFolderDetails = {
-
-                        navController.navigate(Screens.FoldersNoteScreen.route)
+                        navController.navigate(
+                            Screens.FoldersNoteScreen.route.replace(
+                                "{${Constants.FOLDER_ID_ARG}}",
+                                it.toString()
+                            )
+                        )
                     })
                 }
-                composable(route = Screens.FoldersNoteScreen.route) {
-                    FoldersNoteScreen()
+                composable(route = Screens.FoldersNoteScreen.route,
+                    arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
+                        type = NavType.IntType
+                    })
+                ) {
+                    FoldersNoteScreen(
+                        folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
+                        openAddNoteScreen = {
+                            navController.navigate(
+                                Screens.AddNoteScreen.route.replace(
+                                    "{${Constants.FOLDER_ID_ARG}}",
+                                    it.toString()
+                                )
+                            )
+                        })
                 }
-                composable(route = Screens.AddNoteScreen.route) {
-                    AddNoteScreen(onGoBack = {})
+                composable(route = Screens.AddNoteScreen.route,
+                    arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
+                        type = NavType.IntType
+                    })
+                ) {
+                    AddNoteScreen(
+                        folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
+                        onGoBack = {
+                            navController.popBackStack()
+                        })
                 }
                 composable(route = Screens.PickThemeScreen.route) {
 
