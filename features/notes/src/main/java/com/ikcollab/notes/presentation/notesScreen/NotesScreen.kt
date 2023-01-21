@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.ikcollab.notes.presentation
+package com.ikcollab.notes.presentation.notesScreen
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
-   openFolderDetails:()->Unit,
+   openFolderDetails:(Int)->Unit,
    viewModel: NotesScreenViewModel = hiltViewModel()
 ) {
     val cardsScreenViewModel: CardsScreenViewModel = hiltViewModel()
@@ -70,8 +70,7 @@ fun NotesScreen(
                             CustomNotesCategory(
                                 onClick = {
                                     coroutineScope.launch {
-                                            folder.id?.let { viewModel.updateNotesFolderIdAndName(it,folder.name) }
-                                        openFolderDetails()
+                                        openFolderDetails(folder.id!!)
                                     }
                                 },
                                 icon = Icons.Default.Folder,
