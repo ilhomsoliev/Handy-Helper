@@ -4,7 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.components.DraggableCard.ActionsRow
 import com.ikcollab.components.DraggableCard.CardsScreenViewModel
 import com.ikcollab.components.DraggableCard.DraggableCard
+import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.goals.components.GoalDiagram
 import com.ikcollab.goals.components.StepGoalItem
 
@@ -68,14 +75,53 @@ fun GoalStepsScreen(
                     Text(text = "Pending")
                 }
                 items(stepsGoal.filter { !it.isCompleted }) {
-                    Box(Modifier.fillMaxWidth()) {
-
-                        StepGoalItem(
-                            isCompleted = it.isCompleted,
-                            stepGaolContent = it.name,
-                            deadline = it.dateCreated
-                        )
-                    }
+                    DraggableScaffold(
+                        contentUnderRight = {
+                            Box() {
+                                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+                                    IconButton(onClick = {
+                                        // onEdit
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.DoneAll,
+                                            tint = Color.Green,
+                                            contentDescription = null
+                                        )
+                                    }
+                                    IconButton(onClick = {
+                                        // onDelete
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            tint = Color.Red,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                        contentUnderLeft = {
+                            Box() {
+                                IconButton(
+                                    modifier = Modifier.padding(horizontal = 12.dp),
+                                    onClick = {
+                                        // onEdit
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        },
+                        contentOnTop = {
+                            StepGoalItem(
+                                isCompleted = it.isCompleted,
+                                stepGaolContent = it.name,
+                                deadline = it.dateCreated
+                            )
+                        }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
