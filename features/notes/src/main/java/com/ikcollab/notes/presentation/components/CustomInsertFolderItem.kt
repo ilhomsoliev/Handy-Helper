@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ikcollab.components.ModalSheetDefaultStick
 
 @Composable
 fun CustomInsertFolderItem(
@@ -21,22 +22,21 @@ fun CustomInsertFolderItem(
     onValueChange:(String)->Unit,
     onClick:()->Unit,
     placeholder: String,
-    focus:MutableState<Boolean>,
     modifier: Modifier
 ) {
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
+        ModalSheetDefaultStick()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 7.dp),
+                .padding(horizontal = 10.dp, vertical = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CustomInsertFolderTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = placeholder,
-                focus = focus
+                placeholder = placeholder
             )
             FloatingActionButton(
                 backgroundColor= Color.Red,

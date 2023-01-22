@@ -8,9 +8,9 @@ import com.ikcollab.model.local.note.NoteEntity
 
 @Entity(tableName = TodoCategoryEntity.TABLE_NAME)
 data class TodoCategoryEntity(
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = COLUMN_ID) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    
+    @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_TITLE) val title: String,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
 ) {

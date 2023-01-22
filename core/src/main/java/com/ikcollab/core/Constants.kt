@@ -11,5 +11,15 @@ object Constants {
     const val REPEAT_WEEKLY = "Weekly"
     const val REPEAT_MONTHLY = "Monthly"
     const val REPEAT_DO_NOT_REPEAT = "Do not repeat"
+    // Budget Category Type
+    const val BUDGET_CATEGORY_EXPENSE = "Expense"
+    const val BUDGET_CATEGORY_INCOME = "Income"
+
+
+    //Category of notes by folderName
+    var FOLDER_NAME = "FOLDER_NAME"
+    // ID ARGS
+    const val FOLDER_ID_ARG = "NOTE_ID_ARG"
+    const val GOAL_ID_ARG = "GOAL_ID_ARG"
 
 }

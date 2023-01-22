@@ -6,6 +6,8 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -33,20 +35,15 @@ fun CustomInsertFolderTextField(
     value:String,
     onValueChange:(String)->Unit,
     placeholder:String,
-    focus:MutableState<Boolean>
+    width:Float = 0.8f,
+    height:Int = 55,
+    paddingEnd:Int = 0,
+    paddingStart:Int = 15
 ) {
-    val inputService = LocalTextInputService.current
-    val scope = rememberCoroutineScope()
-    scope.launch{
-        if(focus.value){
-            inputService?.showSoftwareKeyboard()
-        }
-        else {
-            inputService?.hideSoftwareKeyboard()
-        }
-    }
     TextField(
-        modifier=Modifier.fillMaxWidth(0.6f),
+        modifier=Modifier.fillMaxWidth(width)
+            .padding(start = 15.dp, end = paddingEnd.dp)
+            .height(height = height.dp),
         value = value,
         placeholder = { Text(text = placeholder) },
         onValueChange =  onValueChange,
@@ -58,6 +55,7 @@ fun CustomInsertFolderTextField(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-        )
+        ),
+        shape = RoundedCornerShape(5.dp)
     )
 }

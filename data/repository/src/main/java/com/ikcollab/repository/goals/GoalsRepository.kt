@@ -23,7 +23,9 @@ class GoalsRepository @Inject constructor(
     suspend fun getGoalById(goalId: Int): GoalEntity? = goalDao.getGoalById(goalId)
     suspend fun getStepGoalById(stepGoalId: Int): StepGoalEntity? = stepGoalDao.getStepGoalById(stepGoalId)
     fun getStepsGoalSByGoalId(goalId: Int): Flow<List<StepGoalEntity>> = stepGoalDao.getStepsGoalByGoalId(goalId)
+    suspend fun getStepsGoalSByGoalIdList(goalId: Int): List<StepGoalEntity> = stepGoalDao.getStepsGoalByGoalIdList(goalId)
     fun getGoals(): Flow<List<GoalEntity>> = goalDao.getGoals()
     suspend fun getGoalStepsCount(goalId: Int): Int = stepGoalDao.getGoalsStepsCount(goalId)
     suspend fun getGoalCompletedStepsCount(goalId: Int): Int = stepGoalDao.getGoalsCompletedStepsCount(goalId)
+
 }
