@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun GoalDiagram(
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     pending: Int,
     completed: Int,
     totalSteps: Int,
@@ -37,13 +37,15 @@ fun GoalDiagram(
         ) {
             Box(modifier = Modifier.padding(end = 12.dp), contentAlignment = Alignment.Center) {
                 CircleProgressIndicator(
-                    dataUsage = (completed / if(totalSteps == 0) 1 else  totalSteps).toFloat()
+                    dataUsage = (completed.toFloat() / if (totalSteps.toFloat() == 0f) 1f else totalSteps.toFloat()) * 100
                 )
             }
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -59,7 +61,9 @@ fun GoalDiagram(
                     Text(text = pending.toString())
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -75,7 +79,9 @@ fun GoalDiagram(
                     Text(text = completed.toString())
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

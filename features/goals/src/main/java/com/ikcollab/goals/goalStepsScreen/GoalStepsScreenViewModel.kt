@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.goals.goal.GetGoalByIdUseCase
 import com.ikcollab.domain.usecase.goals.stepGoal.GetStepsGoalByGoalIdUseCase
+import com.ikcollab.domain.usecase.goals.stepGoal.InsertStepGoalUseCase
 import com.ikcollab.model.dto.goals.GoalDto
 import com.ikcollab.model.dto.goals.StepGoalDto
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class GoalStepsScreenViewModel @Inject constructor(
     private val getStepsGoalByGoalIdUseCase: GetStepsGoalByGoalIdUseCase,
     private val getGoalByIdUseCase: GetGoalByIdUseCase,
+    private val insertStepGoalUseCase: InsertStepGoalUseCase,
 ) :ViewModel() {
     private val _stepsGoal = mutableStateListOf<StepGoalDto>()
     val stepsGoal: List<StepGoalDto> = _stepsGoal
@@ -37,6 +39,17 @@ class GoalStepsScreenViewModel @Inject constructor(
     fun getGoalById(goalId: Int){
         viewModelScope.launch(Dispatchers.IO) {
             _goal.value = getGoalByIdUseCase(goalId)
+        }
+    }
+
+    fun markAsCompleteStepGoal(stepGoalDto: StepGoalDto, onDone:()->Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            insertStepGoalUseCase(
+                stepGoalDto.copy(
+                    isCompleted = true
+                )
+            )
+            onDone()
         }
     }
 

@@ -1,6 +1,5 @@
 package com.ikcollab.goals.goalStepsScreen
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,9 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ikcollab.components.DraggableCard.ActionsRow
-import com.ikcollab.components.DraggableCard.CardsScreenViewModel
-import com.ikcollab.components.DraggableCard.DraggableCard
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.goals.components.GoalDiagram
 import com.ikcollab.goals.components.StepGoalItem
@@ -63,7 +59,6 @@ fun GoalStepsScreen(
                     Text(text = goal.name, fontWeight = FontWeight.Bold)
                 }
                 item {
-                    // Diagram
                     GoalDiagram(
                         modifier = Modifier,
                         pending = goal.stepsCount - goal.completedStepsCount,
@@ -80,7 +75,9 @@ fun GoalStepsScreen(
                             Box() {
                                 Row(modifier = Modifier.padding(horizontal = 12.dp)) {
                                     IconButton(onClick = {
-                                        // onEdit
+                                        viewModel.markAsCompleteStepGoal(it, onDone = {
+                                            viewModel.getGoalById(goalId)
+                                        })
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.DoneAll,

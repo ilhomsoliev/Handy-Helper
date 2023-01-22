@@ -36,7 +36,7 @@ fun CircleProgressIndicator(
 ) {
 
     var dataUsageRemember by remember {
-        mutableStateOf(-1f)
+        mutableStateOf(0f)
     }
 
     val dataUsageAnimate = animateFloatAsState(
