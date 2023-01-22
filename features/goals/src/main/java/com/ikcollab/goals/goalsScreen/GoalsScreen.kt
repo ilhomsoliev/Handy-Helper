@@ -15,6 +15,7 @@ import com.ikcollab.model.dto.goals.GoalDto
 
 @Composable
 fun GoalsScreen(
+    openGoalStepsScreen:(Int)->Unit,
     viewModel: GoalsScreenViewModel = hiltViewModel()
 ) {
     val goals = viewModel.goals
@@ -31,13 +32,16 @@ fun GoalsScreen(
                 stepsCount = goal.stepsCount,
                 stepsCompletedCount = goal.completedStepsCount,
                 daysLeft = goal.dateEnd - goal.dateStart,
+                onClick = {
+                    openGoalStepsScreen(goal.id!!)
+                },
             )
         }
         item {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                text = "Swipe  left to delete Goal, right to edit"
+                text = "Swipe left to delete Goal, right to edit"
             )
         }
     }

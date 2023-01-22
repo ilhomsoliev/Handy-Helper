@@ -44,6 +44,7 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":common:components")))
     implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":core")))
     implementation(project(mapOf("path" to ":data:model")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
@@ -80,5 +81,8 @@ dependencies {
     implementation(Dependencies.accompanist.systemUiController)
     // Pretty time
     implementation(Dependencies.android.prettyTime)
+    // DataStore
     implementation(Dependencies.android.dataStore)
+    // Date/Time Picker
+    implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
 }

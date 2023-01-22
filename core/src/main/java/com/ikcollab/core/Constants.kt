@@ -20,5 +20,6 @@ object Constants {
     var FOLDER_NAME = "FOLDER_NAME"
     // ID ARGS
     const val FOLDER_ID_ARG = "NOTE_ID_ARG"
+    const val GOAL_ID_ARG = "GOAL_ID_ARG"
 
 }
