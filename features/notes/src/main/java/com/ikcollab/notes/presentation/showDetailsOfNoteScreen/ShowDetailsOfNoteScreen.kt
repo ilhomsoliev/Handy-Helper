@@ -17,7 +17,7 @@ fun ShowDetailsOfNoteScreen() {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 8.dp),
+                .padding(horizontal = 10.dp),
             text = Constants.NOTE_TITLE, fontSize = 18.sp, fontWeight = FontWeight.Bold
         )
         Row(
@@ -28,19 +28,11 @@ fun ShowDetailsOfNoteScreen() {
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
-                text = Constants.FOLDER_NAME
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
-                text = Date(Constants.NOTE_DATE_TIME).toString()
-            )
+            Text(text = Constants.FOLDER_NAME)
+            Text(text = Date(Constants.NOTE_DATE_TIME).toString())
         }
-        Text(text = Constants.NOTE_DESCRIPTION)
+        Text(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp),text = Constants.NOTE_DESCRIPTION)
     }
 }
