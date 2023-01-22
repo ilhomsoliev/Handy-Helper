@@ -3,6 +3,7 @@ package com.ikcollab.model.dto
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
 import com.ikcollab.model.dto.budget.BudgetStoryDto
 import com.ikcollab.model.dto.goals.GoalDto
+import com.ikcollab.model.dto.goals.GoalWithStepsDto
 import com.ikcollab.model.dto.goals.StepGoalDto
 import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.model.dto.note.NoteDto
@@ -53,6 +54,13 @@ fun GoalEntity.toGoalDto(stepsCount: Int, completedStepsCount: Int) = GoalDto(
     dateEnd = dateEnd,
     stepsCount = stepsCount,
     completedStepsCount = completedStepsCount,
+)
+
+fun GoalEntity.toGoalWithStepsDto(steps: List<StepGoalDto>) = GoalWithStepsDto(
+    id = id,
+    name = name,
+    dateCreated = dateCreated,
+    steps = steps,
 )
 
 fun GoalDto.toGoalEntity() = GoalEntity(

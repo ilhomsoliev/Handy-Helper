@@ -25,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ikcollab.core.Constants
 import com.ikcollab.core.Constants.FOLDER_NAME
-import com.ikcollab.goals.GoalsListScreen
+import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.goals.components.BottomSheetInsertStepGoal

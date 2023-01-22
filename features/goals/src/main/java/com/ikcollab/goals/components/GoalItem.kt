@@ -18,14 +18,14 @@ import com.ikcollab.core.toMMDDYYYY
 
 @Composable
 fun GoalItem(
-    modifier:Modifier = Modifier,
-    title:String,
-    start:Long,
-    end:Long,
-    stepsCount:Int,
-    stepsCompletedCount:Int,
+    modifier: Modifier = Modifier,
+    title: String,
+    start: Long,
+    end: Long,
+    stepsCount: Int,
+    stepsCompletedCount: Int,
     daysLeft: Long,
-    onClick:()->Unit
+    onClick: () -> Unit
 ) {
     Box(modifier = modifier
         .fillMaxWidth()
@@ -34,33 +34,51 @@ fun GoalItem(
         .clickable {
             onClick()
         }
-    ){
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)) {
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
             Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Start:")
                 Text(text = end.toMMDDYYYY())
             }
-            Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Deadline:")
                 Text(text = end.toMMDDYYYY())
             }
-            Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Steps:")
                 Text(text = "$stepsCompletedCount/$stepsCount")
             }
             ProgressIndicator(
-                progress = (stepsCompletedCount / if(stepsCount == 0) 1 else stepsCount).toFloat()
+                progress = (stepsCompletedCount.toFloat() / if (stepsCount.toFloat() == 0f) 1f else stepsCount.toFloat()).toFloat()
             )
             // Bar
-            Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Days left:")
                 Text(text = "0/0")
             }
             ProgressIndicator(
-                progress = (stepsCompletedCount / if(stepsCount == 0) 1 else stepsCount).toFloat()
+                progress = (stepsCompletedCount / if (stepsCount == 0) 1 else stepsCount).toFloat()
             )
         }
     }
