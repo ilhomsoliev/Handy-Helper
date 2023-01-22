@@ -11,6 +11,7 @@ sealed class Screens(val route: String) {
     object NotesScreen : Screens("NotesScreen")
     object FoldersNoteScreen : Screens("FoldersNoteScreen/{${Constants.FOLDER_ID_ARG}}")
     object AddNoteScreen : Screens("AddNoteScreen/{${Constants.FOLDER_ID_ARG}}")
+    object ShowDetailsOfNoteScreen : Screens("ShowDetailsOfNoteScreen/{${Constants.FOLDER_ID_ARG}}/{${Constants.NOTE_ID_ARG}}")
     object PickThemeScreen : Screens("PickThemeScreen")
     object SettingsScreen : Screens("SettingsScreen")
     object TrackerScreen : Screens("TrackerScreen")
