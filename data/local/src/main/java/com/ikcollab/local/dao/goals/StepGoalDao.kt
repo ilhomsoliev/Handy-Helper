@@ -25,6 +25,9 @@ interface StepGoalDao : BaseDao<StepGoalEntity> {
     @Query("SELECT * FROM ${StepGoalEntity.TABLE_NAME} WHERE goal_id = :goalId")
     fun getStepsGoalByGoalId(goalId: Int): Flow<List<StepGoalEntity>>
 
+    @Query("SELECT * FROM ${StepGoalEntity.TABLE_NAME} WHERE goal_id = :goalId")
+    suspend fun getStepsGoalByGoalIdList(goalId: Int): List<StepGoalEntity>
+
     @Query("SELECT COUNT(*) FROM ${StepGoalEntity.TABLE_NAME} WHERE goal_id = :goalId")
     suspend fun getGoalsStepsCount(goalId: Int): Int
 

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ikcollab.components.ModalSheetDatePicker
 import com.ikcollab.components.ModalSheetDefaultStick
 import com.ikcollab.components.ModalSheetTextField
 
@@ -39,7 +40,28 @@ fun BottomSheetInsertGoal(
             hint = "Enter a goal",
             onValueChange = onGoalValueChange
         )
-        Button(modifier = Modifier.fillMaxWidth().padding(12.dp), onClick = {
+        ModalSheetDatePicker(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            title = "Start",
+            value = "11/12/12",
+            onValueChange = {
+
+            })
+        ModalSheetDatePicker(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            title = "Deadline",
+            value = "11/12/12",
+            onValueChange = {
+
+            })
+
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp), onClick = {
             onAddClick()
         }) {
             Text(text = "Add")

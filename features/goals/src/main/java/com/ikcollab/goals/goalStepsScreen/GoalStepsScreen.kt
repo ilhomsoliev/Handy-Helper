@@ -17,10 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
+import com.ikcollab.components.draggableScaffold.components.SwipeDoneTrash
+import com.ikcollab.components.draggableScaffold.components.SwipeEdit
+import com.ikcollab.components.draggableScaffold.components.SwipeUndoneTrash
 import com.ikcollab.goals.components.GoalDiagram
 import com.ikcollab.goals.components.StepGoalItem
 
@@ -39,13 +43,13 @@ fun GoalStepsScreen(
 
     if (stepsGoal.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column() {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Break your goal down into steps",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
                 )
-                Text(text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track.")
+                Text(textAlign = TextAlign.Center,text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track.")
             }
         }
     } else {
@@ -56,7 +60,7 @@ fun GoalStepsScreen(
                     .padding(horizontal = 12.dp)
             ) {
                 item {
-                    Text(text = goal.name, fontWeight = FontWeight.Bold)
+                    Text(text = goal.name, fontWeight = FontWeight.Bold, fontSize = 28.sp)
                 }
                 item {
                     GoalDiagram(
@@ -67,49 +71,25 @@ fun GoalStepsScreen(
                     )
                 }
                 item {
-                    Text(text = "Pending")
+                    Text(modifier = Modifier.padding(vertical = 6.dp),text = "Pending:", fontWeight = FontWeight.Bold, fontSize = 21.sp)
                 }
                 items(stepsGoal.filter { !it.isCompleted }) {
                     DraggableScaffold(
                         contentUnderRight = {
-                            Box() {
-                                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
-                                    IconButton(onClick = {
-                                        viewModel.markAsCompleteStepGoal(it, onDone = {
-                                            viewModel.getGoalById(goalId)
-                                        })
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Default.DoneAll,
-                                            tint = Color.Green,
-                                            contentDescription = null
-                                        )
-                                    }
-                                    IconButton(onClick = {
-                                        // onDelete
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            tint = Color.Red,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
+                            SwipeDoneTrash(onDoneClick = {
+                                viewModel.markAsCompleteStepGoal(it, onDone = {
+                                    viewModel.getGoalById(goalId)
+                                })
+                            }, onTrashClick = {
+                                viewModel.deleteStepGoal(it, onDone = {
+                                    viewModel.getGoalById(goalId)
+                                })
+                            })
                         },
                         contentUnderLeft = {
-                            Box() {
-                                IconButton(
-                                    modifier = Modifier.padding(horizontal = 12.dp),
-                                    onClick = {
-                                        // onEdit
-                                    }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Edit,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
+                            SwipeEdit(onClick = {
+                                // TODO
+                            })
                         },
                         contentOnTop = {
                             StepGoalItem(
@@ -122,13 +102,33 @@ fun GoalStepsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    Text(text = "Completed")
+                    Text(modifier = Modifier.padding(vertical = 6.dp),text = "Completed:", fontWeight = FontWeight.Bold, fontSize = 21.sp)
                 }
                 items(stepsGoal.filter { it.isCompleted }) {
-                    StepGoalItem(
-                        isCompleted = it.isCompleted,
-                        stepGaolContent = it.name,
-                        deadline = it.dateCreated
+                    DraggableScaffold(
+                        contentUnderRight = {
+                            SwipeUndoneTrash(onUndoneClick = {
+                                viewModel.markAsNotCompleteStepGoal(it, onDone = {
+                                    viewModel.getGoalById(goalId)
+                                })
+                            }, onTrashClick = {
+                                viewModel.deleteStepGoal(it, onDone = {
+                                    viewModel.getGoalById(goalId)
+                                })
+                            })
+                        },
+                        contentUnderLeft = {
+                            SwipeEdit(onClick = {
+                                // TODO
+                            })
+                        },
+                        contentOnTop = {
+                            StepGoalItem(
+                                isCompleted = it.isCompleted,
+                                stepGaolContent = it.name,
+                                deadline = it.dateCreated
+                            )
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
