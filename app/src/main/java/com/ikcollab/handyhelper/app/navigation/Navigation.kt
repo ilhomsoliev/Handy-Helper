@@ -24,7 +24,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ikcollab.core.Constants
+import com.ikcollab.core.Constants.FOLDER_ID_ARG
 import com.ikcollab.core.Constants.FOLDER_NAME
+import com.ikcollab.core.Constants.NOTE_DATE_TIME
+import com.ikcollab.core.Constants.NOTE_DESCRIPTION
+import com.ikcollab.core.Constants.NOTE_ID_ARG
+import com.ikcollab.core.Constants.NOTE_TITLE
 import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
@@ -35,9 +40,10 @@ import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreen
 import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
+import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
 import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "NewApi")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -129,7 +135,12 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         )
                     }
                 }, navigationIcon = {
-                    if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
+                    if (currentScreen != Screens.GoalsListScreen.route &&
+                        currentScreen != Screens.AddNoteScreen.route &&
+                        currentScreen != Screens.FoldersNoteScreen.route &&
+                        currentScreen != Screens.GoalStepsScreen.route &&
+                        currentScreen != Screens.ShowDetailsOfNoteScreen.route
+                    ) {
                         IconButton(onClick = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
@@ -141,8 +152,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
-                            if (currentScreen == Screens.FoldersNoteScreen.route)
-                                Icon(Icons.Filled.Close, null)
+                            if (currentScreen == Screens.FoldersNoteScreen.route ||
+                                currentScreen == Screens.ShowDetailsOfNoteScreen.route)
+                                    Icon(Icons.Filled.Close, null)
                             else
                                 Icon(Icons.Filled.ArrowBack, null)
                         }
@@ -159,6 +171,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         Screens.GoalsListScreen.route -> {}
                         Screens.FoldersNoteScreen.route -> {}
                         Screens.AddNoteScreen.route -> {}
+                        Screens.ShowDetailsOfNoteScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
 
@@ -172,12 +185,18 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
             drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                     currentScreen != Screens.FoldersNoteScreen.route &&
                     currentScreen != Screens.AddNoteScreen.route &&
-            currentScreen != Screens.GoalStepsScreen.route,
+                    currentScreen != Screens.GoalStepsScreen.route &&
+                    currentScreen != Screens.ShowDetailsOfNoteScreen.route,
             drawerContent = {
                 DrawerContent()
             },
             bottomBar = {
-                if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
+                if (currentScreen != Screens.GoalsListScreen.route &&
+                    currentScreen != Screens.FoldersNoteScreen.route &&
+                    currentScreen != Screens.AddNoteScreen.route &&
+                    currentScreen != Screens.GoalStepsScreen.route &&
+                    currentScreen != Screens.ShowDetailsOfNoteScreen.route
+                        ) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -211,7 +230,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     })*/
                 }
             }
-        ) {
+        ) { it ->
 
             NavHost(
                 modifier = Modifier
@@ -273,7 +292,15 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                     it.toString()
                                 )
                             )
-                        })
+                        },
+                        showDetailsOnClick = {folderId:Int,noteId ->
+                            navController.navigate(
+                                Screens.ShowDetailsOfNoteScreen.route.replace("{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                    "$folderId/$noteId"
+                                )
+                            )
+                        }
+                    )
                 }
                 composable(
                     route = Screens.AddNoteScreen.route,
@@ -286,6 +313,19 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         onGoBack = {
                             navController.popBackStack()
                         })
+                }
+                composable(
+                    route = Screens.ShowDetailsOfNoteScreen.route,
+                    arguments = listOf(
+                        navArgument(FOLDER_ID_ARG){
+                        type = NavType.IntType
+                    },
+                        navArgument(NOTE_ID_ARG){
+                            type = NavType.IntType
+                        }
+                    )
+                ){
+                    ShowDetailsOfNoteScreen()
                 }
                 composable(route = Screens.PickThemeScreen.route) {
 

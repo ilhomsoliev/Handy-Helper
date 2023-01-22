@@ -49,7 +49,7 @@ fun AddNoteScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(WhiteRed)
+//            .background(WhiteRed)
     ) {
 
         Spacer(modifier = Modifier.height(12.dp))
