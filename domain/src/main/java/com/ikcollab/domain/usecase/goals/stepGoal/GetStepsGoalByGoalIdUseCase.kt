@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetStepsGoalByFolderIdUseCase @Inject constructor(
+class GetStepsGoalByGoalIdUseCase @Inject constructor(
     private val repository: GoalsRepository
 ){
     operator fun invoke(goalId:Int): Flow<List<StepGoalDto>> {

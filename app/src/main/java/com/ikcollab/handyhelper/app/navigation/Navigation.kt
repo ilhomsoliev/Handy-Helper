@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -26,6 +28,8 @@ import com.ikcollab.core.Constants.FOLDER_NAME
 import com.ikcollab.goals.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
+import com.ikcollab.goals.components.BottomSheetInsertStepGoal
+import com.ikcollab.goals.goalStepsScreen.GoalStepsScreen
 import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreen
 import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreen
 import com.ikcollab.notes.presentation.notesScreen.NotesScreen
@@ -77,11 +81,24 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     Screens.GoalsScreen.route -> {
                         BottomSheetInsertGoal(
                             goalValue = viewModel.newGoalName.value,
-                            onGoalValueChange = viewModel::changeNewGoalName,
+                            onGoalValueChange = viewModel::setNewGoalName,
                             start = viewModel.newGoalStartDate.value,
                             deadline = viewModel.newGoalEndDate.value,
                             onAddClick = {
-                                viewModel.addGoalToDatabase(onDone = {
+                                viewModel.insertGoalToDatabase(onDone = {
+                                    coroutineScope.launch { modalSheetState.hide() }
+                                })
+                            }
+                        )
+                    }
+                    Screens.GoalStepsScreen.route -> {
+                        BottomSheetInsertStepGoal(
+                            stepGoalValue = viewModel.newStepGoalName.value,
+                            onStepGoalValueChange = viewModel::setNewStepGoalName,
+                            deadline = viewModel.newStepGoalDeadline.value,
+                            onDeadlineChange = viewModel::setNewStepGoalDeadline,
+                            onAddClick = {
+                                viewModel.insertStepGoalToDatabase(onDone = {
                                     coroutineScope.launch { modalSheetState.hide() }
                                 })
                             }
@@ -112,7 +129,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         )
                     }
                 }, navigationIcon = {
-                    if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.FoldersNoteScreen.route) {
+                    if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
                         IconButton(onClick = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
@@ -154,12 +171,13 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
             },
             drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                     currentScreen != Screens.FoldersNoteScreen.route &&
-                    currentScreen != Screens.AddNoteScreen.route,
+                    currentScreen != Screens.AddNoteScreen.route &&
+            currentScreen != Screens.GoalStepsScreen.route,
             drawerContent = {
                 DrawerContent()
             },
             bottomBar = {
-                if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.AddNoteScreen.route) {
+                if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -183,6 +201,11 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         },
                     )
+                    Screens.GoalStepsScreen.route -> CustomFloatingActionButton(onInsert = {
+                        coroutineScope.launch {
+                            modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
+                    })
                     /*Screens.FoldersNoteScreen.route -> CustomFloatingActionButton(onInsert = {
                         navController.navigate(Screens.AddNoteScreen.route)
                     })*/
@@ -192,8 +215,8 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
 
             NavHost(
                 modifier = Modifier
-                    .padding(it),
-//                    .background(Color(0xFF34568B)),
+                    .padding(it)
+                    .background(Color(0xFF34568B)),
                 navController = navController,
                 startDestination = Screens.GoalsScreen.route
             ) {
@@ -204,7 +227,23 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
 
                 }
                 composable(route = Screens.GoalsScreen.route) {
-                    GoalsScreen()
+                    GoalsScreen(openGoalStepsScreen = {
+                        navController.navigate(
+                            Screens.GoalStepsScreen.route.replace(
+                                "{${Constants.GOAL_ID_ARG}}",
+                                it.toString(),
+                            )
+                        )
+                    })
+                }
+                composable(
+                    route = Screens.GoalStepsScreen.route,
+                    arguments = listOf(navArgument(Constants.GOAL_ID_ARG) {
+                        type = NavType.IntType
+                    })
+                ) {
+                    viewModel.setNewStepGoalId(it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
+                    GoalStepsScreen(goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
                 }
                 composable(route = Screens.GoalsListScreen.route) {
                     GoalsListScreen()
@@ -219,7 +258,8 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         )
                     })
                 }
-                composable(route = Screens.FoldersNoteScreen.route,
+                composable(
+                    route = Screens.FoldersNoteScreen.route,
                     arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
                         type = NavType.IntType
                     })
@@ -235,7 +275,8 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             )
                         })
                 }
-                composable(route = Screens.AddNoteScreen.route,
+                composable(
+                    route = Screens.AddNoteScreen.route,
                     arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
                         type = NavType.IntType
                     })
