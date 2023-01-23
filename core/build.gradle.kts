@@ -41,4 +41,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Compose
+    implementation(Dependencies.compose.icons)
+    implementation(Dependencies.compose.material)
+    implementation(Dependencies.compose.activity)
+    implementation(Dependencies.compose.navigation)
+    implementation(Dependencies.compose.viewModel)
+    implementation(Dependencies.compose.constraintLayout)
+    implementation(Dependencies.compose.uiToolingPreview)
 }
