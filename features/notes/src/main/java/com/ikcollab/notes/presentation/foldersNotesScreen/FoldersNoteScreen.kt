@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +46,7 @@ fun FoldersNoteScreen(
 
     val notes by viewModel.stateNotesByFolderId
 
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(key1 = false, block = {
         viewModel.getNotesByFolderId(folderId = folderId)
     })
@@ -82,11 +85,13 @@ fun FoldersNoteScreen(
                             description = note.description,
                             dateTime = Date(note.dateCreated).toString(),
                             showDetailsOnClick = {
-                                note.id?.let {
-                                    showDetailsOnClick(folderId, it)
-                                    Constants.NOTE_TITLE = note.title
-                                    Constants.NOTE_DESCRIPTION = note.description
-                                    Constants.NOTE_DATE_TIME = note.dateCreated
+                                coroutineScope.launch {
+                                    note.id?.let {
+                                        showDetailsOnClick(folderId, it)
+                                        Constants.NOTE_TITLE = note.title
+                                        Constants.NOTE_DESCRIPTION = note.description
+                                        Constants.NOTE_DATE_TIME = note.dateCreated
+                                    }
                                 }
                             }
                         )

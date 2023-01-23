@@ -28,7 +28,7 @@ fun ShowDetailsOfNoteScreen() {
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            Text(text = Constants.FOLDER_NAME)
+            Text(text = Constants.FOLDER_NAME.value)
             Text(text = Date(Constants.NOTE_DATE_TIME).toString())
         }
         Text(modifier = Modifier

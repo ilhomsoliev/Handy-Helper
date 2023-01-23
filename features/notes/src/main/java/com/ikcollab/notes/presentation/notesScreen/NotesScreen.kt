@@ -49,13 +49,15 @@ fun NotesScreen(
                 DraggableScaffold(
                     contentUnderRight = {
                         SwipeTrash (onTrashClick = {
-                            folder.id?.let {
-                                viewModel.deleteFolder(
-                                    it,
-                                    folder.name,
-                                    dateCreated = folder.dateCreated
-                                )
-                                Log.e("Delete", "Success")
+                            coroutineScope.launch {
+                                folder.id?.let {
+                                    viewModel.deleteFolder(
+                                        it,
+                                        folder.name,
+                                        dateCreated = folder.dateCreated
+                                    )
+                                    Log.e("Delete", "Success")
+                                }
                             }
                         })
                     },
@@ -69,7 +71,7 @@ fun NotesScreen(
                             onClick = {
                                 coroutineScope.launch {
                                     openFolderDetails(folder.id!!)
-                                    Constants.FOLDER_NAME = folder.name
+                                    Constants.FOLDER_NAME.value = folder.name
                                 }
                             },
                             icon = Icons.Default.Folder,
