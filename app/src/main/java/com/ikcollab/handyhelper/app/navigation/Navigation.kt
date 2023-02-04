@@ -179,6 +179,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         Screens.GoalsListScreen.route -> {}
                         Screens.AddNoteScreen.route -> {}
                         Screens.ShowDetailsOfNoteScreen.route -> {}
+                        Screens.GoalStepsScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
                                 coroutineScope.launch {
