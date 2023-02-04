@@ -1,5 +1,7 @@
 package com.ikcollab.core
 
+import androidx.compose.runtime.mutableStateOf
+
 object Constants {
     // TO-DO List Priorities
     const val TO_DO_LIST_PRIORITY_IMPORTANT = "Important"
@@ -17,9 +19,15 @@ object Constants {
 
 
     //Category of notes by folderName
-    var FOLDER_NAME = "FOLDER_NAME"
+    var FOLDER_NAME = mutableStateOf("FOLDER_NAME")
+    //Note Details
+    var NOTE_TITLE = "NOTE_TITLE"
+    var NOTE_DESCRIPTION = "NOTE_DESCRIPTION"
+    var NOTE_DATE_TIME:Long = 0
+
     // ID ARGS
-    const val FOLDER_ID_ARG = "NOTE_ID_ARG"
+    const val FOLDER_ID_ARG = "FOLDER_ID_ARG"
+    const val NOTE_ID_ARG = "NOTE_ID_ARG"
     const val GOAL_ID_ARG = "GOAL_ID_ARG"
 
 }

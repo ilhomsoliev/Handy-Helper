@@ -24,7 +24,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ikcollab.core.Constants
+import com.ikcollab.core.Constants.FOLDER_ID_ARG
 import com.ikcollab.core.Constants.FOLDER_NAME
+import com.ikcollab.core.Constants.NOTE_DATE_TIME
+import com.ikcollab.core.Constants.NOTE_DESCRIPTION
+import com.ikcollab.core.Constants.NOTE_ID_ARG
+import com.ikcollab.core.Constants.NOTE_TITLE
 import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
@@ -35,9 +40,11 @@ import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreen
 import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
+import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
+import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
 import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "NewApi")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -68,10 +75,12 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 viewModel.setFolderName(it)
                             },
                             onClick = {
-                                if (stateFolderName.value != "") {
-                                    viewModel.insertFolder(
-                                        stateFolderName.value
-                                    )
+                                coroutineScope.launch {
+                                    if (stateFolderName.value != "") {
+                                        viewModel.insertFolder(
+                                            stateFolderName.value
+                                        )
+                                    }
                                 }
                             },
                             placeholder = "Name of Folder...",
@@ -122,14 +131,20 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 Screens.TrackerScreen.route -> "Habit Tracker"
                                 Screens.NotesScreen.route -> "Notes"
                                 Screens.BudgetScreen.route -> "Budget"
-                                Screens.FoldersNoteScreen.route -> FOLDER_NAME
+                                Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
                                 Screens.AddNoteScreen.route -> "Add note"
                                 else -> ""
                             }
                         )
                     }
                 }, navigationIcon = {
-                    if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
+                    if (currentScreen != Screens.GoalsListScreen.route &&
+                        currentScreen != Screens.AddNoteScreen.route &&
+                        currentScreen != Screens.FoldersNoteScreen.route &&
+                        currentScreen != Screens.GoalStepsScreen.route &&
+                        currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                        currentScreen !=  Screens.SearchNotesScreen.route
+                    ) {
                         IconButton(onClick = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
@@ -139,10 +154,13 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         }
                     } else {
                         IconButton(onClick = {
-                            navController.popBackStack()
+                            coroutineScope.launch {
+                                navController.popBackStack()
+                            }
                         }) {
-                            if (currentScreen == Screens.FoldersNoteScreen.route)
-                                Icon(Icons.Filled.Close, null)
+                            if (currentScreen == Screens.FoldersNoteScreen.route ||
+                                currentScreen == Screens.ShowDetailsOfNoteScreen.route)
+                                    Icon(Icons.Filled.Close, null)
                             else
                                 Icon(Icons.Filled.ArrowBack, null)
                         }
@@ -151,17 +169,22 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     when (currentScreen) {
                         Screens.GoalsScreen.route -> {
                             IconButton(onClick = {
-                                navController.navigate(Screens.GoalsListScreen.route)
+                                coroutineScope.launch {
+                                    navController.navigate(Screens.GoalsListScreen.route)
+                                }
                             }) {
                                 Icon(Icons.Filled.ListAlt, null)
                             }
                         }
                         Screens.GoalsListScreen.route -> {}
-                        Screens.FoldersNoteScreen.route -> {}
                         Screens.AddNoteScreen.route -> {}
+                        Screens.ShowDetailsOfNoteScreen.route -> {}
+                        Screens.GoalStepsScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
-
+                                coroutineScope.launch {
+                                    navController.navigate(Screens.SearchNotesScreen.route)
+                                }
                             }) {
                                 Icon(Icons.Filled.Search, null)
                             }
@@ -172,12 +195,20 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
             drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                     currentScreen != Screens.FoldersNoteScreen.route &&
                     currentScreen != Screens.AddNoteScreen.route &&
-            currentScreen != Screens.GoalStepsScreen.route,
+                    currentScreen != Screens.GoalStepsScreen.route &&
+                    currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                    currentScreen != Screens.SearchNotesScreen.route,
             drawerContent = {
                 DrawerContent()
             },
             bottomBar = {
-                if (currentScreen != Screens.GoalsListScreen.route && currentScreen != Screens.FoldersNoteScreen.route && currentScreen != Screens.AddNoteScreen.route && currentScreen != Screens.GoalStepsScreen.route) {
+                if (currentScreen != Screens.GoalsListScreen.route &&
+                    currentScreen != Screens.FoldersNoteScreen.route &&
+                    currentScreen != Screens.AddNoteScreen.route &&
+                    currentScreen != Screens.GoalStepsScreen.route &&
+                    currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                    currentScreen != Screens.SearchNotesScreen.route
+                        ) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -211,7 +242,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     })*/
                 }
             }
-        ) {
+        ) { it ->
 
             NavHost(
                 modifier = Modifier
@@ -228,12 +259,14 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.GoalsScreen.route) {
                     GoalsScreen(openGoalStepsScreen = {
-                        navController.navigate(
-                            Screens.GoalStepsScreen.route.replace(
-                                "{${Constants.GOAL_ID_ARG}}",
-                                it.toString(),
+                        coroutineScope.launch {
+                            navController.navigate(
+                                Screens.GoalStepsScreen.route.replace(
+                                    "{${Constants.GOAL_ID_ARG}}",
+                                    it.toString(),
+                                )
                             )
-                        )
+                        }
                     })
                 }
                 composable(
@@ -242,7 +275,11 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         type = NavType.IntType
                     })
                 ) {
-                    viewModel.setNewStepGoalId(it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
+                    coroutineScope.launch {
+                        viewModel.setNewStepGoalId(
+                            it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
+                        )
+                    }
                     GoalStepsScreen(goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
                 }
                 composable(route = Screens.GoalsListScreen.route) {
@@ -250,12 +287,14 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.NotesScreen.route) {
                     NotesScreen(openFolderDetails = {
-                        navController.navigate(
-                            Screens.FoldersNoteScreen.route.replace(
-                                "{${Constants.FOLDER_ID_ARG}}",
-                                it.toString(),
+                        coroutineScope.launch {
+                            navController.navigate(
+                                Screens.FoldersNoteScreen.route.replace(
+                                    "{${Constants.FOLDER_ID_ARG}}",
+                                    it.toString(),
+                                )
                             )
-                        )
+                        }
                     })
                 }
                 composable(
@@ -267,13 +306,26 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     FoldersNoteScreen(
                         folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
                         openAddNoteScreen = {
-                            navController.navigate(
-                                Screens.AddNoteScreen.route.replace(
-                                    "{${Constants.FOLDER_ID_ARG}}",
-                                    it.toString()
+                            coroutineScope.launch {
+                                navController.navigate(
+                                    Screens.AddNoteScreen.route.replace(
+                                        "{${Constants.FOLDER_ID_ARG}}",
+                                        it.toString()
+                                    )
                                 )
-                            )
-                        })
+                            }
+                        },
+                        showDetailsOnClick = {folderId:Int,noteId ->
+                            coroutineScope.launch {
+                                navController.navigate(
+                                    Screens.ShowDetailsOfNoteScreen.route.replace(
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "$folderId/$noteId"
+                                    )
+                                )
+                            }
+                        }
+                    )
                 }
                 composable(
                     route = Screens.AddNoteScreen.route,
@@ -284,8 +336,39 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     AddNoteScreen(
                         folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
                         onGoBack = {
-                            navController.popBackStack()
+                            coroutineScope.launch {
+                                navController.popBackStack()
+                            }
                         })
+                }
+                composable(
+                    route = Screens.ShowDetailsOfNoteScreen.route,
+                    arguments = listOf(
+                        navArgument(FOLDER_ID_ARG){
+                        type = NavType.IntType
+                    },
+                        navArgument(NOTE_ID_ARG){
+                            type = NavType.IntType
+                        }
+                    )
+                ){
+                    ShowDetailsOfNoteScreen()
+                }
+                composable(
+                    route = Screens.SearchNotesScreen.route
+                ) {
+                    SearchNotesScreen(
+                        showDetailsOnClick = { folderId:Int,noteId ->
+                            coroutineScope.launch {
+                                navController.navigate(
+                                    Screens.ShowDetailsOfNoteScreen.route.replace(
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "$folderId/$noteId"
+                                    )
+                                )
+                            }
+                        }
+                    )
                 }
                 composable(route = Screens.PickThemeScreen.route) {
 

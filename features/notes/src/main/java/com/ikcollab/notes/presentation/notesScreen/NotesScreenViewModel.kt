@@ -26,8 +26,7 @@ class NotesScreenViewModel @Inject constructor(
 ):ViewModel() {
 
 
-    private val _stateSearchNotes = mutableStateOf("")
-    val stateSearchNotes = _stateSearchNotes
+
 
     private val _stateNumberCategoriesNote = mutableStateOf(0)
     val stateNumberCategoriesNote = _stateNumberCategoriesNote
@@ -50,9 +49,6 @@ class NotesScreenViewModel @Inject constructor(
         getFolders()
     }
 
-    fun changeSearchNotes(search:String){
-        _stateSearchNotes.value = search
-    }
 
 
     fun updateNumberCategoriesNote(number:Int){

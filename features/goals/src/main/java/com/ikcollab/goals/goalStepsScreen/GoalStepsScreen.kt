@@ -49,7 +49,10 @@ fun GoalStepsScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
                 )
-                Text(textAlign = TextAlign.Center,text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track.")
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track."
+                )
             }
         }
     } else {
@@ -71,7 +74,12 @@ fun GoalStepsScreen(
                     )
                 }
                 item {
-                    Text(modifier = Modifier.padding(vertical = 6.dp),text = "Pending:", fontWeight = FontWeight.Bold, fontSize = 21.sp)
+                    Text(
+                        modifier = Modifier.padding(vertical = 6.dp),
+                        text = "Pending:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 21.sp
+                    )
                 }
                 items(stepsGoal.filter { !it.isCompleted }) {
                     DraggableScaffold(
@@ -102,7 +110,12 @@ fun GoalStepsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    Text(modifier = Modifier.padding(vertical = 6.dp),text = "Completed:", fontWeight = FontWeight.Bold, fontSize = 21.sp)
+                    Text(
+                        modifier = Modifier.padding(vertical = 6.dp),
+                        text = "Completed:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 21.sp
+                    )
                 }
                 items(stepsGoal.filter { it.isCompleted }) {
                     DraggableScaffold(

@@ -1,6 +1,7 @@
 package com.ikcollab.notes.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -13,18 +14,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ikcollab.core.Constants.FOLDER_NAME
 
 @Composable
 fun CustomNotesItem(
     title:String,
     description:String,
-    dateTime:String
+    dateTime:String,
+    showDetailsOnClick:()->Unit
 ) {
     Box(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 15.dp)
+        .padding(horizontal = 12.dp)
         .clip(RoundedCornerShape(15.dp))
         .background(Color.White)
+        .clickable {
+            showDetailsOnClick()
+        }
     ){
         Column(modifier=Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)) {
             Row(modifier = Modifier
