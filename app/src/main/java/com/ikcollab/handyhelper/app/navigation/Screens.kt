@@ -16,4 +16,6 @@ sealed class Screens(val route: String) {
     object PickThemeScreen : Screens("PickThemeScreen")
     object SettingsScreen : Screens("SettingsScreen")
     object TrackerScreen : Screens("TrackerScreen")
+    object TodoListScreen : Screens("TodoListScreen")
+    object TodoCategoryScreen : Screens("TodoCategoryScreen")
 }

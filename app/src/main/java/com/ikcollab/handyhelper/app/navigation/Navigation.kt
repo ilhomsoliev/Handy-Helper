@@ -42,6 +42,12 @@ import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
 import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryEvent
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreen
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreenViewModel
+import com.ikcollab.todolist.todoListScreen.TodoListEvent
+import com.ikcollab.todolist.todoListScreen.TodoListScreen
+import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "NewApi")
@@ -58,6 +64,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateFolderName = viewModel.stateFolderName
+    val stateTodoCategoryName = viewModel.stateFolderName
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
@@ -113,6 +120,25 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         )
                     }
+                    Screens.TodoCategoryScreen.route -> {
+                        CustomInsertFolderItem(
+                            value = stateTodoCategoryName.value,
+                            onValueChange = {
+                                viewModel.setTodoCategoryName(it)
+                            },
+                            onClick = {
+                                coroutineScope.launch {
+                                    if (stateTodoCategoryName.value != "") {
+                                        viewModel.insertTodoCategory(
+                                            stateFolderName.value
+                                        )
+                                    }
+                                }
+                            },
+                            placeholder = "Name of Category...",
+                            modifier = Modifier.padding(bottom = 150.dp)
+                        )
+                    }
                 }
             }
         },
@@ -143,7 +169,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         currentScreen != Screens.FoldersNoteScreen.route &&
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                        currentScreen !=  Screens.SearchNotesScreen.route
+                        currentScreen != Screens.SearchNotesScreen.route
                     ) {
                         IconButton(onClick = {
                             coroutineScope.launch {
@@ -159,8 +185,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         }) {
                             if (currentScreen == Screens.FoldersNoteScreen.route ||
-                                currentScreen == Screens.ShowDetailsOfNoteScreen.route)
-                                    Icon(Icons.Filled.Close, null)
+                                currentScreen == Screens.ShowDetailsOfNoteScreen.route
+                            )
+                                Icon(Icons.Filled.Close, null)
                             else
                                 Icon(Icons.Filled.ArrowBack, null)
                         }
@@ -180,6 +207,15 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         Screens.AddNoteScreen.route -> {}
                         Screens.ShowDetailsOfNoteScreen.route -> {}
                         Screens.GoalStepsScreen.route -> {}
+                        Screens.TodoListScreen.route -> {
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    navController.navigate(Screens.TodoCategoryScreen.route)
+                                }
+                            }) {
+                                Icon(Icons.Filled.ListAlt, null)
+                            }
+                        }
                         else -> {
                             IconButton(onClick = {
                                 coroutineScope.launch {
@@ -197,6 +233,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     currentScreen != Screens.AddNoteScreen.route &&
                     currentScreen != Screens.GoalStepsScreen.route &&
                     currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                    currentScreen != Screens.TodoCategoryScreen.route &&
                     currentScreen != Screens.SearchNotesScreen.route,
             drawerContent = {
                 DrawerContent()
@@ -207,8 +244,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     currentScreen != Screens.AddNoteScreen.route &&
                     currentScreen != Screens.GoalStepsScreen.route &&
                     currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                    currentScreen != Screens.SearchNotesScreen.route
-                        ) {
+                    currentScreen != Screens.SearchNotesScreen.route &&
+                    currentScreen != Screens.TodoCategoryScreen.route
+                ) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -290,7 +328,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         coroutineScope.launch {
                             navController.navigate(
                                 Screens.FoldersNoteScreen.route.replace(
-                                    "{${Constants.FOLDER_ID_ARG}}",
+                                    "{${FOLDER_ID_ARG}}",
                                     it.toString(),
                                 )
                             )
@@ -315,7 +353,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 )
                             }
                         },
-                        showDetailsOnClick = {folderId:Int,noteId ->
+                        showDetailsOnClick = { folderId: Int, noteId ->
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.ShowDetailsOfNoteScreen.route.replace(
@@ -344,21 +382,21 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 composable(
                     route = Screens.ShowDetailsOfNoteScreen.route,
                     arguments = listOf(
-                        navArgument(FOLDER_ID_ARG){
-                        type = NavType.IntType
-                    },
-                        navArgument(NOTE_ID_ARG){
+                        navArgument(FOLDER_ID_ARG) {
+                            type = NavType.IntType
+                        },
+                        navArgument(NOTE_ID_ARG) {
                             type = NavType.IntType
                         }
                     )
-                ){
+                ) {
                     ShowDetailsOfNoteScreen()
                 }
                 composable(
                     route = Screens.SearchNotesScreen.route
                 ) {
                     SearchNotesScreen(
-                        showDetailsOnClick = { folderId:Int,noteId ->
+                        showDetailsOnClick = { folderId: Int, noteId ->
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.ShowDetailsOfNoteScreen.route.replace(
@@ -378,6 +416,38 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.TrackerScreen.route) {
 
+                }
+                composable(route = Screens.TodoListScreen.route) {
+                    val viewModel = hiltViewModel<TodoListScreenViewModel>()
+                    val state by viewModel.state.collectAsState()
+                    TodoListScreen(state, onEvent = { event ->
+                        when (event) {
+                            is TodoListEvent.OpenBottomSheet -> {
+
+                            }
+                            is TodoListEvent.OpenCategoryScreen -> {
+
+                            }
+                            else -> viewModel.onEvent(event)
+                        }
+                    })
+                }
+                composable(route = Screens.TodoCategoryScreen.route) {
+                    val viewModel = hiltViewModel<TodoCategoryScreenViewModel>()
+                    val state by viewModel.state.collectAsState()
+                    TodoCategoryScreen(
+                        state,
+                        onEvent = { event ->
+                            when (event) {
+                                is TodoCategoryEvent.OpenBottomSheet -> {
+                                    coroutineScope.launch {
+                                        modalSheetState.show()
+                                    }
+                                }
+                                else -> viewModel.onEvent(event)
+                            }
+                        }
+                    )
                 }
             }
         }
