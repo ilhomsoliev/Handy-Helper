@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.goals.goal.InsertGoalUseCase
 import com.ikcollab.domain.usecase.goals.stepGoal.InsertStepGoalUseCase
 import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
+import com.ikcollab.domain.usecase.todo_list.todoCategory.InsertTodoCategoryUseCase
 import com.ikcollab.model.dto.goals.GoalDto
 import com.ikcollab.model.dto.goals.StepGoalDto
 import com.ikcollab.model.dto.note.FolderDto
+import com.ikcollab.model.dto.todo_list.TodoCategoryDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -22,9 +24,13 @@ class NavigationViewModel @Inject constructor(
     private val insertGoalUseCase: InsertGoalUseCase,
     private val insertFolderUseCase: InsertFolderUseCase,
     private val insertStepGoalUseCase: InsertStepGoalUseCase,
+    private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
 ) : ViewModel() {
     private val _stateFolderName = mutableStateOf("")
     val stateFolderName = _stateFolderName
+
+    private val _stateTodoCategoryName = mutableStateOf("")
+    val stateTodoCategoryName = _stateTodoCategoryName
 
     // ------------------------------------------
     private val _newGoalName = mutableStateOf("")
@@ -45,7 +51,9 @@ class NavigationViewModel @Inject constructor(
     val newStepGoalName: State<String> = _newStepGoalName
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val _newStepGoalDeadline = mutableStateOf(LocalDate.ofEpochDay(LocalDate.now().toEpochDay()).toEpochDay())
+    private val _newStepGoalDeadline =
+        mutableStateOf(LocalDate.ofEpochDay(LocalDate.now().toEpochDay()).toEpochDay())
+
     @RequiresApi(Build.VERSION_CODES.O)
     val newStepGoalDeadline: State<Long> = _newStepGoalDeadline
 
@@ -62,6 +70,10 @@ class NavigationViewModel @Inject constructor(
     }
 
     fun setFolderName(folder: String) {
+        _stateFolderName.value = folder
+    }
+
+    fun setTodoCategoryName(folder: String) {
         _stateFolderName.value = folder
     }
 
@@ -84,6 +96,23 @@ class NavigationViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             insertFolderUseCase(FolderDto(name = name, dateCreated = dateCreated, id = null))
+        }
+        _stateFolderName.value = ""
+    }
+
+    fun insertTodoCategory(
+        name: String,
+        dateCreated: Long = System.currentTimeMillis()
+    ) {
+        viewModelScope.launch {
+            insertTodoCategoryUseCase(
+                TodoCategoryDto(
+                    title = name,
+                    dateCreated = dateCreated,
+                    id = null,
+                    todosCount = 0
+                )
+            )
         }
         _stateFolderName.value = ""
     }

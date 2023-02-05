@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/goals" />
             <option value="$PROJECT_DIR$/features/notes" />
+            <option value="$PROJECT_DIR$/features/todoList" />
           </set>
         </option>
       </GradleProjectSettings>

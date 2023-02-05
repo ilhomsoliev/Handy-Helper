@@ -22,5 +22,5 @@ interface TodoDao : BaseDao<TodoEntity> {
     suspend fun deleteTodoById(todoId: Int)
 
     @Query("SELECT COUNT(*) FROM ${TodoEntity.TABLE_NAME} WHERE category_id = :categoryId")
-    fun getCategoryTodosCount(categoryId: Int):Int
+    suspend fun getCategoryTodosCount(categoryId: Int):Int
 }
