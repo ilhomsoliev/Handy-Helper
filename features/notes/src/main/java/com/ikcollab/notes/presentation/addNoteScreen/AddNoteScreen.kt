@@ -26,9 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ikcollab.components.DatePickerLabel
 import com.ikcollab.notes.presentation.components.CustomInsertFolderTextField
+import com.ikcollab.notes.presentation.components.DatePicker
 import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
 import com.ikcollab.notes.presentation.theme.WhiteRed
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -44,6 +47,10 @@ fun AddNoteScreen(
     var stateTitleNotNull by remember {
         mutableStateOf(false)
     }
+    val stateNoteDate = viewModel.stateNoteDate
+
+    val calendarState = rememberSheetState()
+
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -72,6 +79,14 @@ fun AddNoteScreen(
             paddingEnd = 15
         )
 
+        Spacer(modifier = Modifier.height(25.dp))
+
+        DatePickerLabel(date = stateNoteDate.value) {
+            calendarState.show()
+        }
+        DatePicker(calendarState){
+            viewModel.updateNoteDate(it.toString())
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
