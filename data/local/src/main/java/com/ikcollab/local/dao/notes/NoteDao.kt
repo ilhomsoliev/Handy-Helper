@@ -23,4 +23,6 @@ interface NoteDao : BaseDao<NoteEntity> {
     @Query("SELECT * FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
     fun getNotesByFolderId(folderId: Int): Flow<List<NoteEntity>>
 
+    @Query("SELECT COUNT(*) FROM ${NoteEntity.TABLE_NAME} WHERE ${NoteEntity.COLUMN_FOLDER_ID} = :folderId")
+    suspend fun countNotesOfFolder(folderId: Int): Int
 }
