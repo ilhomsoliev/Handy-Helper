@@ -81,10 +81,18 @@ fun AddNoteScreen(
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        DatePickerLabel(date = stateNoteDate.value) {
-            calendarState.show()
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(modifier = Modifier.padding(start = 16.dp),text = "Выберите дату",color = Color.Gray)
+            DatePickerLabel(date = stateNoteDate.value) {
+                calendarState.show()
+            }
         }
-        DatePicker(calendarState){
+
+        DatePicker(calendarState) {
             viewModel.updateNoteDate(it.toString())
         }
         Box(
@@ -103,7 +111,6 @@ fun AddNoteScreen(
             }
         }
     }
-
     AnimatedVisibility(
         visible = stateTitleNotNull,
         enter = slideInVertically(
@@ -122,7 +129,12 @@ fun AddNoteScreen(
                 .background(Color(0xFFF87E77))
         ) {
             Spacer(modifier = Modifier.height(15.dp))
-            Text(text = "Required field", fontSize = 18.sp, color = Color.Red, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Required field",
+                fontSize = 18.sp,
+                color = Color.Red,
+                fontWeight = FontWeight.Bold
+            )
             Text(text = "Title can't be empty", color = Color.Red)
             Spacer(modifier = Modifier.height(15.dp))
         }

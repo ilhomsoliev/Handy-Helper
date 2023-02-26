@@ -1,5 +1,6 @@
 package com.ikcollab.notes.presentation.addNoteScreen
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.ikcollab.model.dto.note.NoteDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +20,8 @@ class AddNoteScreenViewModel @Inject constructor(
     private val _stateNoteTitle = mutableStateOf("")
     val stateNoteTitle = _stateNoteTitle
 
-    private val _stateNoteDate = mutableStateOf("")
+    @SuppressLint("NewApi")
+    private val _stateNoteDate = mutableStateOf("${LocalDate.now().year}-${if(LocalDate.now().monthValue<=9) "0" else ""}${LocalDate.now().monthValue}-${if(LocalDate.now().dayOfMonth<=9) "0" else ""}${LocalDate.now().dayOfMonth}")
     val stateNoteDate = _stateNoteDate
 
     private val _stateNoteDescription = mutableStateOf("")
