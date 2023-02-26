@@ -22,7 +22,9 @@ import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
+import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreenViewModel
 import com.ikcollab.notes.presentation.theme.WhiteRed
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,29 +32,38 @@ fun NotesScreen(
    openFolderDetails:(Int)->Unit,
    viewModel: NotesScreenViewModel = hiltViewModel()
 ) {
-    val stateNumberCategoriesNote by remember {
-        viewModel.stateNumberCategoriesNote
-    }
+    val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
+
     val coroutineScope = rememberCoroutineScope()
 
-    val stateFolder = viewModel.stateFolder.value.folders
+    val stateFolder = remember { viewModel.stateFolder }
+
+    LaunchedEffect(key1 = true){
+        stateFolder.value.folders.forEach { folder ->
+            folder.id?.let {
+                foldersNoteScreenViewModel.getNotesByFolderId(folderId = it)
+            }
+        }
+        delay(100)
+        viewModel.countNotesOfFolder()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(WhiteRed)
     ) {
         LazyColumn(
             modifier = Modifier
                 .padding(top = 10.dp)
         ) {
-            items(stateFolder) { folder ->
+            items(stateFolder.value.folders) { folder ->
                 DraggableScaffold(
                     contentUnderRight = {
-                        SwipeTrash (onTrashClick = {
+                        SwipeTrash(onTrashClick = {
                             coroutineScope.launch {
-                                folder.id?.let {
+                                folder.id?.let { id ->
                                     viewModel.deleteFolder(
-                                        it,
+                                        id,
                                         folder.name,
                                         dateCreated = folder.dateCreated
                                     )
@@ -76,7 +87,7 @@ fun NotesScreen(
                             },
                             icon = Icons.Default.Folder,
                             title = folder.name,
-                            number = stateNumberCategoriesNote
+                            number = folder.countOfNotes
                         )
                     }
                 )
