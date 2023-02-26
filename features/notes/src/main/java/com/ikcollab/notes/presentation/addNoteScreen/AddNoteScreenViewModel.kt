@@ -7,6 +7,7 @@ import com.ikcollab.domain.usecase.notes.note.InsertNoteUseCase
 import com.ikcollab.model.dto.note.NoteDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +17,15 @@ class AddNoteScreenViewModel @Inject constructor(
     private val _stateNoteTitle = mutableStateOf("")
     val stateNoteTitle = _stateNoteTitle
 
+    private val _stateNoteDate = mutableStateOf("")
+    val stateNoteDate = _stateNoteDate
+
     private val _stateNoteDescription = mutableStateOf("")
     val stateNoteDescription = _stateNoteDescription
+
+    fun updateNoteDate(date:String){
+        _stateNoteDate.value = date
+    }
 
     fun updateNoteTitle(title:String){
         _stateNoteTitle.value = title
@@ -38,7 +46,7 @@ class AddNoteScreenViewModel @Inject constructor(
                     id = null,
                     title =  _stateNoteTitle.value,
                     description = _stateNoteDescription.value,
-                    dateCreated = System.currentTimeMillis(),
+                    dateCreated = if(_stateNoteDate.value=="") System.currentTimeMillis() else SimpleDateFormat("yyyy-MM-dd").parse(_stateNoteDate.value).time,
                     folderId = folderId
                 )
             )

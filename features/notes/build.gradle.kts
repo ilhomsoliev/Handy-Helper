@@ -85,4 +85,7 @@ dependencies {
     // Pretty time
     implementation(Dependencies.android.prettyTime)
     implementation(Dependencies.android.dataStore)
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
 }
