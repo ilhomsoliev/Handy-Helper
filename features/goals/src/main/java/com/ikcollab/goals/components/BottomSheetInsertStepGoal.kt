@@ -6,11 +6,17 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.ikcollab.components.DatePickerLabel
 import com.ikcollab.components.ModalSheetDefaultStick
 import com.ikcollab.components.ModalSheetTextField
@@ -27,14 +33,25 @@ fun BottomSheetInsertStepGoal(
     stepGoalValue: String,
     onStepGoalValueChange: (String) -> Unit,
     deadline: Long,
-    onDeadlineChange:(Long)->Unit,
+    onDeadlineChange: (Long) -> Unit,
     onAddClick: () -> Unit
 ) {
     val dateDialogState = rememberMaterialDialogState()
+    val focusManager = LocalFocusManager.current
+    val requester = FocusRequester()
+    var isKeyboardActive by remember {
+        mutableStateOf(false)
+    }
+    SideEffect {
+        if (isKeyboardActive) {
+            requester.requestFocus()
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
+
             .background(Color(0xFF34568B)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -44,20 +61,38 @@ fun BottomSheetInsertStepGoal(
         ModalSheetTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp)
+                .focusRequester(requester)
+                .onFocusChanged { focusState ->
+                    when {
+                        focusState.isFocused -> {
+                            isKeyboardActive = true
+                            println("I'm focused!")
+                        }
+                        focusState.hasFocus ->
+                            println("A child of mine has focus!")
+                    }
+                },
             value = stepGoalValue,
             hint = "Add a new step",
             onValueChange = onStepGoalValueChange
         )
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             DatePickerLabel(date = deadline.toMMDDYYYY(), onClick = {
                 dateDialogState.show()
             })
-            SendIcon(onAddClick)
+            SendIcon(
+                modifier = Modifier
+                    .focusTarget()
+                    .focusRequester(requester),
+                onClick = onAddClick
+            )
         }
     }
     MaterialDialog(
@@ -73,7 +108,7 @@ fun BottomSheetInsertStepGoal(
             initialDate = LocalDate.ofEpochDay(deadline),
             title = "Pick a date"
         ) {
-             onDeadlineChange(it.toEpochDay())
+            onDeadlineChange(it.toEpochDay())
         }
     }
 }

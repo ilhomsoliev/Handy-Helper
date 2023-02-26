@@ -9,15 +9,19 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 
 @Composable
 fun SendIcon(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    IconButton(onClick = {
+    IconButton(modifier = modifier, onClick = {
         onClick()
-    }, Modifier.clip(CircleShape).background(Color.Blue)) {
+    }) {
         Icon(imageVector = Icons.Default.Send, contentDescription = null)
     }
 
