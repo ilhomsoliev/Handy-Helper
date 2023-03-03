@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.folder.DeleteFolderByIdUseCase
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
 import com.ikcollab.domain.usecase.notes.note.CountNotesOfFolderUseCase
+import com.ikcollab.domain.usecase.notes.note.DeleteAllNotesByFolderIdUseCase
 import com.ikcollab.domain.usecase.notes.note.GetNotesByFolderIdUseCase
 import com.ikcollab.domain.usecase.notes.note.InsertNoteUseCase
 import com.ikcollab.model.dto.note.FolderDto
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class NotesScreenViewModel @Inject constructor(
     private val getFoldersUseCase: GetFoldersUseCase,
     private val deleteFolderByIdUseCase: DeleteFolderByIdUseCase,
-    private val countNotesOfFolderUseCase: CountNotesOfFolderUseCase
+    private val countNotesOfFolderUseCase: CountNotesOfFolderUseCase,
+    private val deleteAllNotesByFolderIdUseCase: DeleteAllNotesByFolderIdUseCase
 ):ViewModel() {
 
     private val _stateFolder = mutableStateOf(FolderState())
@@ -61,20 +63,16 @@ class NotesScreenViewModel @Inject constructor(
         }
     }
 
-    fun countNotesOfFolder() {
-        viewModelScope.launch {
-            _stateFolder.value.folders.forEach { res->
-                res.id?.let { id ->
-                    countNotesOfFolderUseCase.invoke(id).let {
-                        res.countOfNotes = it
-                        Log.e("Count","${res.countOfNotes}  \n $it")
-                    }
-                }
-            }
-        }
+    fun deleteAllNotesByFolderId(
+        folderId:Int
+    ){
+     viewModelScope.launch {
+         deleteAllNotesByFolderIdUseCase(folderId)
+     }
     }
 
-    private fun getFolders(){
+
+    fun getFolders(){
         getFolderJob?.cancel()
         viewModelScope.launch {
             getFolderJob = getFoldersUseCase().onEach {

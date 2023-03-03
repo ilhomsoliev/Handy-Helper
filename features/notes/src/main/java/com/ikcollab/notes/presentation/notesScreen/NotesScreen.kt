@@ -2,6 +2,7 @@
 
 package com.ikcollab.notes.presentation.notesScreen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import com.ikcollab.notes.presentation.theme.WhiteRed
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NotesScreen(
    openFolderDetails:(Int)->Unit,
@@ -39,15 +41,8 @@ fun NotesScreen(
     val stateFolder = remember { viewModel.stateFolder }
 
     LaunchedEffect(key1 = true){
-        stateFolder.value.folders.forEach { folder ->
-            folder.id?.let {
-                foldersNoteScreenViewModel.getNotesByFolderId(folderId = it)
-            }
-        }
-        delay(100)
-        viewModel.countNotesOfFolder()
+        viewModel.getFolders()
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,6 +62,7 @@ fun NotesScreen(
                                         folder.name,
                                         dateCreated = folder.dateCreated
                                     )
+                                    viewModel.deleteAllNotesByFolderId(id)
                                     Log.e("Delete", "Success")
                                 }
                             }

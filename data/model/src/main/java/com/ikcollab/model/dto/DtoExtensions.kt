@@ -34,16 +34,17 @@ fun NoteDto.toNoteEntity() = NoteEntity(
     folderId = folderId,
 )
 
-fun FolderEntity.toFolderDto() = FolderDto(
+fun FolderEntity.toFolderDto(notesCount:Int) = FolderDto(
     id = id,
     name = name,
     dateCreated = dateCreated,
+    countOfNotes = notesCount
 )
 
 fun FolderDto.toFolderEntity() = FolderEntity(
     id = id,
     name = name,
-    dateCreated = dateCreated,
+    dateCreated = dateCreated
 )
 
 fun GoalEntity.toGoalDto(stepsCount: Int, completedStepsCount: Int) = GoalDto(

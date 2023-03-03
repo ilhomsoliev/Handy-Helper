@@ -12,7 +12,9 @@ class GetFoldersUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<List<FolderDto>> {
         return repository.getFolders().map { folders ->
-            folders.sortedBy { it.dateCreated }.map { it.toFolderDto() }
+            folders.sortedBy { it.dateCreated }.map { it.toFolderDto(
+                notesCount = repository.countNotesOfFolder(folderId = it.id!!)
+            ) }
         }
     }
 }
