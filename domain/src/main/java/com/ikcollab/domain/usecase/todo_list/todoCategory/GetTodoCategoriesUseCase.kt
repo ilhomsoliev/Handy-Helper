@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetTodoCategoriesUseCase @Inject constructor(
     private val repository: TodoRepository
 ) {
-    operator fun invoke(): Flow<List<TodoCategoryDto>> {
+    suspend operator fun invoke(): Flow<List<TodoCategoryDto>> {
         return repository.getCategories().map { todos ->
             todos.sortedBy { it.dateCreated }.map {
                 it.toTodoCategoryDto(todosCount = repository.getCategoryTodosCount(it.id!!))

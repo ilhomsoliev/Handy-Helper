@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,10 +25,7 @@ import androidx.navigation.navArgument
 import com.ikcollab.core.Constants
 import com.ikcollab.core.Constants.FOLDER_ID_ARG
 import com.ikcollab.core.Constants.FOLDER_NAME
-import com.ikcollab.core.Constants.NOTE_DATE_TIME
-import com.ikcollab.core.Constants.NOTE_DESCRIPTION
 import com.ikcollab.core.Constants.NOTE_ID_ARG
-import com.ikcollab.core.Constants.NOTE_TITLE
 import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
@@ -42,13 +38,24 @@ import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
 import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
+import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryEvent
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreen
+import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreenViewModel
+import com.ikcollab.todolist.todoListScreen.TodoListEvent
+import com.ikcollab.todolist.todoListScreen.TodoListScreen
+import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "NewApi")
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
-fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
+fun Navigation(
+    state: NavigationState,
+    onEvent: (NavigationEvent) -> Unit,
+) {
+
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -57,7 +64,6 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
     )
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
-    val stateFolderName = viewModel.stateFolderName
 
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
@@ -70,17 +76,14 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 when (currentScreen) {
                     Screens.NotesScreen.route -> {
                         CustomInsertFolderItem(
-                            value = stateFolderName.value,
+                            value = state.folderName,
                             onValueChange = {
-                                viewModel.setFolderName(it)
+                                onEvent(NavigationEvent.OnFolderNameChange(it))
                             },
                             onClick = {
+                                onEvent(NavigationEvent.InsertFolder)
                                 coroutineScope.launch {
-                                    if (stateFolderName.value != "") {
-                                        viewModel.insertFolder(
-                                            stateFolderName.value
-                                        )
-                                    }
+                                    modalSheetState.hide()
                                 }
                             },
                             placeholder = "Name of Folder...",
@@ -89,27 +92,66 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     }
                     Screens.GoalsScreen.route -> {
                         BottomSheetInsertGoal(
-                            goalValue = viewModel.newGoalName.value,
-                            onGoalValueChange = viewModel::setNewGoalName,
-                            start = viewModel.newGoalStartDate.value,
-                            deadline = viewModel.newGoalEndDate.value,
+                            goalValue = state.goalName,
+                            onGoalValueChange = { onEvent(NavigationEvent.OnNewGoalNameChange(it)) },
+                            start = state.goalStartDate,
+                            deadline = state.goalEndDate,
                             onAddClick = {
-                                viewModel.insertGoalToDatabase(onDone = {
-                                    coroutineScope.launch { modalSheetState.hide() }
-                                })
+                                onEvent(NavigationEvent.InsertGoalToDatabase)
+                                coroutineScope.launch { modalSheetState.hide() }
                             }
                         )
                     }
                     Screens.GoalStepsScreen.route -> {
                         BottomSheetInsertStepGoal(
-                            stepGoalValue = viewModel.newStepGoalName.value,
-                            onStepGoalValueChange = viewModel::setNewStepGoalName,
-                            deadline = viewModel.newStepGoalDeadline.value,
-                            onDeadlineChange = viewModel::setNewStepGoalDeadline,
+                            stepGoalValue = state.stepGoalName,
+                            onStepGoalValueChange = {
+                                onEvent(
+                                    NavigationEvent.OnNewStepGoalNameChange(
+                                        it
+                                    )
+                                )
+                            },
+                            deadline = state.stepGoalDeadline,
+                            onDeadlineChange = {
+                                onEvent(
+                                    NavigationEvent.OnNewStepGoalDeadlineChange(
+                                        it
+                                    )
+                                )
+                            },
                             onAddClick = {
-                                viewModel.insertStepGoalToDatabase(onDone = {
-                                    coroutineScope.launch { modalSheetState.hide() }
-                                })
+                                onEvent(NavigationEvent.InsertStepGoalToDatabase)
+                                coroutineScope.launch { modalSheetState.hide() }
+                            }
+                        )
+                    }
+                    Screens.TodoCategoryScreen.route -> {
+                        CustomInsertFolderItem(
+                            value = state.todoCategoryName,
+                            onValueChange = {
+                                onEvent(NavigationEvent.OnTodoCategoryNameChange(it))
+                            },
+                            onClick = {
+                                coroutineScope.launch {
+                                    onEvent(NavigationEvent.InsertTodoCategory)
+                                    coroutineScope.launch {
+                                        modalSheetState.hide()
+                                    }
+                                }
+                            },
+                            placeholder = "Name of Category...",
+                            modifier = Modifier.padding(bottom = 150.dp)
+                        )
+                    }
+                    Screens.TodoListScreen.route -> {
+                        BottomSheetInsertTodoTask(
+                            taskValue = state.todoTaskName,
+                            onTaskValueChange = { onEvent(NavigationEvent.OnTodoNameChange(it)) },
+                            deadline = state.todoTaskDeadline,
+                            onAddClick = {
+                                onEvent(NavigationEvent.InsertTodoTaskToDatabase)
+                                coroutineScope.launch { modalSheetState.hide() }
                             }
                         )
                     }
@@ -143,7 +185,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         currentScreen != Screens.FoldersNoteScreen.route &&
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                        currentScreen !=  Screens.SearchNotesScreen.route
+                        currentScreen != Screens.SearchNotesScreen.route
                     ) {
                         IconButton(onClick = {
                             coroutineScope.launch {
@@ -159,8 +201,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                             }
                         }) {
                             if (currentScreen == Screens.FoldersNoteScreen.route ||
-                                currentScreen == Screens.ShowDetailsOfNoteScreen.route)
-                                    Icon(Icons.Filled.Close, null)
+                                currentScreen == Screens.ShowDetailsOfNoteScreen.route
+                            )
+                                Icon(Icons.Filled.Close, null)
                             else
                                 Icon(Icons.Filled.ArrowBack, null)
                         }
@@ -180,6 +223,15 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         Screens.AddNoteScreen.route -> {}
                         Screens.ShowDetailsOfNoteScreen.route -> {}
                         Screens.GoalStepsScreen.route -> {}
+                        Screens.TodoListScreen.route -> {
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    navController.navigate(Screens.TodoCategoryScreen.route)
+                                }
+                            }) {
+                                Icon(Icons.Filled.ListAlt, null)
+                            }
+                        }
                         else -> {
                             IconButton(onClick = {
                                 coroutineScope.launch {
@@ -197,6 +249,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     currentScreen != Screens.AddNoteScreen.route &&
                     currentScreen != Screens.GoalStepsScreen.route &&
                     currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                    currentScreen != Screens.TodoCategoryScreen.route &&
                     currentScreen != Screens.SearchNotesScreen.route,
             drawerContent = {
                 DrawerContent()
@@ -207,8 +260,9 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                     currentScreen != Screens.AddNoteScreen.route &&
                     currentScreen != Screens.GoalStepsScreen.route &&
                     currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                    currentScreen != Screens.SearchNotesScreen.route
-                        ) {
+                    currentScreen != Screens.SearchNotesScreen.route &&
+                    currentScreen != Screens.TodoCategoryScreen.route
+                ) {
                     com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
                 }
             },
@@ -275,11 +329,11 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         type = NavType.IntType
                     })
                 ) {
-                    coroutineScope.launch {
-                        viewModel.setNewStepGoalId(
+                    onEvent(
+                        NavigationEvent.OnNewStepGoalIdChange(
                             it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
                         )
-                    }
+                    )
                     GoalStepsScreen(goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
                 }
                 composable(route = Screens.GoalsListScreen.route) {
@@ -290,7 +344,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                         coroutineScope.launch {
                             navController.navigate(
                                 Screens.FoldersNoteScreen.route.replace(
-                                    "{${Constants.FOLDER_ID_ARG}}",
+                                    "{${FOLDER_ID_ARG}}",
                                     it.toString(),
                                 )
                             )
@@ -315,7 +369,7 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                                 )
                             }
                         },
-                        showDetailsOnClick = {folderId:Int,noteId ->
+                        showDetailsOnClick = { folderId: Int, noteId ->
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.ShowDetailsOfNoteScreen.route.replace(
@@ -344,21 +398,21 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 composable(
                     route = Screens.ShowDetailsOfNoteScreen.route,
                     arguments = listOf(
-                        navArgument(FOLDER_ID_ARG){
-                        type = NavType.IntType
-                    },
-                        navArgument(NOTE_ID_ARG){
+                        navArgument(FOLDER_ID_ARG) {
+                            type = NavType.IntType
+                        },
+                        navArgument(NOTE_ID_ARG) {
                             type = NavType.IntType
                         }
                     )
-                ){
+                ) {
                     ShowDetailsOfNoteScreen()
                 }
                 composable(
                     route = Screens.SearchNotesScreen.route
                 ) {
                     SearchNotesScreen(
-                        showDetailsOnClick = { folderId:Int,noteId ->
+                        showDetailsOnClick = { folderId: Int, noteId ->
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.ShowDetailsOfNoteScreen.route.replace(
@@ -378,6 +432,39 @@ fun Navigation(viewModel: NavigationViewModel = hiltViewModel()) {
                 }
                 composable(route = Screens.TrackerScreen.route) {
 
+                }
+                composable(route = Screens.TodoListScreen.route) {
+                    val viewModel = hiltViewModel<TodoListScreenViewModel>()
+                    TodoListScreen(viewModel.state.collectAsState().value, onEvent = { event ->
+                        when (event) {
+                            is TodoListEvent.OpenBottomSheet -> {
+                                coroutineScope.launch {
+                                    modalSheetState.show()
+                                }
+                            }
+                            is TodoListEvent.OnTaskCategoryIdChange -> {
+                                onEvent(NavigationEvent.OnTodoCategoryIdChange(event.value))
+                            }
+                            else -> viewModel.onEvent(event)
+                        }
+                    })
+                }
+                composable(route = Screens.TodoCategoryScreen.route) {
+                    val viewModel = hiltViewModel<TodoCategoryScreenViewModel>()
+                    TodoCategoryScreen(
+                        viewModel.state.collectAsState().value,
+                        onEvent = { event ->
+                            when (event) {
+                                is TodoCategoryEvent.OpenBottomSheet -> {
+                                    coroutineScope.launch {
+                                        modalSheetState.show()
+                                    }
+                                }
+
+                                else -> viewModel.onEvent(event)
+                            }
+                        }
+                    )
                 }
             }
         }

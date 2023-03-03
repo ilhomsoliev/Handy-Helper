@@ -34,5 +34,5 @@ class TodoRepository @Inject constructor(
         todoDao.getTodosByCategoryId(categoryId)
 
     fun getCategories(): Flow<List<TodoCategoryEntity>> = todoCategoryDao.getTodoCategories()
-    fun getCategoryTodosCount(categoryId:Int) = todoDao.getCategoryTodosCount(categoryId)
+    suspend fun getCategoryTodosCount(categoryId:Int) = todoDao.getCategoryTodosCount(categoryId)
 }
