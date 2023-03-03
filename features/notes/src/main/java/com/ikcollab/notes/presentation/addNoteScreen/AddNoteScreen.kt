@@ -26,7 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ikcollab.components.CustomDropDownMenu
 import com.ikcollab.components.DatePickerLabel
+import com.ikcollab.core.Constants
+import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
+import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.notes.presentation.components.CustomInsertFolderTextField
 import com.ikcollab.notes.presentation.components.DatePicker
 import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
@@ -42,6 +46,7 @@ fun AddNoteScreen(
     onGoBack:()->Unit,
     viewModel: AddNoteScreenViewModel = hiltViewModel()
 ) {
+    val folderIdNull = remember{ mutableStateOf(-1)}
     val stateNoteTitle by viewModel.stateNoteTitle
     val stateNoteDescription by viewModel.stateNoteDescription
     var stateTitleNotNull by remember {
@@ -50,6 +55,10 @@ fun AddNoteScreen(
     val stateNoteDate = viewModel.stateNoteDate
 
     val calendarState = rememberSheetState()
+
+    val notesScreenViewModel:NotesScreenViewModel = hiltViewModel()
+
+    val selectedCategory = remember { mutableStateOf("Choose a folder") }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,12 +90,35 @@ fun AddNoteScreen(
 
         Spacer(modifier = Modifier.height(25.dp))
 
+
+        if(FOLDER_ID_IS_NULL.value) {
+            LaunchedEffect(key1 = true) {
+                notesScreenViewModel.getFolders()
+            }
+            CustomDropDownMenu(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
+                suggestions = notesScreenViewModel.stateFolder.value.folders.map { it.name },
+                selectedText = selectedCategory.value,
+                onClick = { categoryName->
+                    val response:FolderDto? = notesScreenViewModel.stateFolder.value.folders.find {
+                        it.name == categoryName
+                    }
+                    selectedCategory.value = categoryName
+                    if(folderId==-1){
+                        folderIdNull.value = response?.id?:-1
+                    }
+                })
+        }
+
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(modifier = Modifier.padding(start = 16.dp),text = "Выберите дату",color = Color.Gray)
+            Text(modifier = Modifier.padding(start = 16.dp),text = "Choose a date",color = Color.Gray)
             DatePickerLabel(date = stateNoteDate.value) {
                 calendarState.show()
             }
@@ -102,7 +134,7 @@ fun AddNoteScreen(
         ) {
             FloatingActionButton(backgroundColor = Color.Red, onClick = {
                 if (stateNoteTitle != "")
-                    viewModel.insertNoteToDatabase(folderId = folderId, onDone = onGoBack)
+                    viewModel.insertNoteToDatabase(folderId = if(folderId!=-1)folderId else folderIdNull.value, onDone = onGoBack)
                 else {
                     stateTitleNotNull = true
                 }

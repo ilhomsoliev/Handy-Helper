@@ -24,7 +24,7 @@ object Constants {
     var NOTE_TITLE = "NOTE_TITLE"
     var NOTE_DESCRIPTION = "NOTE_DESCRIPTION"
     var NOTE_DATE_TIME:Long = 0
-
+    var FOLDER_ID_IS_NULL = mutableStateOf(false)
     // ID ARGS
     const val FOLDER_ID_ARG = "FOLDER_ID_ARG"
     const val NOTE_ID_ARG = "NOTE_ID_ARG"

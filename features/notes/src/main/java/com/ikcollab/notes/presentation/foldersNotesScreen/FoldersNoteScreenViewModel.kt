@@ -21,8 +21,10 @@ class FoldersNoteScreenViewModel @Inject constructor(
     private val _stateNotesByFolderId = mutableStateOf(NoteState())
     val stateNotesByFolderId = _stateNotesByFolderId
 
-    fun getNotesByFolderId(folderId:Int){
+    fun getNotesByFolderId(folderId:Int,onFolderNameDismiss:()->Unit={}){
         viewModelScope.launch {
+            if(folderId==-1)
+                onFolderNameDismiss()
             getNotesByFolderIdUseCase(folderId = folderId).onEach {
                 _stateNotesByFolderId.value = _stateNotesByFolderId.value.copy(it)
             }.launchIn(viewModelScope)
