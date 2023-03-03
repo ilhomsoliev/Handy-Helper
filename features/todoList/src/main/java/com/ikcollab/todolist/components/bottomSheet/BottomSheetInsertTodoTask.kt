@@ -24,8 +24,7 @@ fun BottomSheetInsertTodoTask(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF34568B)),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ModalSheetDefaultStick(

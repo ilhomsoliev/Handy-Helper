@@ -21,17 +21,12 @@ class SearchNotesScreenViewModel @Inject constructor(
     init {
         getNotes()
     }
-    private val _stateSearchNotes = mutableStateOf("")
-    val stateSearchNotes = _stateSearchNotes
 
     private val _stateNotes = mutableStateOf(NoteState())
     val stateNotes = _stateNotes
 
     private var getNoteJob: Job? = null
 
-    fun changeSearchNotes(search:String){
-        _stateSearchNotes.value = search
-    }
     fun getNotes(){
         getNoteJob?.cancel()
         viewModelScope.launch {

@@ -13,6 +13,7 @@ data class NavigationState constructor(
     val goalEndDate: Long = System.currentTimeMillis(),
     val stepGoalId: Int = -1,
     val stepGoalName: String = "",
+    val searchState:String = "",
     val stepGoalDeadline: Long = LocalDate.ofEpochDay(LocalDate.now().toEpochDay()).toEpochDay(),
     val todoTaskName: String = "",
     val todoTaskDeadline: Long = System.currentTimeMillis(),

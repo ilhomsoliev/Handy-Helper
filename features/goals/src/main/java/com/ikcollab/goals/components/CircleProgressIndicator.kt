@@ -3,6 +3,7 @@ package com.ikcollab.goals.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -33,6 +34,7 @@ fun CircleProgressIndicator(
     indicatorThickness: Dp = 12.dp,
     dataUsage: Float,
     animationDuration: Int = 1000,
+    color:Color = MaterialTheme.colors.primary
 ) {
 
     var dataUsageRemember by remember {
@@ -72,7 +74,7 @@ fun CircleProgressIndicator(
             )
 
             drawCircle(
-                color = Color.White,
+                color = color,
                 radius = (size / 2 - indicatorThickness).toPx(),
                 center = Offset(x = this.size.width / 2, y = this.size.height / 2)
             )
@@ -118,6 +120,7 @@ private fun DisplayText(
             text = (animateNumber.value).toInt().toString() + "%",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
+            color = MaterialTheme.colors.onBackground
         )
     }
 }

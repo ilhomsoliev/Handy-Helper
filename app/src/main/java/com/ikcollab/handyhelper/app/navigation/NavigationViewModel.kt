@@ -203,6 +203,13 @@ class NavigationViewModel @Inject constructor(
                     )
                 }
             }
+            is NavigationEvent.OnSearchNotes->{
+                _state.update {
+                    it.copy(
+                        searchState = event.value
+                    )
+                }
+            }
         }
     }
 }

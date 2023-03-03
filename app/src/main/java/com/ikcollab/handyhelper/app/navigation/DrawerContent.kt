@@ -27,7 +27,7 @@ fun DrawerContent() {
             modifier = Modifier.padding(12.dp),
             text = "Handy Helper",
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colors.onBackground
         )
         Divider()
         DrawerItem(

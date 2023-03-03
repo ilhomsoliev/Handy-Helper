@@ -1,33 +1,18 @@
 package com.ikcollab.notes.presentation.components
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -41,21 +26,24 @@ fun CustomInsertFolderTextField(
     paddingStart:Int = 15
 ) {
     TextField(
-        modifier=Modifier.fillMaxWidth(width)
-            .padding(start = 15.dp, end = paddingEnd.dp)
+        modifier= Modifier
+            .fillMaxWidth(width)
+            .padding(start = paddingStart.dp, end = paddingEnd.dp)
             .height(height = height.dp),
         value = value,
         placeholder = { Text(text = placeholder, color = Color.Gray) },
         onValueChange =  onValueChange,
         textStyle = TextStyle.Default.copy(fontSize = 20.sp, fontWeight = FontWeight.Black),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Black,
+            textColor = MaterialTheme.colors.onBackground,
             disabledTextColor = Color.Transparent,
-            backgroundColor = Color.White,
+            backgroundColor = MaterialTheme.colors.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
         ),
-        shape = RoundedCornerShape(5.dp)
+        shape = RoundedCornerShape(5.dp),
+        singleLine = true,
+        maxLines = 1
     )
 }
