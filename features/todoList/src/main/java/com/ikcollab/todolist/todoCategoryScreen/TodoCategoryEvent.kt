@@ -4,4 +4,5 @@ sealed class TodoCategoryEvent {
     object BackPress : TodoCategoryEvent()
     object OpenBottomSheet : TodoCategoryEvent()
     object InsertCategory : TodoCategoryEvent()
+
 }
