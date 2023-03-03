@@ -9,7 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,8 +28,9 @@ fun DatePickerLabel(
         .background(Color.White)
         .clickable { onClick() }) {
         Row(modifier = Modifier.padding(6.dp)) {
-            Icon(imageVector = Icons.Default.CalendarToday, contentDescription = null)
+            Icon(imageVector = Icons.Default.CalendarToday, contentDescription = null,tint = Color.Gray)
             Text(modifier = Modifier.padding(start = 6.dp),text = date)
+            Icon(modifier = Modifier.padding(start = 6.dp),imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null, tint = Color.Gray)
         }
     }
 }

@@ -21,6 +21,8 @@ class NotesRepository @Inject constructor(
     suspend fun deleteNoteById(noteId: Int) = noteDao.deleteNoteById(noteId)
     suspend fun deleteFolderById(folderId: Int) = folderDao.deleteFolderById(folderId)
     suspend fun getNoteById(noteId: Int):NoteEntity? = noteDao.getNoteById(noteId)
+    suspend fun countNotesOfFolder(folderId: Int): Int = noteDao.countNotesOfFolder(folderId)
+    suspend fun deleteAllNotesByFolderId(folderId: Int) = noteDao.deleteAllNotesByFolderId(folderId)
     fun getNotes(): Flow<List<NoteEntity>> = noteDao.getNotes()
     suspend fun getFolderById(folderId: Int):FolderEntity? = folderDao.getFolderById(folderId)
     fun getNoteSByFolderId(folderId: Int): Flow<List<NoteEntity>> = noteDao.getNotesByFolderId(folderId)

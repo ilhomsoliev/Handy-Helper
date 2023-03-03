@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.folder.DeleteFolderByIdUseCase
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
+import com.ikcollab.domain.usecase.notes.note.CountNotesOfFolderUseCase
+import com.ikcollab.domain.usecase.notes.note.DeleteAllNotesByFolderIdUseCase
 import com.ikcollab.domain.usecase.notes.note.GetNotesByFolderIdUseCase
 import com.ikcollab.domain.usecase.notes.note.InsertNoteUseCase
 import com.ikcollab.model.dto.note.FolderDto
@@ -23,13 +25,9 @@ import javax.inject.Inject
 class NotesScreenViewModel @Inject constructor(
     private val getFoldersUseCase: GetFoldersUseCase,
     private val deleteFolderByIdUseCase: DeleteFolderByIdUseCase,
+    private val countNotesOfFolderUseCase: CountNotesOfFolderUseCase,
+    private val deleteAllNotesByFolderIdUseCase: DeleteAllNotesByFolderIdUseCase
 ):ViewModel() {
-
-
-
-
-    private val _stateNumberCategoriesNote = mutableStateOf(0)
-    val stateNumberCategoriesNote = _stateNumberCategoriesNote
 
     private val _stateFolder = mutableStateOf(FolderState())
     val stateFolder = _stateFolder
@@ -50,11 +48,6 @@ class NotesScreenViewModel @Inject constructor(
     }
 
 
-
-    fun updateNumberCategoriesNote(number:Int){
-        _stateNumberCategoriesNote.value = number
-    }
-
     fun updateNotesFolderIdAndName(id:Int,name:String){
         _stateNotesFolderId.value = id
         _stateNotesFolderName.value = name
@@ -70,7 +63,16 @@ class NotesScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getFolders(){
+    fun deleteAllNotesByFolderId(
+        folderId:Int
+    ){
+     viewModelScope.launch {
+         deleteAllNotesByFolderIdUseCase(folderId)
+     }
+    }
+
+
+    fun getFolders(){
         getFolderJob?.cancel()
         viewModelScope.launch {
             getFolderJob = getFoldersUseCase().onEach {

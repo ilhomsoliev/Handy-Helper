@@ -45,7 +45,7 @@ fun CustomInsertFolderTextField(
             .padding(start = 15.dp, end = paddingEnd.dp)
             .height(height = height.dp),
         value = value,
-        placeholder = { Text(text = placeholder) },
+        placeholder = { Text(text = placeholder, color = Color.Gray) },
         onValueChange =  onValueChange,
         textStyle = TextStyle.Default.copy(fontSize = 20.sp, fontWeight = FontWeight.Black),
         colors = TextFieldDefaults.textFieldColors(
