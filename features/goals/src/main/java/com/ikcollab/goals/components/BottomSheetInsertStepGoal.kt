@@ -37,16 +37,6 @@ fun BottomSheetInsertStepGoal(
     onAddClick: () -> Unit
 ) {
     val dateDialogState = rememberMaterialDialogState()
-    val focusManager = LocalFocusManager.current
-    val requester = FocusRequester()
-    var isKeyboardActive by remember {
-        mutableStateOf(false)
-    }
-    SideEffect {
-        if (isKeyboardActive) {
-            requester.requestFocus()
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -61,18 +51,7 @@ fun BottomSheetInsertStepGoal(
         ModalSheetTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
-                .focusRequester(requester)
-                .onFocusChanged { focusState ->
-                    when {
-                        focusState.isFocused -> {
-                            isKeyboardActive = true
-                            println("I'm focused!")
-                        }
-                        focusState.hasFocus ->
-                            println("A child of mine has focus!")
-                    }
-                },
+                .padding(12.dp),
             value = stepGoalValue,
             hint = "Add a new step",
             onValueChange = onStepGoalValueChange
@@ -89,8 +68,7 @@ fun BottomSheetInsertStepGoal(
             })
             SendIcon(
                 modifier = Modifier
-                    .focusTarget()
-                    .focusRequester(requester),
+                    .focusTarget(),
                 onClick = onAddClick
             )
         }

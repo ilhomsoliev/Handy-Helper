@@ -17,7 +17,6 @@ class TodoListScreenViewModel @Inject constructor(
     private val getTodosByCategoryIdUseCase: GetTodosByCategoryIdUseCase,
 ) : ViewModel() {
 
-    private val _currentCategory = mutableStateOf(0)
     private val _state = MutableStateFlow(TodoListState())
     val state = _state.stateIn(
         viewModelScope,
@@ -34,6 +33,13 @@ class TodoListScreenViewModel @Inject constructor(
             is TodoListEvent.ClearTodoList -> {
 
             }
+            is TodoListEvent.ChangePage -> {
+                _state.update {
+                    it.copy(
+                        currentPage = event.page
+                    )
+                }
+            }
             else -> Unit
         }
     }
@@ -46,7 +52,6 @@ class TodoListScreenViewModel @Inject constructor(
                         categories = list
                     )
                 }
-
             }.launchIn(viewModelScope)
         }
     }
