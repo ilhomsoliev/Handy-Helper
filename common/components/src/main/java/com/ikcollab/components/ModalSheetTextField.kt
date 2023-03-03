@@ -2,6 +2,7 @@ package com.ikcollab.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -27,7 +28,7 @@ fun ModalSheetTextField(
         },
         colors = TextFieldDefaults.textFieldColors(
             disabledTextColor = Color.Transparent,
-            backgroundColor = Color.White,
+            backgroundColor = MaterialTheme.colors.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent

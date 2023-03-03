@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RestoreFromTrash
@@ -36,7 +37,7 @@ fun CustomNotesCategory(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(WhiteNotesCategory)
+                .background(MaterialTheme.colors.primary)
                 .clickable { onClick() }
         ) {
             Row(

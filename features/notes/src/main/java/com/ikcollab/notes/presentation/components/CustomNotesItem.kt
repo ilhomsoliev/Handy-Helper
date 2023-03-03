@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +28,7 @@ fun CustomNotesItem(
         .fillMaxWidth()
         .padding(horizontal = 12.dp)
         .clip(RoundedCornerShape(15.dp))
-        .background(Color.White)
+        .background(MaterialTheme.colors.primary)
         .clickable {
             showDetailsOnClick()
         }

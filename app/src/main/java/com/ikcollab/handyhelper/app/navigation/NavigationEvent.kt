@@ -6,6 +6,7 @@ sealed class NavigationEvent {
     data class OnNewStepGoalNameChange(val value: String) : NavigationEvent()
     data class OnNewStepGoalIdChange(val value: Int) : NavigationEvent()
     data class OnFolderNameChange(val value: String) : NavigationEvent()
+    data class OnSearchNotes(val value: String) : NavigationEvent()
     data class OnTodoCategoryNameChange(val value: String) : NavigationEvent()
     data class OnNewGoalStartDateChange(val value: Long) : NavigationEvent()
     data class OnNewStepGoalDeadlineChange(val value: Long) : NavigationEvent()

@@ -2,6 +2,7 @@ package com.ikcollab.handyhelper.app.navigation.bottomBar
 
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
