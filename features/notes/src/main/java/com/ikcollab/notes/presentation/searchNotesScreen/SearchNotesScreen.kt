@@ -69,14 +69,14 @@ fun SearchNotesScreen(
                                 showDetailsOnClick = {
                                     coroutineScope.launch {
                                         notesScreenViewModel.stateFolder.value.folders.forEach {
-                                            if(it.id == note.folderId){
+                                            if(it.id == note.folderId || note.folderId==-1){
                                                 note.id?.let {
                                                     showDetailsOnClick(note.folderId, note.folderId)
                                                     Constants.NOTE_TITLE = note.title
                                                     Constants.NOTE_DESCRIPTION = note.description
                                                     Constants.NOTE_DATE_TIME = note.dateCreated
                                                 }
-                                                Constants.FOLDER_NAME.value = it.name
+                                                Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else it.name
                                             }
                                         }
                                     }
