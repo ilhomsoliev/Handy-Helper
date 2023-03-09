@@ -15,6 +15,7 @@ class NotesRepository @Inject constructor(
 ) {
 
     suspend fun insertNote(noteEntity: NoteEntity) = noteDao.insert(noteEntity)
+    suspend fun updateNote(noteEntity: NoteEntity) = noteDao.update(noteEntity)
     suspend fun insertFolder(folderEntity: FolderEntity) = folderDao.insert(folderEntity)
     suspend fun deleteNote(noteEntity: NoteEntity) = noteDao.delete(noteEntity)
     suspend fun deleteFolder(folderEntity: FolderEntity) = folderDao.delete(folderEntity)

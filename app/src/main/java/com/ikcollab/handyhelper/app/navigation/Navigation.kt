@@ -23,11 +23,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ikcollab.core.Constants
+import com.ikcollab.core.Constants.ADD_NOTE
+import com.ikcollab.core.Constants.EDIT_NOTE
 import com.ikcollab.core.Constants.FOLDER_ID_ARG
+import com.ikcollab.core.Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL
 import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
 import com.ikcollab.core.Constants.FOLDER_NAME
+import com.ikcollab.core.Constants.GOAL_ID_ARG
 import com.ikcollab.core.Constants.NOTE_ID_ARG
+import com.ikcollab.core.Constants.WHICH_NOTE
 import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
@@ -220,6 +224,11 @@ fun Navigation(
                     } else {
                         IconButton(onClick = {
                             coroutineScope.launch {
+                                if(FOLDER_ID_ARG_IS_LESS_OF_NULL.value)
+                                {
+                                    navController.popBackStack()
+                                    FOLDER_ID_ARG_IS_LESS_OF_NULL.value = false
+                                }
                                 navController.popBackStack()
                             }
                         }) {
@@ -305,11 +314,12 @@ fun Navigation(
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.AddNoteScreen.route.replace(
-                                        "{${Constants.FOLDER_ID_ARG}}",
-                                        (-1).toString()
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "-1/0"
                                     )
                                 )
                             }
+                            WHICH_NOTE.value = ADD_NOTE
                             FOLDER_ID_IS_NULL.value = true
                         },
                         isMultiple = true
@@ -350,7 +360,7 @@ fun Navigation(
                         coroutineScope.launch {
                             navController.navigate(
                                 Screens.GoalStepsScreen.route.replace(
-                                    "{${Constants.GOAL_ID_ARG}}",
+                                    "{${GOAL_ID_ARG}}",
                                     it.toString(),
                                 )
                             )
@@ -359,23 +369,23 @@ fun Navigation(
                 }
                 composable(
                     route = Screens.GoalStepsScreen.route,
-                    arguments = listOf(navArgument(Constants.GOAL_ID_ARG) {
+                    arguments = listOf(navArgument(GOAL_ID_ARG) {
                         type = NavType.IntType
                     })
                 ) {
                     onEvent(
                         NavigationEvent.OnNewStepGoalIdChange(
-                            it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
+                            it.arguments?.getInt(GOAL_ID_ARG) ?: -1
                         )
                     )
-                    GoalStepsScreen(goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1)
+                    GoalStepsScreen(goalId = it.arguments?.getInt(GOAL_ID_ARG) ?: -1)
                 }
                 composable(route = Screens.GoalsListScreen.route) {
                     GoalsListScreen()
                 }
                 composable(route = Screens.NotesScreen.route) {
                     NotesScreen(
-                        folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
+                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
                         openFolderDetails = {
                             coroutineScope.launch {
                                 navController.navigate(
@@ -395,25 +405,36 @@ fun Navigation(
                                     )
                                 )
                             }
-                        })
+                        },
+                    editNote = { folderId:Int,noteId:Int->
+                        coroutineScope.launch {
+                            navController.navigate(
+                                Screens.AddNoteScreen.route.replace(
+                                    "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                    "$folderId/$noteId"
+                                )
+                            )
+                        }
+                    })
                 }
                 composable(
                     route = Screens.FoldersNoteScreen.route,
-                    arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
+                    arguments = listOf(navArgument(FOLDER_ID_ARG) {
                         type = NavType.IntType
                     })
                 ) {
                     FoldersNoteScreen(
-                        folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
+                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
                         openAddNoteScreen = {
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.AddNoteScreen.route.replace(
-                                        "{${Constants.FOLDER_ID_ARG}}",
-                                        it.toString()
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "$it/0"
                                     )
                                 )
                             }
+                            WHICH_NOTE.value = ADD_NOTE
                         },
                         showDetailsOnClick = { folderId: Int, noteId ->
                             coroutineScope.launch {
@@ -424,19 +445,39 @@ fun Navigation(
                                     )
                                 )
                             }
+                        },
+                        editNote = { folderId:Int,noteId:Int->
+                            coroutineScope.launch {
+                                navController.navigate(
+                                    Screens.AddNoteScreen.route.replace(
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "$folderId/$noteId"
+                                    )
+                                )
+                            }
                         }
                     )
                 }
                 composable(
                     route = Screens.AddNoteScreen.route,
-                    arguments = listOf(navArgument(Constants.FOLDER_ID_ARG) {
+                    arguments = listOf(
+                        navArgument(FOLDER_ID_ARG) {
                         type = NavType.IntType
-                    })
+                    },
+                        navArgument(NOTE_ID_ARG) {
+                            type = NavType.IntType
+                        }
+                    )
                 ) {
                     AddNoteScreen(
-                        folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1,
+                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
                         onGoBack = {
                             coroutineScope.launch {
+                                if((it.arguments?.getInt(FOLDER_ID_ARG) ?: -1) == -1 && WHICH_NOTE.value == EDIT_NOTE)
+                                {
+                                    FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
+                                    navController.popBackStack()
+                                }
                                 navController.popBackStack()
                             }
                         })
@@ -468,7 +509,17 @@ fun Navigation(
                                 )
                             }
                         },
-                        stateSearch = state.searchState
+                        stateSearch = state.searchState,
+                        editNote = { folderId: Int, noteId: Int ->
+                            coroutineScope.launch {
+                                navController.navigate(
+                                    Screens.AddNoteScreen.route.replace(
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "$folderId/$noteId"
+                                    )
+                                )
+                            }
+                        }
                     )
                 }
                 composable(route = Screens.PickThemeScreen.route) {

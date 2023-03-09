@@ -1,6 +1,7 @@
 package com.ikcollab.notes.presentation.addNoteScreen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -30,6 +31,7 @@ import com.ikcollab.components.CustomDropDownMenu
 import com.ikcollab.components.DatePickerLabel
 import com.ikcollab.core.Constants
 import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
+import com.ikcollab.core.Constants.WHICH_NOTE
 import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.notes.presentation.components.CustomInsertFolderTextField
 import com.ikcollab.notes.presentation.components.DatePicker
@@ -38,8 +40,12 @@ import com.ikcollab.notes.presentation.theme.WhiteRed
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.sql.Date
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 
-@SuppressLint("InvalidColorHexValue", "CoroutineCreationDuringComposition")
+@SuppressLint("InvalidColorHexValue", "CoroutineCreationDuringComposition", "NewApi")
 @Composable
 fun AddNoteScreen(
     folderId:Int,
@@ -62,6 +68,25 @@ fun AddNoteScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val stateFolder = remember{notesScreenViewModel.stateFolder}
+    val stateFolderIdHasBeen = remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = true){
+        if(WHICH_NOTE.value == Constants.EDIT_NOTE){
+            viewModel.updateNoteDate(Date(Constants.NOTE_DATE_TIME).toString())
+            viewModel.updateNoteTitle(Constants.NOTE_TITLE)
+            viewModel.updateNoteDescription(Constants.NOTE_DESCRIPTION)
+            notesScreenViewModel.getFolders()
+            delay(100)
+            stateFolder.value.folders.forEach {
+                if(it.id == Constants.FOLDER_ID && Constants.FOLDER_ID!=-2){
+                    selectedCategory.value = it.name
+                    folderIdNull.value = folderId
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +116,7 @@ fun AddNoteScreen(
         Spacer(modifier = Modifier.height(25.dp))
 
 
-        if(FOLDER_ID_IS_NULL.value) {
+        if (FOLDER_ID_IS_NULL.value || Constants.WHICH_NOTE.value == Constants.EDIT_NOTE) {
             LaunchedEffect(key1 = true) {
                 notesScreenViewModel.getFolders()
             }
@@ -100,14 +125,13 @@ fun AddNoteScreen(
                 .padding(horizontal = 15.dp),
                 suggestions = notesScreenViewModel.stateFolder.value.folders.map { it.name },
                 selectedText = selectedCategory.value,
-                onClick = { categoryName->
-                    val response:FolderDto? = notesScreenViewModel.stateFolder.value.folders.find {
+                onClick = { categoryName ->
+                    val response: FolderDto? = notesScreenViewModel.stateFolder.value.folders.find {
                         it.name == categoryName
                     }
                     selectedCategory.value = categoryName
-                    if(folderId==-1){
-                        folderIdNull.value = response?.id?:-1
-                    }
+                        folderIdNull.value = response?.id ?: -1
+                        Log.e("FOLDERIDNULL","${folderIdNull.value}")
                 })
         }
 
@@ -118,7 +142,11 @@ fun AddNoteScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(modifier = Modifier.padding(start = 16.dp),text = "Choose a date",color = Color.Gray)
+            Text(
+                modifier = Modifier.padding(start = 16.dp),
+                text = "Choose a date",
+                color = Color.Gray
+            )
             DatePickerLabel(date = stateNoteDate.value) {
                 calendarState.show()
             }
@@ -133,10 +161,27 @@ fun AddNoteScreen(
                 .padding(end = 25.dp, bottom = 25.dp), contentAlignment = Alignment.BottomEnd
         ) {
             FloatingActionButton(backgroundColor = Color.Red, onClick = {
-                if (stateNoteTitle != "")
-                    viewModel.insertNoteToDatabase(folderId = if(folderId!=-1)folderId else folderIdNull.value, onDone = onGoBack)
-                else {
-                    stateTitleNotNull = true
+                if (WHICH_NOTE.value == Constants.EDIT_NOTE)
+                {
+                    viewModel.updateNoteInDatabase(
+                        folderIdNull.value,
+                        Constants.NOTE_ID
+                    ) {
+                        viewModel.clear()
+                        onGoBack()
+                    }
+                }
+                else if(WHICH_NOTE.value == Constants.ADD_NOTE){
+                    if (stateNoteTitle != "")
+                    {
+                        viewModel.insertNoteToDatabase(
+                            folderId = if (folderId != -1) folderId else folderIdNull.value,
+                            onDone = onGoBack
+                        )
+                    }
+                    else {
+                        stateTitleNotNull = true
+                    }
                 }
             }) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = null)
