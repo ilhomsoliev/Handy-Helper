@@ -13,10 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,15 +38,18 @@ fun FoldersNoteScreen(
     folderId:Int,
     openAddNoteScreen:(Int) ->Unit,
     viewModel: FoldersNoteScreenViewModel = hiltViewModel(),
-    showDetailsOnClick:(Int,Int)->Unit
+    showDetailsOnClick:(Int,Int)->Unit,
+    editNote:(Int,Int)->Unit
 ) {
 
+    val notesScreenViewModel:NotesScreenViewModel = hiltViewModel()
     val notes by viewModel.stateNotesByFolderId
 
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(key1 = false, block = {
         viewModel.getNotesByFolderId(folderId = folderId)
     })
+    val stateFolder = remember { notesScreenViewModel.stateFolder }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +76,22 @@ fun FoldersNoteScreen(
                     },
                     contentUnderLeft = {
                         SwipeEdit(onClick = {
-                            // TODO
+                            Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
+                            coroutineScope.launch {
+                                stateFolder.value.folders.forEach { folder->
+                                    if(folder.id == note.folderId || note.folderId==-1){
+                                        note.id?.let {id->
+                                            editNote(note.folderId, id)
+                                            Constants.NOTE_TITLE = note.title
+                                            Constants.NOTE_DESCRIPTION = note.description
+                                            Constants.NOTE_DATE_TIME = note.dateCreated
+                                            Constants.FOLDER_ID = note.folderId
+                                            Constants.NOTE_ID = id
+                                        }
+                                        Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else folder.name
+                                    }
+                                }
+                            }
                         })
                     },
                     contentOnTop = {

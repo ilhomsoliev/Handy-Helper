@@ -4,7 +4,6 @@ package com.ikcollab.notes.presentation.notesScreen
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,20 +12,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ikcollab.components.DraggableCard.*
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
-import com.ikcollab.components.draggableScaffold.components.SwipeDoneTrash
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.components.CustomNotesItem
 import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreenViewModel
-import com.ikcollab.notes.presentation.theme.WhiteRed
-import kotlinx.coroutines.delay
+import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreenViewModel
 import kotlinx.coroutines.launch
 import java.sql.Date
 
@@ -36,13 +32,14 @@ fun NotesScreen(
     folderId:Int,
     openFolderDetails:(Int)->Unit,
    viewModel: NotesScreenViewModel = hiltViewModel(),
-   showDetailsOnClick:(Int,Int)->Unit
+   showDetailsOnClick:(Int,Int)->Unit,
+    editNote:(Int,Int)->Unit
 ) {
     val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
 
     val coroutineScope = rememberCoroutineScope()
 
-    val stateNotes = remember{ foldersNoteScreenViewModel.stateNotesByFolderId }
+    val stateNotesByFolderId = remember{ foldersNoteScreenViewModel.stateNotesByFolderId }
     val stateFolder = remember { viewModel.stateFolder }
 
     LaunchedEffect(key1 = true){
@@ -101,7 +98,7 @@ fun NotesScreen(
             item {
                 Spacer(modifier = Modifier.height(25.dp))
             }
-            items(stateNotes.value.notes){ note ->
+            items(stateNotesByFolderId.value.notes){ note ->
                 if(note.folderId<=0) {
                     DraggableScaffold(
                         contentUnderRight = {
@@ -120,7 +117,23 @@ fun NotesScreen(
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
-                                // TODO
+                                Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
+                                Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
+                                coroutineScope.launch {
+                                    stateFolder.value.folders.forEach { folder->
+                                        if(folder.id == note.folderId || note.folderId==-1){
+                                            note.id?.let {id->
+                                                editNote(note.folderId, id)
+                                                Constants.NOTE_TITLE = note.title
+                                                Constants.NOTE_DESCRIPTION = note.description
+                                                Constants.NOTE_DATE_TIME = note.dateCreated
+                                                Constants.FOLDER_ID = note.folderId
+                                                Constants.NOTE_ID = id
+                                            }
+                                            Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else folder.name
+                                        }
+                                    }
+                                }
                             })
                         },
                         contentOnTop = {

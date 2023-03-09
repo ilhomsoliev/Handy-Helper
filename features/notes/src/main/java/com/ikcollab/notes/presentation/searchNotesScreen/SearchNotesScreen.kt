@@ -24,7 +24,8 @@ import java.util.*
 fun SearchNotesScreen(
     viewModel: SearchNotesScreenViewModel = hiltViewModel(),
     showDetailsOnClick:(Int,Int)->Unit,
-    stateSearch:String
+    stateSearch:String,
+    editNote:(Int,Int)->Unit
 ) {
     val foldersNoteScreenViewModel:FoldersNoteScreenViewModel = hiltViewModel()
 
@@ -58,7 +59,23 @@ fun SearchNotesScreen(
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
-                                // TODO
+                                Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
+                                Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
+                                coroutineScope.launch {
+                                    notesScreenViewModel.stateFolder.value.folders.forEach {
+                                        if(it.id == note.folderId || note.folderId==-1){
+                                            note.id?.let {id->
+                                                editNote(note.folderId, id)
+                                                Constants.NOTE_TITLE = note.title
+                                                Constants.NOTE_DESCRIPTION = note.description
+                                                Constants.NOTE_DATE_TIME = note.dateCreated
+                                                Constants.FOLDER_ID = note.folderId
+                                                Constants.NOTE_ID = id
+                                            }
+                                            Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else it.name
+                                        }
+                                    }
+                                }
                             })
                         },
                         contentOnTop = {
@@ -70,8 +87,8 @@ fun SearchNotesScreen(
                                     coroutineScope.launch {
                                         notesScreenViewModel.stateFolder.value.folders.forEach {
                                             if(it.id == note.folderId || note.folderId==-1){
-                                                note.id?.let {
-                                                    showDetailsOnClick(note.folderId, note.folderId)
+                                                note.id?.let { id->
+                                                    showDetailsOnClick(note.folderId,id)
                                                     Constants.NOTE_TITLE = note.title
                                                     Constants.NOTE_DESCRIPTION = note.description
                                                     Constants.NOTE_DATE_TIME = note.dateCreated
