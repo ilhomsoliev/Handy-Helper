@@ -60,7 +60,6 @@ fun SearchNotesScreen(
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
                                 Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
-                                Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
                                 coroutineScope.launch {
                                     notesScreenViewModel.stateFolder.value.folders.forEach {
                                         if(it.id == note.folderId || note.folderId==-1){

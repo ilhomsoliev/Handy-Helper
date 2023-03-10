@@ -29,22 +29,22 @@ import java.sql.Date
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NotesScreen(
-    folderId:Int,
-    openFolderDetails:(Int)->Unit,
-   viewModel: NotesScreenViewModel = hiltViewModel(),
-   showDetailsOnClick:(Int,Int)->Unit,
-    editNote:(Int,Int)->Unit
+    folderId: Int,
+    openFolderDetails: (Int) -> Unit,
+    viewModel: NotesScreenViewModel = hiltViewModel(),
+    showDetailsOnClick: (Int, Int) -> Unit,
+    editNote: (Int, Int) -> Unit
 ) {
     val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
 
     val coroutineScope = rememberCoroutineScope()
 
-    val stateNotesByFolderId = remember{ foldersNoteScreenViewModel.stateNotesByFolderId }
+    val stateNotesByFolderId = remember { foldersNoteScreenViewModel.stateNotesByFolderId }
     val stateFolder = remember { viewModel.stateFolder }
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         viewModel.getFolders()
-        foldersNoteScreenViewModel.getNotesByFolderId(-1){
+        foldersNoteScreenViewModel.getNotesByFolderId(-1) {
             Constants.FOLDER_NAME.value = ""
             Constants.FOLDER_ID_IS_NULL.value = false
         }
@@ -83,7 +83,7 @@ fun NotesScreen(
                         CustomNotesCategory(
                             onClick = {
                                 coroutineScope.launch {
-                                        openFolderDetails(folder.id!!)
+                                    openFolderDetails(folder.id!!)
                                     Constants.FOLDER_NAME.value = folder.name
                                 }
                             },
@@ -98,8 +98,7 @@ fun NotesScreen(
             item {
                 Spacer(modifier = Modifier.height(25.dp))
             }
-            items(stateNotesByFolderId.value.notes){ note ->
-                if(note.folderId<=0) {
+            items(stateNotesByFolderId.value.notes.filter { it.folderId == -1 }) { note ->
                     DraggableScaffold(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
@@ -117,12 +116,11 @@ fun NotesScreen(
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
-                                Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
-                                Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
+                                Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
                                 coroutineScope.launch {
-                                    stateFolder.value.folders.forEach { folder->
-                                        if(folder.id == note.folderId || note.folderId==-1){
-                                            note.id?.let {id->
+                                    stateFolder.value.folders.forEach { folder ->
+                                        if (folder.id == note.folderId || note.folderId == -1) {
+                                            note.id?.let { id ->
                                                 editNote(note.folderId, id)
                                                 Constants.NOTE_TITLE = note.title
                                                 Constants.NOTE_DESCRIPTION = note.description
@@ -130,7 +128,8 @@ fun NotesScreen(
                                                 Constants.FOLDER_ID = note.folderId
                                                 Constants.NOTE_ID = id
                                             }
-                                            Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else folder.name
+                                            Constants.FOLDER_NAME.value =
+                                                if (note.folderId == -1) "" else folder.name
                                         }
                                     }
                                 }
@@ -155,7 +154,6 @@ fun NotesScreen(
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                }
             }
         }
     }
