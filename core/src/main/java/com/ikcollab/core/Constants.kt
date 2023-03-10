@@ -35,7 +35,6 @@ object Constants {
     var FOLDER_ID = -2
     var NOTE_ID = -2
     var FOLDER_ID_IS_NULL = mutableStateOf(false)
-    var FOLDER_ID_ARG_IS_LESS_OF_NULL = mutableStateOf(false)
     // ID ARGS
     const val FOLDER_ID_ARG = "FOLDER_ID_ARG"
     const val NOTE_ID_ARG = "NOTE_ID_ARG"

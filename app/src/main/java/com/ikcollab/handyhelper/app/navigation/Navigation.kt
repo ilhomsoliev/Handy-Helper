@@ -26,7 +26,6 @@ import androidx.navigation.navArgument
 import com.ikcollab.core.Constants.ADD_NOTE
 import com.ikcollab.core.Constants.EDIT_NOTE
 import com.ikcollab.core.Constants.FOLDER_ID_ARG
-import com.ikcollab.core.Constants.FOLDER_ID_ARG_IS_LESS_OF_NULL
 import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
 import com.ikcollab.core.Constants.FOLDER_NAME
 import com.ikcollab.core.Constants.GOAL_ID_ARG
@@ -171,13 +170,13 @@ fun Navigation(
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 TopAppBar(title = {
-                    when(currentScreen) {
+                    when (currentScreen) {
                         Screens.SearchNotesScreen.route -> {
                             CustomSearchNotesTextField(
                                 value = state.searchState,
                                 onValueChange = {
-                                    if(it.length<=20)
-                                    onEvent(NavigationEvent.OnSearchNotes(it))
+                                    if (it.length <= 20)
+                                        onEvent(NavigationEvent.OnSearchNotes(it))
                                 },
                                 placeholder = "Search notes"
                             )
@@ -212,32 +211,37 @@ fun Navigation(
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
                         currentScreen != Screens.SearchNotesScreen.route &&
-                        currentScreen !=Screens.TodoCategoryScreen.route
+                        currentScreen != Screens.TodoCategoryScreen.route
                     ) {
                         IconButton(onClick = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
                             }
                         }) {
-                            Icon(Icons.Filled.Menu, null, tint = MaterialTheme.colors.onBackground)
+                            Icon(
+                                Icons.Filled.Menu,
+                                null,
+                                tint = MaterialTheme.colors.onBackground
+                            )
                         }
                     } else {
                         IconButton(onClick = {
-                            coroutineScope.launch {
-                                if(FOLDER_ID_ARG_IS_LESS_OF_NULL.value)
-                                {
-                                    navController.popBackStack()
-                                    FOLDER_ID_ARG_IS_LESS_OF_NULL.value = false
-                                }
                                 navController.popBackStack()
-                            }
                         }) {
                             if (currentScreen == Screens.FoldersNoteScreen.route ||
                                 currentScreen == Screens.ShowDetailsOfNoteScreen.route
                             )
-                                Icon(Icons.Filled.Close, null, tint = MaterialTheme.colors.onBackground)
+                                Icon(
+                                    Icons.Filled.Close,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
                             else
-                                Icon(Icons.Filled.ArrowBackIos, null, tint = MaterialTheme.colors.onBackground)
+                                Icon(
+                                    Icons.Filled.ArrowBackIos,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
                         }
                     }
                 }, actions = {
@@ -248,7 +252,11 @@ fun Navigation(
                                     navController.navigate(Screens.GoalsListScreen.route)
                                 }
                             }) {
-                                Icon(Icons.Filled.ListAlt, null, tint = MaterialTheme.colors.onBackground)
+                                Icon(
+                                    Icons.Filled.ListAlt,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
                             }
                         }
                         Screens.GoalsListScreen.route -> {}
@@ -261,23 +269,31 @@ fun Navigation(
                                     navController.navigate(Screens.TodoCategoryScreen.route)
                                 }
                             }) {
-                                Icon(Icons.Filled.ListAlt, null, tint = MaterialTheme.colors.onBackground)
+                                Icon(
+                                    Icons.Filled.ListAlt,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
                             }
                         }
-                        Screens.SearchNotesScreen.route->{}
-                        Screens.TodoCategoryScreen.route->{}
+                        Screens.SearchNotesScreen.route -> {}
+                        Screens.TodoCategoryScreen.route -> {}
                         else -> {
                             IconButton(onClick = {
                                 coroutineScope.launch {
                                     navController.navigate(Screens.SearchNotesScreen.route)
                                 }
                             }) {
-                                Icon(Icons.Filled.Search, null, tint = MaterialTheme.colors.onBackground)
+                                Icon(
+                                    Icons.Filled.Search,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
                             }
                         }
                     }
                 },
-                backgroundColor = MaterialTheme.colors.background
+                    backgroundColor = MaterialTheme.colors.background
                 )
             },
             drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
@@ -406,16 +422,14 @@ fun Navigation(
                                 )
                             }
                         },
-                    editNote = { folderId:Int,noteId:Int->
-                        coroutineScope.launch {
+                        editNote = { folderId: Int, noteId: Int ->
                             navController.navigate(
                                 Screens.AddNoteScreen.route.replace(
                                     "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
                                     "$folderId/$noteId"
                                 )
                             )
-                        }
-                    })
+                        })
                 }
                 composable(
                     route = Screens.FoldersNoteScreen.route,
@@ -446,7 +460,7 @@ fun Navigation(
                                 )
                             }
                         },
-                        editNote = { folderId:Int,noteId:Int->
+                        editNote = { folderId: Int, noteId: Int ->
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.AddNoteScreen.route.replace(
@@ -462,8 +476,8 @@ fun Navigation(
                     route = Screens.AddNoteScreen.route,
                     arguments = listOf(
                         navArgument(FOLDER_ID_ARG) {
-                        type = NavType.IntType
-                    },
+                            type = NavType.IntType
+                        },
                         navArgument(NOTE_ID_ARG) {
                             type = NavType.IntType
                         }
@@ -472,14 +486,7 @@ fun Navigation(
                     AddNoteScreen(
                         folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
                         onGoBack = {
-                            coroutineScope.launch {
-                                if((it.arguments?.getInt(FOLDER_ID_ARG) ?: -1) == -1 && WHICH_NOTE.value == EDIT_NOTE)
-                                {
-                                    FOLDER_ID_ARG_IS_LESS_OF_NULL.value = true
-                                    navController.popBackStack()
-                                }
-                                navController.popBackStack()
-                            }
+                            navController.popBackStack()
                         })
                 }
                 composable(
