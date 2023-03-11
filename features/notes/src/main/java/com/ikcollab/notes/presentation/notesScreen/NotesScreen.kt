@@ -33,7 +33,7 @@ fun NotesScreen(
     openFolderDetails: (Int) -> Unit,
     viewModel: NotesScreenViewModel = hiltViewModel(),
     showDetailsOnClick: (Int, Int) -> Unit,
-    editNote: (Int, Int) -> Unit
+    editNote: (Int) -> Unit
 ) {
     val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
 
@@ -116,23 +116,8 @@ fun NotesScreen(
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
+                                note.id?.let { editNote(it) }
                                 Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
-                                coroutineScope.launch {
-                                    stateFolder.value.folders.forEach { folder ->
-                                        if (folder.id == note.folderId || note.folderId == -1) {
-                                            note.id?.let { id ->
-                                                editNote(note.folderId, id)
-                                                Constants.NOTE_TITLE = note.title
-                                                Constants.NOTE_DESCRIPTION = note.description
-                                                Constants.NOTE_DATE_TIME = note.dateCreated
-                                                Constants.FOLDER_ID = note.folderId
-                                                Constants.NOTE_ID = id
-                                            }
-                                            Constants.FOLDER_NAME.value =
-                                                if (note.folderId == -1) "" else folder.name
-                                        }
-                                    }
-                                }
                             })
                         },
                         contentOnTop = {

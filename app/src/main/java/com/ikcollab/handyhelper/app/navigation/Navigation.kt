@@ -37,6 +37,8 @@ import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.goals.components.BottomSheetInsertStepGoal
 import com.ikcollab.goals.goalStepsScreen.GoalStepsScreen
 import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreen
+import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreenEvent
+import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreenViewModel
 import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreen
 import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
@@ -226,7 +228,7 @@ fun Navigation(
                         }
                     } else {
                         IconButton(onClick = {
-                                navController.popBackStack()
+                            navController.popBackStack()
                         }) {
                             if (currentScreen == Screens.FoldersNoteScreen.route ||
                                 currentScreen == Screens.ShowDetailsOfNoteScreen.route
@@ -330,8 +332,8 @@ fun Navigation(
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.AddNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "-1/0"
+                                        "{${NOTE_ID_ARG}}",
+                                        "-1"
                                     )
                                 )
                             }
@@ -352,9 +354,6 @@ fun Navigation(
                             modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
                     })
-                    /*Screens.FoldersNoteScreen.route -> CustomFloatingActionButton(onInsert = {
-                        navController.navigate(Screens.AddNoteScreen.route)
-                    })*/
                 }
             }
         ) { it ->
@@ -422,11 +421,11 @@ fun Navigation(
                                 )
                             }
                         },
-                        editNote = { folderId: Int, noteId: Int ->
+                        editNote = { noteId: Int ->
                             navController.navigate(
                                 Screens.AddNoteScreen.route.replace(
-                                    "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                    "$folderId/$noteId"
+                                    "{${NOTE_ID_ARG}}",
+                                    "$noteId"
                                 )
                             )
                         })
@@ -475,18 +474,26 @@ fun Navigation(
                 composable(
                     route = Screens.AddNoteScreen.route,
                     arguments = listOf(
-                        navArgument(FOLDER_ID_ARG) {
-                            type = NavType.IntType
-                        },
                         navArgument(NOTE_ID_ARG) {
                             type = NavType.IntType
                         }
                     )
                 ) {
+                    val noteId = it.arguments?.getInt(NOTE_ID_ARG) ?: -1
+                    val viewModel = hiltViewModel<AddNoteScreenViewModel>()
+                    viewModel.onEvent(AddNoteScreenEvent.OnLoadNote(noteId))
+
                     AddNoteScreen(
-                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
-                        onGoBack = {
-                            navController.popBackStack()
+                        state = viewModel.state.collectAsState().value,
+                        onEvent = { event ->
+                            when (event) {
+                                is AddNoteScreenEvent.OnGoBack -> {
+                                    navController.popBackStack()
+                                }
+                                else -> {
+                                    viewModel.onEvent(event)
+                                }
+                            }
                         })
                 }
                 composable(
