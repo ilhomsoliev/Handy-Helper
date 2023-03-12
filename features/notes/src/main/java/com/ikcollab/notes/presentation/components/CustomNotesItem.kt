@@ -10,19 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ikcollab.core.Constants.FOLDER_NAME
 
 @Composable
 fun CustomNotesItem(
     title:String,
     description:String,
     dateTime:String,
-    showDetailsOnClick:()->Unit
+    onItemClick:()->Unit
 ) {
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -30,7 +28,7 @@ fun CustomNotesItem(
         .clip(RoundedCornerShape(15.dp))
         .background(MaterialTheme.colors.primary)
         .clickable {
-            showDetailsOnClick()
+            onItemClick()
         }
     ){
         Column(modifier=Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)) {

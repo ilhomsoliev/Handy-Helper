@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,7 +15,7 @@ import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesItem
-import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreenViewModel
+import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesViewModel
 import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
 import kotlinx.coroutines.launch
 import java.sql.Date
@@ -27,13 +28,13 @@ fun SearchNotesScreen(
     stateSearch:String,
     editNote:(Int,Int)->Unit
 ) {
-    val foldersNoteScreenViewModel:FoldersNoteScreenViewModel = hiltViewModel()
+    val foldersNoteScreenViewModel:FolderNotesViewModel = hiltViewModel()
 
     val notesScreenViewModel:NotesScreenViewModel = hiltViewModel()
 
     val coroutineScope = rememberCoroutineScope()
 
-    val stateNotes = viewModel.stateNotes.value
+    val stateNotes = viewModel.state.collectAsState().value
     Column(modifier=Modifier.fillMaxSize()) {
         LazyColumn(modifier=Modifier.padding(top = 12.dp)){
             items(stateNotes.notes){ note->
@@ -80,7 +81,7 @@ fun SearchNotesScreen(
                                 title = note.title,
                                 description = note.description,
                                 dateTime = Date(note.dateCreated).toString(),
-                                showDetailsOnClick = {
+                                onItemClick = {
                                     coroutineScope.launch {
                                         notesScreenViewModel.stateFolder.value.folders.forEach {
                                             if(it.id == note.folderId || note.folderId==-1){

@@ -21,8 +21,7 @@ import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.components.CustomNotesItem
-import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreenViewModel
-import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreenViewModel
+import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesViewModel
 import kotlinx.coroutines.launch
 import java.sql.Date
 
@@ -35,7 +34,7 @@ fun NotesScreen(
     showDetailsOnClick: (Int, Int) -> Unit,
     editNote: (Int,Int) -> Unit
 ) {
-    val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
+    val foldersNoteScreenViewModel: FolderNotesViewModel = hiltViewModel()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -125,7 +124,7 @@ fun NotesScreen(
                                 title = note.title,
                                 description = note.description,
                                 dateTime = Date(note.dateCreated).toString(),
-                                showDetailsOnClick = {
+                                onItemClick = {
                                     coroutineScope.launch {
                                         note.id?.let {
                                             showDetailsOnClick(folderId, it)

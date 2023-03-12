@@ -4,34 +4,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.note.GetNotesUseCase
-import com.ikcollab.model.dto.note.FolderState
-import com.ikcollab.model.dto.note.NoteState
+import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchNotesScreenViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase
-):ViewModel() {
+) : ViewModel() {
 
     init {
         getNotes()
     }
 
-    private val _stateNotes = mutableStateOf(NoteState())
-    val stateNotes = _stateNotes
+    private val _state = MutableStateFlow(SearchNotesState())
+    val state = _state.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000),
+        SearchNotesState()
+    )
 
     private var getNoteJob: Job? = null
 
-    fun getNotes(){
+    private fun getNotes() {
         getNoteJob?.cancel()
         viewModelScope.launch {
-            getNoteJob = getNotesUseCase().onEach {
-                _stateNotes.value = _stateNotes.value.copy(it)
+            getNoteJob = getNotesUseCase().onEach { list ->
+                _state.update {
+                    it.copy(list)
+                }
             }.launchIn(viewModelScope)
         }
     }
