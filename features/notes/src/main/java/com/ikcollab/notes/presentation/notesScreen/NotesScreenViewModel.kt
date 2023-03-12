@@ -47,12 +47,6 @@ class NotesScreenViewModel @Inject constructor(
         getFolders()
     }
 
-
-    fun updateNotesFolderIdAndName(id:Int,name:String){
-        _stateNotesFolderId.value = id
-        _stateNotesFolderName.value = name
-    }
-
     fun deleteFolder(
         id:Int,
         name:String,

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -13,8 +12,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.Modifier.Companion.toString
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -44,6 +41,8 @@ import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
+import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNoteScreenViewModel
+import com.ikcollab.notes.presentation.foldersNotesScreen.FoldersNotesScreenEvent
 import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
 import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
 import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
@@ -54,7 +53,6 @@ import com.ikcollab.todolist.todoListScreen.TodoListEvent
 import com.ikcollab.todolist.todoListScreen.TodoListScreen
 import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
 import kotlinx.coroutines.launch
-import kotlin.Unit.toString
 
 @SuppressLint("CoroutineCreationDuringComposition", "NewApi")
 @OptIn(ExperimentalMaterialApi::class)
@@ -198,7 +196,7 @@ fun Navigation(
                                         Screens.NotesScreen.route -> "Notes"
                                         Screens.BudgetScreen.route -> "Budget"
                                         Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
-                                        Screens.AddNoteScreen.route -> "Add note"
+                                        Screens.AddNoteScreen.route -> if(WHICH_NOTE.value == EDIT_NOTE) "Edit note" else "Add note"
                                         else -> ""
                                     },
                                     color = MaterialTheme.colors.onBackground
@@ -332,8 +330,8 @@ fun Navigation(
                             coroutineScope.launch {
                                 navController.navigate(
                                     Screens.AddNoteScreen.route.replace(
-                                        "{${NOTE_ID_ARG}}",
-                                        "-1"
+                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                        "-1/-1"
                                     )
                                 )
                             }
@@ -421,11 +419,11 @@ fun Navigation(
                                 )
                             }
                         },
-                        editNote = { noteId: Int ->
+                        editNote = { folderId:Int,noteId: Int ->
                             navController.navigate(
                                 Screens.AddNoteScreen.route.replace(
-                                    "{${NOTE_ID_ARG}}",
-                                    "$noteId"
+                                    "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                    "$folderId/$noteId"
                                 )
                             )
                         })
@@ -436,53 +434,72 @@ fun Navigation(
                         type = NavType.IntType
                     })
                 ) {
+                    val folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1
+                    val viewModel = hiltViewModel<FoldersNoteScreenViewModel>()
+                    val state = viewModel.state.collectAsState()
+                    LaunchedEffect(key1 = true) {
+                        viewModel.onEvent(FoldersNotesScreenEvent.OnFolderIdChange(folderId))
+                        viewModel.onEvent(FoldersNotesScreenEvent.GetNotesByFolderId)
+                    }
                     FoldersNoteScreen(
-                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
-                        openAddNoteScreen = {
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.AddNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "$it/0"
+                        state = viewModel.state.collectAsState(),
+                    ) { event ->
+                        when (event) {
+                            is FoldersNotesScreenEvent.NavigateToAddNote -> {
+                                coroutineScope.launch {
+                                    navController.navigate(
+                                        Screens.AddNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "${state.value.folderId}/-1"
+                                        )
                                     )
-                                )
+                                }
+                                WHICH_NOTE.value = ADD_NOTE
                             }
-                            WHICH_NOTE.value = ADD_NOTE
-                        },
-                        showDetailsOnClick = { folderId: Int, noteId ->
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.ShowDetailsOfNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "$folderId/$noteId"
+                            is FoldersNotesScreenEvent.NavigateToEditNote -> {
+                                coroutineScope.launch {
+                                    navController.navigate(
+                                        Screens.AddNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "${state.value.folderId}/${state.value.noteId}"
+                                        )
                                     )
-                                )
+                                }
                             }
-                        },
-                        editNote = { folderId: Int, noteId: Int ->
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.AddNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "$folderId/$noteId"
+                            is FoldersNotesScreenEvent.NavigateToShowDetails -> {
+                                coroutineScope.launch {
+                                    navController.navigate(
+                                        Screens.ShowDetailsOfNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "${state.value.folderId}/${state.value.noteId}"
+                                        )
                                     )
-                                )
+                                }
+                            }
+                            else -> {
+                                viewModel.onEvent(event)
                             }
                         }
-                    )
+                    }
                 }
                 composable(
                     route = Screens.AddNoteScreen.route,
                     arguments = listOf(
+                        navArgument(FOLDER_ID_ARG) {
+                            type = NavType.IntType
+                        },
                         navArgument(NOTE_ID_ARG) {
                             type = NavType.IntType
                         }
                     )
                 ) {
+                    val folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1
                     val noteId = it.arguments?.getInt(NOTE_ID_ARG) ?: -1
                     val viewModel = hiltViewModel<AddNoteScreenViewModel>()
-                    viewModel.onEvent(AddNoteScreenEvent.OnLoadNote(noteId))
-
+                    LaunchedEffect(key1 = true) {
+                        viewModel.onEvent(AddNoteScreenEvent.OnLoadNote(noteId, folderId))
+                        viewModel.onEvent(AddNoteScreenEvent.OnFolderChange(folderId))
+                    }
                     AddNoteScreen(
                         state = viewModel.state.collectAsState().value,
                         onEvent = { event ->

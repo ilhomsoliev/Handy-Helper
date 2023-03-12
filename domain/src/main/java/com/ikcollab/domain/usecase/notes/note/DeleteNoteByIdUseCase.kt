@@ -8,7 +8,7 @@ import javax.inject.Inject
 class DeleteNoteByIdUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
-    suspend operator fun invoke(noteDto: NoteDto) {
-        repository.deleteNote(noteDto.toNoteEntity())
+    suspend operator fun invoke(noteId:Int) {
+        repository.deleteNoteById(noteId)
     }
 }

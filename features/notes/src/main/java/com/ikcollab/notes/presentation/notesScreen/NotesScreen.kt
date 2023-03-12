@@ -33,7 +33,7 @@ fun NotesScreen(
     openFolderDetails: (Int) -> Unit,
     viewModel: NotesScreenViewModel = hiltViewModel(),
     showDetailsOnClick: (Int, Int) -> Unit,
-    editNote: (Int) -> Unit
+    editNote: (Int,Int) -> Unit
 ) {
     val foldersNoteScreenViewModel: FoldersNoteScreenViewModel = hiltViewModel()
 
@@ -44,10 +44,10 @@ fun NotesScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.getFolders()
-        foldersNoteScreenViewModel.getNotesByFolderId(-1) {
-            Constants.FOLDER_NAME.value = ""
-            Constants.FOLDER_ID_IS_NULL.value = false
-        }
+//        foldersNoteScreenViewModel.getNotesByFolderId(-1) {
+//            Constants.FOLDER_NAME.value = ""
+//            Constants.FOLDER_ID_IS_NULL.value = false
+//        }
     }
     Column(
         modifier = Modifier
@@ -103,20 +103,20 @@ fun NotesScreen(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
                                 note.id?.let {
-                                    foldersNoteScreenViewModel.deleteNoteById(
-                                        it,
-                                        note.title,
-                                        dateCreated = note.dateCreated,
-                                        description = note.description,
-                                        folderId = folderId
-                                    )
+//                                    foldersNoteScreenViewModel.deleteNoteById(
+//                                        it,
+//                                        note.title,
+//                                        dateCreated = note.dateCreated,
+//                                        description = note.description,
+//                                        folderId = folderId
+//                                    )
                                     Log.e("Delete", "Success")
                                 }
                             })
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
-                                note.id?.let { editNote(it) }
+                                note.id?.let { editNote(folderId,it) }
                                 Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
                             })
                         },
