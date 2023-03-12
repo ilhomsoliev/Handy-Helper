@@ -2,7 +2,6 @@ package com.ikcollab.notes.presentation.addNoteScreen
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -11,18 +10,15 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,19 +27,15 @@ import com.ikcollab.components.CustomDropDownMenu
 import com.ikcollab.components.DatePickerLabel
 import com.ikcollab.core.Constants
 import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
-import com.ikcollab.core.Constants.WHICH_NOTE
+import com.ikcollab.core.Constants.FOLDER_NAME
 import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.notes.presentation.components.CustomInsertFolderTextField
 import com.ikcollab.notes.presentation.components.DatePicker
 import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
-import com.ikcollab.notes.presentation.theme.WhiteRed
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.sql.Date
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @SuppressLint("InvalidColorHexValue", "CoroutineCreationDuringComposition", "NewApi")
 @Composable
@@ -51,16 +43,17 @@ fun AddNoteScreen(
     state: AddNoteScreenState,
     onEvent: (AddNoteScreenEvent) -> Unit
 ) {
-    val folderIdNull = remember { mutableStateOf(-1) }
     var stateTitleNotNull by remember {
         mutableStateOf(false)
     }
     val calendarState = rememberSheetState()
     val notesScreenViewModel: NotesScreenViewModel = hiltViewModel()
-    val selectedCategory = remember { mutableStateOf("Choose a folder") }
     val coroutineScope = rememberCoroutineScope()
 
     state.note?.let { note ->
+        val selectedCategory = remember { mutableStateOf(if(note.folderId==-1) "Choose a folder" else FOLDER_NAME.value) }
+
+        val folderIdNull = remember { mutableStateOf(note.folderId) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,7 +83,7 @@ fun AddNoteScreen(
 
             if (FOLDER_ID_IS_NULL.value || Constants.WHICH_NOTE.value == Constants.EDIT_NOTE) {
                 LaunchedEffect(key1 = true) {
-                    notesScreenViewModel.getFolders()
+                    onEvent(AddNoteScreenEvent.GetFolders)
                 }
                 CustomDropDownMenu(modifier = Modifier
                     .fillMaxWidth()
@@ -104,6 +97,7 @@ fun AddNoteScreen(
                             }
                         selectedCategory.value = categoryName
                         folderIdNull.value = response?.id ?: -1
+                        onEvent(AddNoteScreenEvent.OnFolderChange(folderIdNull.value))
                         Log.e("FOLDERIDNULL", "${folderIdNull.value}")
                     })
             }
@@ -120,21 +114,28 @@ fun AddNoteScreen(
                     text = "Choose a date",
                     color = Color.Gray
                 )
-                /* DatePickerLabel(date = stateNoteDate.value) {
+                 DatePickerLabel(date = Date(state.note.dateCreated).toString()) {
                      calendarState.show()
-                 }*/
+                 }
             }
 
-            /*    DatePicker(calendarState) {
-                    viewModel.updateNoteDate(it.toString())
-                }*/
+               DatePicker(calendarState) {
+                   onEvent(AddNoteScreenEvent.OnDateChange(it.toString()))
+                }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(end = 25.dp, bottom = 25.dp), contentAlignment = Alignment.BottomEnd
             ) {
                 FloatingActionButton(backgroundColor = Color.Red, onClick = {
-                    onEvent(AddNoteScreenEvent.InsertToDatabase)
+                    if(state.note.title.isNotBlank())
+                    {
+                        onEvent(AddNoteScreenEvent.InsertToDatabase)
+                        onEvent(AddNoteScreenEvent.OnGoBack)
+                    }
+                    else {
+                        stateTitleNotNull = true
+                    }
                 }) {
                     Icon(imageVector = Icons.Default.Done, contentDescription = null)
                 }

@@ -45,13 +45,13 @@ fun SearchNotesScreen(
                             SwipeTrash (onTrashClick = {
                                 coroutineScope.launch {
                                     note.id?.let {
-                                        foldersNoteScreenViewModel.deleteNoteById(
-                                            it,
-                                            note.title,
-                                            dateCreated = note.dateCreated,
-                                            description = note.description,
-                                            folderId = note.folderId
-                                        )
+//                                        foldersNoteScreenViewModel.deleteNoteById(
+//                                            it,
+//                                            note.title,
+//                                            dateCreated = note.dateCreated,
+//                                            description = note.description,
+//                                            folderId = note.folderId
+//                                        )
                                         Log.e("Delete", "Success")
                                     }
                                 }
@@ -68,8 +68,6 @@ fun SearchNotesScreen(
                                                 Constants.NOTE_TITLE = note.title
                                                 Constants.NOTE_DESCRIPTION = note.description
                                                 Constants.NOTE_DATE_TIME = note.dateCreated
-                                                Constants.FOLDER_ID = note.folderId
-                                                Constants.NOTE_ID = id
                                             }
                                             Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else it.name
                                         }

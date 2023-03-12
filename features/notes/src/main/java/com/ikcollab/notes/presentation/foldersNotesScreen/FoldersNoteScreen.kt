@@ -1,5 +1,6 @@
 package com.ikcollab.notes.presentation.foldersNotesScreen
 
+import android.annotation.SuppressLint
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ikcollab.components.CustomDialog
 import com.ikcollab.components.DraggableCard.ActionsRow
 import com.ikcollab.components.DraggableCard.CardsScreenViewModel
 import com.ikcollab.components.DraggableCard.DraggableCard
@@ -30,26 +32,21 @@ import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.components.CustomNotesItem
 import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
 import com.ikcollab.notes.presentation.theme.WhiteRed
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.sql.Date
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FoldersNoteScreen(
-    folderId:Int,
-    openAddNoteScreen:(Int) ->Unit,
-    viewModel: FoldersNoteScreenViewModel = hiltViewModel(),
-    showDetailsOnClick:(Int,Int)->Unit,
-    editNote:(Int,Int)->Unit
+    state: State<FoldersNotesScreenState>,
+    onEvent: (FoldersNotesScreenEvent)->Unit
 ) {
-
-    val notesScreenViewModel:NotesScreenViewModel = hiltViewModel()
-    val notes by viewModel.stateNotesByFolderId
-
+    val isDialogState = remember{
+        mutableStateOf(false)
+    }
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(key1 = false, block = {
-        viewModel.getNotesByFolderId(folderId = folderId)
-    })
-    val stateFolder = remember { notesScreenViewModel.stateFolder }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,61 +55,79 @@ fun FoldersNoteScreen(
         LazyColumn(
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            items(notes.notes) { note ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeTrash (onTrashClick = {
-                            note.id?.let {
-                                viewModel.deleteNoteById(
-                                    it,
-                                    note.title,
-                                    dateCreated = note.dateCreated,
-                                    description = note.description,
-                                    folderId = folderId
-                                )
-                                Log.e("Delete", "Success")
-                            }
-                        })
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            Constants.WHICH_NOTE.value=Constants.EDIT_NOTE
-                            coroutineScope.launch {
-                                stateFolder.value.folders.forEach { folder->
-                                    if(folder.id == note.folderId || note.folderId==-1){
-                                        note.id?.let {id->
-                                            editNote(note.folderId, id)
-                                            Constants.NOTE_TITLE = note.title
-                                            Constants.NOTE_DESCRIPTION = note.description
-                                            Constants.NOTE_DATE_TIME = note.dateCreated
-                                            Constants.FOLDER_ID = note.folderId
-                                            Constants.NOTE_ID = id
+            item() {
+                state.value.note?.let {
+                    it.notes?.let { notes ->
+                        notes.forEach { note ->
+                            DraggableScaffold(
+                                contentUnderRight = {
+                                    SwipeTrash(onTrashClick = {
+                                        isDialogState.value = true
+                                    })
+                                },
+                                contentUnderLeft = {
+                                    SwipeEdit(onClick = {
+                                        Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
+                                        coroutineScope.launch {
+                                            if (state.value.folderId == note.folderId || note.folderId == -1) {
+                                                note.id?.let { id ->
+                                                    onEvent(
+                                                        FoldersNotesScreenEvent.OnNoteIdChange(
+                                                            id
+                                                        )
+                                                    )
+                                                }
+                                                onEvent(FoldersNotesScreenEvent.NavigateToEditNote)
+                                            }
                                         }
-                                        Constants.FOLDER_NAME.value = if(note.folderId==-1) "" else folder.name
-                                    }
+                                    })
+                                },
+                                contentOnTop = {
+                                    CustomNotesItem(
+                                        title = note.title,
+                                        description = note.description,
+                                        dateTime = Date(note.dateCreated).toString(),
+                                        showDetailsOnClick = {
+                                            coroutineScope.launch {
+                                                note.id?.let { id ->
+                                                    onEvent(
+                                                        FoldersNotesScreenEvent.OnNoteIdChange(
+                                                            id
+                                                        )
+                                                    )
+                                                    Constants.NOTE_TITLE = note.title
+                                                    Constants.NOTE_DESCRIPTION = note.description
+                                                    Constants.NOTE_DATE_TIME = note.dateCreated
+                                                    onEvent(FoldersNotesScreenEvent.NavigateToShowDetails)
+                                                }
+                                            }
+                                        }
+                                    )
                                 }
-                            }
-                        })
-                    },
-                    contentOnTop = {
-                        CustomNotesItem(
-                            title = note.title,
-                            description = note.description,
-                            dateTime = Date(note.dateCreated).toString(),
-                            showDetailsOnClick = {
-                                coroutineScope.launch {
-                                    note.id?.let {
-                                        showDetailsOnClick(folderId, it)
-                                        Constants.NOTE_TITLE = note.title
-                                        Constants.NOTE_DESCRIPTION = note.description
-                                        Constants.NOTE_DATE_TIME = note.dateCreated
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            CustomDialog(
+                                text = "Attention",
+                                description = "The entry will be permanently deleted",
+                                okBtnClick =
+                                {
+                                    note.id?.let { id ->
+                                        onEvent(FoldersNotesScreenEvent.OnNoteIdChange(id))
+                                        onEvent(FoldersNotesScreenEvent.DeleteNoteById)
+                                        Log.e("Delete", "Success")
+                                        isDialogState.value = false
                                     }
-                                }
+                                },
+                                cancelBtnClick = { isDialogState.value = false },
+                                isDialogOpen = isDialogState,
+                                okBtnText = "Delete",
+                                cancelBtnText = "Cancel"
+                            ) {
+                                isDialogState.value = false
                             }
-                        )
+                        }
                     }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }
@@ -123,7 +138,7 @@ fun FoldersNoteScreen(
         contentAlignment = Alignment.BottomEnd
     ) {
         FloatingActionButton(backgroundColor = Color.Red, onClick = {
-            openAddNoteScreen(folderId)
+            onEvent(FoldersNotesScreenEvent.NavigateToAddNote)
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
