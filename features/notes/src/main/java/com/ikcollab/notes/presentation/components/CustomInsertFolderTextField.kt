@@ -7,13 +7,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CustomInsertFolderTextField(
@@ -23,11 +29,19 @@ fun CustomInsertFolderTextField(
     width:Float = 0.8f,
     height:Int = 55,
     paddingEnd:Int = 0,
-    paddingStart:Int = 15
+    paddingStart:Int = 15,
+    keyboard:SoftwareKeyboardController?=null,
+    focusRequester:FocusRequester
 ) {
     TextField(
         modifier= Modifier
             .fillMaxWidth(width)
+            .focusRequester(focusRequester)
+            .onFocusChanged {
+                if (it.isFocused) {
+                    keyboard?.show()
+                }
+            }
             .padding(start = paddingStart.dp, end = paddingEnd.dp)
             .height(height = height.dp),
         value = value,

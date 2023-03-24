@@ -1,7 +1,5 @@
 package com.ikcollab.notes.presentation.folderNotesScreen
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.note.DeleteNoteByIdUseCase
@@ -16,8 +14,6 @@ class FolderNotesViewModel @Inject constructor(
     private val getNotesByFolderIdUseCase: GetNotesByFolderIdUseCase,
     private val deleteNoteByIdUseCase: DeleteNoteByIdUseCase
 ) : ViewModel() {
-    private val _stateNotesByFolderId = mutableStateOf(FolderNotesState())
-    val stateNotesByFolderId = _stateNotesByFolderId
     private val _state = MutableStateFlow(FolderNotesState())
     val state = _state.stateIn(
         viewModelScope,
@@ -25,6 +21,9 @@ class FolderNotesViewModel @Inject constructor(
         FolderNotesState()
     )
 
+    init {
+        onEvent(FolderNotesEvent.GetNotesByFolderId)
+    }
     fun onEvent(event: FolderNotesEvent) {
         when (event) {
             is FolderNotesEvent.GetNotesByFolderId -> {

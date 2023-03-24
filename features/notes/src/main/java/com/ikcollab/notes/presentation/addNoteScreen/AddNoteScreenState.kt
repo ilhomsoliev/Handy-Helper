@@ -8,5 +8,5 @@ data class AddNoteScreenState(
     val isLoading: Boolean = false,
     val error: String = "",
     val note: NoteEntity? = null,
-    val folder:FolderState? = null
+    val folder:List<FolderDto>? = null
 )

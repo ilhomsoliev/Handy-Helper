@@ -1,18 +1,15 @@
 package com.ikcollab.notes.presentation.notesScreen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ikcollab.core.Constants
 import com.ikcollab.domain.usecase.notes.folder.DeleteFolderByIdUseCase
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
-import com.ikcollab.domain.usecase.notes.note.CountNotesOfFolderUseCase
 import com.ikcollab.domain.usecase.notes.note.DeleteAllNotesByFolderIdUseCase
-import com.ikcollab.model.dto.note.FolderDto
-import com.ikcollab.model.dto.note.FolderState
+import com.ikcollab.domain.usecase.notes.note.DeleteNoteByIdUseCase
+import com.ikcollab.domain.usecase.notes.note.GetNotesByFolderIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,53 +17,68 @@ import javax.inject.Inject
 class NotesScreenViewModel @Inject constructor(
     private val getFoldersUseCase: GetFoldersUseCase,
     private val deleteFolderByIdUseCase: DeleteFolderByIdUseCase,
-    private val countNotesOfFolderUseCase: CountNotesOfFolderUseCase,
-    private val deleteAllNotesByFolderIdUseCase: DeleteAllNotesByFolderIdUseCase
-):ViewModel() {
+    private val deleteAllNotesByFolderIdUseCase: DeleteAllNotesByFolderIdUseCase,
+    private val deleteNoteByIdUseCase: DeleteNoteByIdUseCase,
+    private val getNotesByFolderIdUseCase: GetNotesByFolderIdUseCase,
+    ):ViewModel() {
 
-    private val _stateFolder = mutableStateOf(FolderState())
-    val stateFolder = _stateFolder
-
-    private val _stateNotesFolderId = mutableStateOf(0)
-    val stateNotesFolderId = _stateNotesFolderId
-
-    private val _stateNotesFolderName = mutableStateOf("")
-    val stateNotesFolderName = _stateNotesFolderName
-
-
-    private var getFolderJob: Job? = null
-
-    private var getNoteJob: Job? = null
+    private val _state = MutableStateFlow(NotesState())
+    val state = _state.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(1000),
+        NotesState()
+    )
 
     init {
-        getFolders()
+            onEvent(NotesEvent.GetFolders)
     }
 
-    fun deleteFolder(
-        id:Int,
-        name:String,
-        dateCreated: Long
-    ) {
-        viewModelScope.launch {
-            deleteFolderByIdUseCase(FolderDto(id, name, dateCreated))
-        }
-    }
-
-    fun deleteAllNotesByFolderId(
-        folderId:Int
-    ){
-     viewModelScope.launch {
-         deleteAllNotesByFolderIdUseCase(folderId)
-     }
-    }
-
-
-    fun getFolders(){
-        getFolderJob?.cancel()
-        viewModelScope.launch {
-            getFolderJob = getFoldersUseCase().onEach {
-                _stateFolder.value = _stateFolder.value.copy(it)
-            }.launchIn(viewModelScope)
+    fun onEvent(event: NotesEvent){
+        when(event){
+            is NotesEvent.DeleteAllNotesByFolderId -> {
+                viewModelScope.launch {
+                    deleteAllNotesByFolderIdUseCase(_state.value.folderId)
+                }
+            }
+            is NotesEvent.GetFolders ->{
+                viewModelScope.launch {
+                    getFoldersUseCase().onEach { folders->
+                        _state.update {
+                            it.copy(folders = folders)
+                        }
+                    }.launchIn(viewModelScope)
+                }
+            }
+            is NotesEvent.GetNotesByFolderId ->{
+                getNotesByFolderIdUseCase(folderId =-1).onEach { list ->
+                    _state.update {
+                        it.copy(notes = list)
+                    }
+                }.launchIn(viewModelScope)
+                Constants.FOLDER_NAME.value = ""
+                Constants.FOLDER_ID_IS_NULL.value = false
+            }
+            is NotesEvent.DeleteFolder->{
+                viewModelScope.launch {
+                    deleteFolderByIdUseCase(_state.value.folderId)
+                }
+            }
+            is NotesEvent.OnFolderIdChange->{
+                _state.update {
+                    it.copy(folderId = event.value)
+                }
+            }
+            is NotesEvent.DeleteNoteById -> {
+                viewModelScope.launch {
+                    deleteNoteByIdUseCase.invoke(_state.value.noteId)
+                }
+            }
+            is NotesEvent.OnNoteIdChange->{
+                _state.update {
+                    it.copy(noteId = event.value)
+                }
+            }
+            else ->{ }
         }
     }
 }

@@ -17,7 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +39,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.sql.Date
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("InvalidColorHexValue", "CoroutineCreationDuringComposition", "NewApi")
 @Composable
 fun AddNoteScreen(
@@ -49,10 +52,12 @@ fun AddNoteScreen(
     val calendarState = rememberSheetState()
     val notesScreenViewModel: NotesScreenViewModel = hiltViewModel()
     val coroutineScope = rememberCoroutineScope()
+    val focusRequester = remember { FocusRequester() }
 
+    val folder = notesScreenViewModel.state.collectAsState()
     state.note?.let { note ->
+        Log.e("FOLDER_NAME","${FOLDER_NAME.value}")
         val selectedCategory = remember { mutableStateOf(if(note.folderId==-1) "Choose a folder" else FOLDER_NAME.value) }
-
         val folderIdNull = remember { mutableStateOf(note.folderId) }
         Column(
             modifier = Modifier
@@ -66,7 +71,8 @@ fun AddNoteScreen(
                 onValueChange = { onEvent(AddNoteScreenEvent.OnTitleChange(it)) },
                 placeholder = "Title",
                 width = 1f,
-                paddingEnd = 15
+                paddingEnd = 15,
+                focusRequester = focusRequester
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -76,7 +82,8 @@ fun AddNoteScreen(
                 placeholder = "Description..",
                 width = 1f,
                 height = 100,
-                paddingEnd = 15
+                paddingEnd = 15,
+                focusRequester = focusRequester
             )
 
             Spacer(modifier = Modifier.height(25.dp))
@@ -85,21 +92,23 @@ fun AddNoteScreen(
                 LaunchedEffect(key1 = true) {
                     onEvent(AddNoteScreenEvent.GetFolders)
                 }
-                CustomDropDownMenu(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
-                    suggestions = notesScreenViewModel.stateFolder.value.folders.map { it.name },
-                    selectedText = selectedCategory.value,
-                    onClick = { categoryName ->
-                        val response: FolderDto? =
-                            notesScreenViewModel.stateFolder.value.folders.find {
-                                it.name == categoryName
-                            }
-                        selectedCategory.value = categoryName
-                        folderIdNull.value = response?.id ?: -1
-                        onEvent(AddNoteScreenEvent.OnFolderChange(folderIdNull.value))
-                        Log.e("FOLDERIDNULL", "${folderIdNull.value}")
-                    })
+                folder.value.folders.map { it.name }.let { name ->
+                    CustomDropDownMenu(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp),
+                        suggestions = name,
+                        selectedText = selectedCategory.value,
+                        onClick = { categoryName ->
+                            val response: FolderDto? =
+                                folder.value.folders.find {
+                                    it.name == categoryName
+                                }
+                            selectedCategory.value = categoryName
+                            folderIdNull.value = response?.id ?: -1
+                            onEvent(AddNoteScreenEvent.OnFolderChange(folderIdNull.value))
+                            Log.e("FOLDERIDNULL", "${folderIdNull.value}")
+                        })
+                }
             }
 
             Row(

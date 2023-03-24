@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.notes.folder.GetFoldersUseCase
 import com.ikcollab.domain.usecase.notes.note.GetNoteByIdUseCase
 import com.ikcollab.domain.usecase.notes.note.InsertNoteUseCase
-import com.ikcollab.model.dto.note.FolderState
 import com.ikcollab.model.dto.toNoteDto
 import com.ikcollab.model.local.note.NoteEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -86,7 +85,7 @@ class AddNoteScreenViewModel @Inject constructor(
                 viewModelScope.launch {
                     getFolderJob = getFoldersUseCase().onEach { folder->
                         _state.update {
-                            it.copy(folder = FolderState(folder))
+                            it.copy(folder = folder)
                         }
                     }.launchIn(viewModelScope)
                 }
