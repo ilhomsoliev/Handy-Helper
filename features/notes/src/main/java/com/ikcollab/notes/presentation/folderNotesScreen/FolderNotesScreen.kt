@@ -39,11 +39,6 @@ fun FoldersNoteScreen(
         {
             onEvent(FolderNotesEvent.DeleteNoteById)
             isDialogState.value = false
-            /*note.id?.let { id ->
-                onEvent(FoldersNotesScreenEvent.OnNoteIdChange(id))
-                onEvent(FoldersNotesScreenEvent.DeleteNoteById)
-                Log.e("Delete", "Success")
-            }*/
         },
         cancelBtnClick = { isDialogState.value = false },
         isDialogOpen = isDialogState,
@@ -71,15 +66,9 @@ fun FoldersNoteScreen(
                     contentUnderLeft = {
                         SwipeEdit(onClick = {
                             Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
-                            coroutineScope.launch {
-                                if (state.folderId == note.folderId || note.folderId == -1) {
-                                    note.id?.let { id ->
-                                        onEvent(
-                                            FolderNotesEvent.OnNoteIdChange(
-                                                id
-                                            )
-                                        )
-                                    }
+                            if (state.folderId == note.folderId) {
+                                coroutineScope.launch {
+                                    onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
                                     onEvent(FolderNotesEvent.NavigateToEditNote)
                                 }
                             }
@@ -92,19 +81,12 @@ fun FoldersNoteScreen(
                             dateTime = Date(note.dateCreated).toString(),
                             onItemClick = {
                                 onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
-                                /*coroutineScope.launch {
-                                    note.id?.let { id ->
-                                        onEvent(
-                                            FoldersNotesScreenEvent.OnNoteIdChange(
-                                                id
-                                            )
-                                        )
+                                coroutineScope.launch {
                                         Constants.NOTE_TITLE = note.title
                                         Constants.NOTE_DESCRIPTION = note.description
                                         Constants.NOTE_DATE_TIME = note.dateCreated
-                                        onEvent(FoldersNotesScreenEvent.NavigateToShowDetails)
+                                        onEvent(FolderNotesEvent.NavigateToShowDetails)
                                     }
-                                }*/
                             }
                         )
                     }

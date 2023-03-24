@@ -7,6 +7,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 data class NavigationState constructor(
     val folderName: String = "",
+    val folderId: Int = -1,
     val todoCategoryName: String = "",
     val goalName: String = "",
     val goalStartDate: Long = System.currentTimeMillis(),

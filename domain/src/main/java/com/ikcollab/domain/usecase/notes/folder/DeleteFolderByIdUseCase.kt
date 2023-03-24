@@ -8,7 +8,7 @@ import javax.inject.Inject
 class DeleteFolderByIdUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
-    suspend operator fun invoke(folderDto: FolderDto) {
-        repository.deleteFolder(folderDto.toFolderEntity())
+    suspend operator fun invoke(folderId: Int) {
+        repository.deleteFolderById(folderId)
     }
 }

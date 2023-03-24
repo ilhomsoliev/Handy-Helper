@@ -2,8 +2,10 @@ package com.ikcollab.handyhelper.app.navigation
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,7 +46,11 @@ import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
 import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesViewModel
 import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesEvent
+import com.ikcollab.notes.presentation.notesScreen.NotesEvent
+import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
+import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesEvent
 import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
+import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreenViewModel
 import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
 import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
 import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryEvent
@@ -52,10 +59,13 @@ import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreenViewModel
 import com.ikcollab.todolist.todoListScreen.TodoListEvent
 import com.ikcollab.todolist.todoListScreen.TodoListScreen
 import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "NewApi")
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun Navigation(
@@ -65,15 +75,28 @@ fun Navigation(
 
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
+    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
+    val stateOfKeyboard = remember{
+        mutableStateOf(false)
+    }
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded },
     )
-    val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
+    if(!modalSheetState.isVisible){
+        stateOfKeyboard.value = false
+    }
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
+        stateOfKeyboard.value = false
+    }
+
+    if(currentScreen == Screens.NotesScreen.route){
+        LaunchedEffect(key1 = true){
+
+        }
     }
     ModalBottomSheetLayout(
         sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
@@ -94,7 +117,8 @@ fun Navigation(
                                 }
                             },
                             placeholder = "Name of Folder...",
-                            modifier = Modifier.padding(bottom = 150.dp)
+                            modifier = Modifier.padding(bottom = 150.dp),
+                            stateOfKeyboard = stateOfKeyboard
                         )
                     }
                     Screens.GoalsScreen.route -> {
@@ -325,6 +349,8 @@ fun Navigation(
                             coroutineScope.launch {
                                 modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                             }
+                            stateOfKeyboard.value=true
+                            onEvent(NavigationEvent.OnFolderIdChange(-1))
                         },
                         onEdit = {
                             coroutineScope.launch {
@@ -397,36 +423,56 @@ fun Navigation(
                     GoalsListScreen()
                 }
                 composable(route = Screens.NotesScreen.route) {
+                    val viewModel = hiltViewModel<NotesScreenViewModel>()
+                    val state = viewModel.state.collectAsState()
+                    LaunchedEffect(key1 = true){
+                        viewModel.onEvent(NotesEvent.GetFolders)
+                        delay(300)
+                        viewModel.onEvent(NotesEvent.GetNotesByFolderId)
+                    }
                     NotesScreen(
-                        folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1,
-                        openFolderDetails = {
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.FoldersNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}",
-                                        it.toString(),
+                        state = viewModel.state.collectAsState().value,
+                        onEvent= { event ->
+                            when (event) {
+                                is NotesEvent.NavigateToFoldersDetails -> {
+                                    navController.navigate(
+                                        Screens.FoldersNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}",
+                                            "${state.value.folderId}",
+                                        )
                                     )
-                                )
-                            }
-                        },
-                        showDetailsOnClick = { folderId: Int, noteId ->
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.ShowDetailsOfNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "-$folderId/$noteId"
+                                    Log.e("Folder_id","${state.value.folderId}")
+                                }
+                                is NotesEvent.NavigateToEditFolder->{
+                                    onEvent(NavigationEvent.OnFolderIdChange(state.value.folderId))
+                                    Log.e("FOlder_Id","${state.value.folderId}")
+                                    onEvent(NavigationEvent.OnFolderNameChange(FOLDER_NAME.value))
+                                    coroutineScope.launch {
+                                        modalSheetState.show()
+                                    }
+                                }
+                                is NotesEvent.NavigateToShowNotesDetails -> {
+                                    navController.navigate(
+                                        Screens.ShowDetailsOfNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "${state.value.folderId}/${state.value.noteId}"
+                                        )
                                     )
-                                )
+                                }
+                                is NotesEvent.NavigateToAddNote -> {
+                                    navController.navigate(
+                                        Screens.AddNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "-1/${state.value.noteId}"
+                                        )
+                                    )
+                                }
+                                else ->{
+                                viewModel.onEvent(event)
+                                }
                             }
-                        },
-                        editNote = { folderId: Int, noteId: Int ->
-                            navController.navigate(
-                                Screens.AddNoteScreen.route.replace(
-                                    "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                    "$folderId/$noteId"
-                                )
-                            )
-                        })
+                        }
+                    )
                 }
                 composable(
                     route = Screens.FoldersNoteScreen.route,
@@ -436,13 +482,13 @@ fun Navigation(
                 ) {
                     val folderId = it.arguments?.getInt(FOLDER_ID_ARG) ?: -1
                     val viewModel = hiltViewModel<FolderNotesViewModel>()
-                    val state = viewModel.state.collectAsState().value
                     LaunchedEffect(key1 = true) {
                         viewModel.onEvent(FolderNotesEvent.OnFolderIdChange(folderId))
                         viewModel.onEvent(FolderNotesEvent.GetNotesByFolderId)
                     }
+                    val state = viewModel.state.collectAsState()
                     FoldersNoteScreen(
-                        state = state,
+                        state = viewModel.state.collectAsState().value,
                     ) { event ->
                         when (event) {
                             is FolderNotesEvent.NavigateToAddNote -> {
@@ -450,7 +496,7 @@ fun Navigation(
                                     navController.navigate(
                                         Screens.AddNoteScreen.route.replace(
                                             "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                            "${state.folderId}/-1"
+                                            "${state.value.folderId}/-1"
                                         )
                                     )
                                 }
@@ -461,7 +507,7 @@ fun Navigation(
                                     navController.navigate(
                                         Screens.AddNoteScreen.route.replace(
                                             "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                            "${state.folderId}/${state.noteId}"
+                                            "${state.value.folderId}/${state.value.noteId}"
                                         )
                                     )
                                 }
@@ -471,7 +517,7 @@ fun Navigation(
                                     navController.navigate(
                                         Screens.ShowDetailsOfNoteScreen.route.replace(
                                             "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                            "${state.folderId}/${state.noteId}"
+                                            "${state.value.folderId}/${state.value.noteId}"
                                         )
                                     )
                                 }
@@ -529,28 +575,36 @@ fun Navigation(
                 composable(
                     route = Screens.SearchNotesScreen.route
                 ) {
+                    val viewModel = hiltViewModel<SearchNotesScreenViewModel>()
+                    val searchState = viewModel.state.collectAsState()
+                    viewModel.onEvent(SearchNotesEvent.OnSearchChange(state.searchState))
                     SearchNotesScreen(
-                        showDetailsOnClick = { folderId: Int, noteId ->
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.ShowDetailsOfNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "$folderId/$noteId"
-                                    )
-                                )
+                        state = searchState.value,
+                        onEvent = { event->
+                            when(event){
+                                is SearchNotesEvent.NavigateToEditNote ->{
+                                    coroutineScope.launch {
+                                        navController.navigate(
+                                            Screens.AddNoteScreen.route.replace(
+                                                "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                                "${searchState.value.folderId}/${searchState.value.noteId}"
+                                            )
+                                        )
+                                    }
+                                }
+                                is SearchNotesEvent.NavigateToShowDetails ->{
+                                    coroutineScope.launch {
+                                        navController.navigate(
+                                            Screens.ShowDetailsOfNoteScreen.route.replace(
+                                                "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                                "${searchState.value.folderId}/${searchState.value.noteId}"
+                                            )
+                                        )
+                                    }
+                                }
+                                else->viewModel.onEvent(event)
                             }
                         },
-                        stateSearch = state.searchState,
-                        editNote = { folderId: Int, noteId: Int ->
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.AddNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "$folderId/$noteId"
-                                    )
-                                )
-                            }
-                        }
                     )
                 }
                 composable(route = Screens.PickThemeScreen.route) {

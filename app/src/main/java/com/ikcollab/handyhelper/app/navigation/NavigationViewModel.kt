@@ -107,11 +107,16 @@ class NavigationViewModel @Inject constructor(
                         FolderDto(
                             name = name,
                             dateCreated = dateCreated,
-                            id = null
+                            id = if(_state.value.folderId!=-1) _state.value.folderId else null
                         )
                     )
                 }
                 onEvent(NavigationEvent.OnFolderNameChange(""))
+            }
+            is NavigationEvent.OnFolderIdChange->{
+                _state.update {
+                    it.copy(folderId = event.value)
+                }
             }
             is NavigationEvent.InsertTodoCategory -> {
                 val name = _state.value.todoCategoryName

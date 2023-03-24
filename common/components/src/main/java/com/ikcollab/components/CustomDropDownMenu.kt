@@ -26,7 +26,7 @@ fun CustomDropDownMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    var textfieldSize by remember { mutableStateOf(Size.Zero) }
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (expanded)
         Icons.Filled.ExpandLess
@@ -38,7 +38,7 @@ fun CustomDropDownMenu(
             modifier = Modifier
                 .onGloballyPositioned { coordinates ->
                     //This value is used to assign to the DropDown the same width
-                    textfieldSize = coordinates.size.toSize()
+                    textFieldSize = coordinates.size.toSize()
                 }
                 .clickable {
                     expanded = !expanded
@@ -68,7 +68,7 @@ fun CustomDropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+                .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
         ) {
             suggestions.forEach { label ->
                 DropdownMenuItem(onClick = {
