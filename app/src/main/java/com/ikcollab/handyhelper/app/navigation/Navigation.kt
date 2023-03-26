@@ -2,7 +2,6 @@ package com.ikcollab.handyhelper.app.navigation
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -16,51 +15,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.ikcollab.core.Constants.ADD_NOTE
 import com.ikcollab.core.Constants.EDIT_NOTE
 import com.ikcollab.core.Constants.FOLDER_ID_ARG
 import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
 import com.ikcollab.core.Constants.FOLDER_NAME
-import com.ikcollab.core.Constants.GOAL_ID_ARG
 import com.ikcollab.core.Constants.NOTE_ID_ARG
 import com.ikcollab.core.Constants.WHICH_NOTE
-import com.ikcollab.goals.goalsListScreen.GoalsListScreen
-import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.components.BottomSheetInsertGoal
 import com.ikcollab.goals.components.BottomSheetInsertStepGoal
-import com.ikcollab.goals.goalStepsScreen.GoalStepsScreen
 import com.ikcollab.handyhelper.app.navigation.graph.*
-import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreen
-import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreenEvent
-import com.ikcollab.notes.presentation.addNoteScreen.AddNoteScreenViewModel
-import com.ikcollab.notes.presentation.folderNotesScreen.FoldersNoteScreen
-import com.ikcollab.notes.presentation.notesScreen.NotesScreen
 import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
-import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesViewModel
-import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesEvent
-import com.ikcollab.notes.presentation.notesScreen.NotesEvent
-import com.ikcollab.notes.presentation.notesScreen.NotesScreenViewModel
-import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesEvent
-import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreen
-import com.ikcollab.notes.presentation.searchNotesScreen.SearchNotesScreenViewModel
-import com.ikcollab.notes.presentation.showDetailsOfNoteScreen.ShowDetailsOfNoteScreen
 import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryEvent
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreen
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreenViewModel
-import com.ikcollab.todolist.todoListScreen.TodoListEvent
-import com.ikcollab.todolist.todoListScreen.TodoListScreen
-import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition", "NewApi")
@@ -90,16 +62,12 @@ fun Navigation(
     if (!modalSheetState.isVisible) {
         stateOfKeyboard.value = false
     }
+
     BackHandler(modalSheetState.isVisible) {
         coroutineScope.launch { modalSheetState.hide() }
         stateOfKeyboard.value = false
     }
 
-    if (currentScreen == Screens.NotesScreen.route) {
-        LaunchedEffect(key1 = true) {
-
-        }
-    }
     ModalBottomSheetLayout(
         sheetShape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
         sheetState = modalSheetState,
@@ -388,6 +356,7 @@ fun Navigation(
                 modifier = Modifier
                     .padding(it),
                 navController = navController,
+                route = Graph.RootGraph.route,
                 startDestination = Graph.GoalsGraph.route
             ) {
                 GoalsNavGraph(navController)

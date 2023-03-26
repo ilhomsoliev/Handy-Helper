@@ -1,6 +1,7 @@
 package com.ikcollab.handyhelper.app.navigation.graph
 
 sealed class Graph(val route: String) {
+    object RootGraph : Graph("RootGraph")
     object GoalsGraph : Graph("GoalsGraph")
     object BudgetGraph : Graph("BudgetGraph")
     object ChoresGraph : Graph("ChoresGraph")
