@@ -8,7 +8,7 @@ import javax.inject.Inject
 class DeleteGoalByIdUseCase @Inject constructor(
     private val repository: GoalsRepository
 ) {
-    suspend operator fun invoke(goalDto: GoalDto) {
-        repository.deleteGoal(goalDto.toGoalEntity())
+    suspend operator fun invoke(goalId: Int) {
+        repository.deleteGoalById(goalId)
     }
 }
