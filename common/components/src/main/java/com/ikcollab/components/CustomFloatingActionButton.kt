@@ -1,4 +1,4 @@
-package com.ikcollab.notes.presentation.components
+package com.ikcollab.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility

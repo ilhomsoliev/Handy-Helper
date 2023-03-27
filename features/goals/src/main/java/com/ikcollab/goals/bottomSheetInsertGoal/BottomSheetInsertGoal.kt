@@ -1,4 +1,4 @@
-package com.ikcollab.goals.components
+package com.ikcollab.goals.bottomSheetInsertGoal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,11 +17,8 @@ import com.ikcollab.components.ModalSheetTextField
 
 @Composable
 fun BottomSheetInsertGoal(
-    goalValue: String,
-    onGoalValueChange: (String) -> Unit,
-    start: Long,
-    deadline: Long,
-    onAddClick: () -> Unit
+    state: BottomSheetInsertGoalState,
+    onEvent: (BottomSheetInsertGoalEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -35,9 +32,11 @@ fun BottomSheetInsertGoal(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            value = goalValue,
+            value = state.goalName,
             hint = "Enter a goal",
-            onValueChange = onGoalValueChange
+            onValueChange = {
+                onEvent(BottomSheetInsertGoalEvent.OnNewGoalNameChange(it))
+            }
         )
         ModalSheetDatePicker(
             modifier = Modifier
@@ -61,7 +60,7 @@ fun BottomSheetInsertGoal(
         Button(modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp), onClick = {
-            onAddClick()
+            onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
         }) {
             Text(text = "Add")
         }

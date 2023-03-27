@@ -1,24 +1,30 @@
 package com.ikcollab.handyhelper.app.navigation
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.ikcollab.components.CustomFloatingActionButton
 import com.ikcollab.core.Constants.ADD_NOTE
 import com.ikcollab.core.Constants.EDIT_NOTE
 import com.ikcollab.core.Constants.FOLDER_ID_ARG
@@ -26,28 +32,25 @@ import com.ikcollab.core.Constants.FOLDER_ID_IS_NULL
 import com.ikcollab.core.Constants.FOLDER_NAME
 import com.ikcollab.core.Constants.NOTE_ID_ARG
 import com.ikcollab.core.Constants.WHICH_NOTE
-import com.ikcollab.goals.components.BottomSheetInsertGoal
-import com.ikcollab.goals.components.BottomSheetInsertStepGoal
 import com.ikcollab.handyhelper.app.navigation.graph.*
-import com.ikcollab.notes.presentation.components.CustomFloatingActionButton
 import com.ikcollab.notes.presentation.components.CustomInsertFolderItem
 import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
 import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
 import kotlinx.coroutines.launch
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 
-@SuppressLint("CoroutineCreationDuringComposition", "NewApi")
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class,
 )
-@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun Navigation(
     state: NavigationState,
     onEvent: (NavigationEvent) -> Unit,
 ) {
+    val bottomSheetNavigator = rememberBottomSheetNavigator()
+    val navController = rememberNavController(bottomSheetNavigator)
 
-    val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateOfKeyboard = remember {
@@ -91,42 +94,6 @@ fun Navigation(
                             stateOfKeyboard = stateOfKeyboard
                         )
                     }
-                    Screens.GoalsScreen.route -> {
-                        BottomSheetInsertGoal(
-                            goalValue = state.goalName,
-                            onGoalValueChange = { onEvent(NavigationEvent.OnNewGoalNameChange(it)) },
-                            start = state.goalStartDate,
-                            deadline = state.goalEndDate,
-                            onAddClick = {
-                                onEvent(NavigationEvent.InsertGoalToDatabase)
-                                coroutineScope.launch { modalSheetState.hide() }
-                            }
-                        )
-                    }
-                    Screens.GoalStepsScreen.route -> {
-                        BottomSheetInsertStepGoal(
-                            stepGoalValue = state.stepGoalName,
-                            onStepGoalValueChange = {
-                                onEvent(
-                                    NavigationEvent.OnNewStepGoalNameChange(
-                                        it
-                                    )
-                                )
-                            },
-                            deadline = state.stepGoalDeadline,
-                            onDeadlineChange = {
-                                onEvent(
-                                    NavigationEvent.OnNewStepGoalDeadlineChange(
-                                        it
-                                    )
-                                )
-                            },
-                            onAddClick = {
-                                onEvent(NavigationEvent.InsertStepGoalToDatabase)
-                                coroutineScope.launch { modalSheetState.hide() }
-                            }
-                        )
-                    }
                     Screens.TodoCategoryScreen.route -> {
                         CustomInsertFolderItem(
                             value = state.todoCategoryName,
@@ -161,6 +128,8 @@ fun Navigation(
         },
         sheetElevation = 12.dp,
     ) {
+        ModalBottomSheetLayout(bottomSheetNavigator) {
+
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 TopAppBar(title = {
@@ -317,7 +286,7 @@ fun Navigation(
                     Screens.NotesScreen.route -> CustomFloatingActionButton(
                         onInsert = {
                             coroutineScope.launch {
-                                modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                //modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
                             }
                             stateOfKeyboard.value = true
                             onEvent(NavigationEvent.OnFolderIdChange(-1))
@@ -336,45 +305,33 @@ fun Navigation(
                         },
                         isMultiple = true
                     )
-                    Screens.GoalsScreen.route -> CustomFloatingActionButton(
-                        onInsert = {
-                            coroutineScope.launch {
-                                modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                            }
-                        },
-                    )
-                    Screens.GoalStepsScreen.route -> CustomFloatingActionButton(onInsert = {
-                        coroutineScope.launch {
-                            modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                        }
-                    })
                 }
             }
         ) { it ->
+                NavHost(
+                    modifier = Modifier
+                        .padding(it),
+                    navController = navController,
+                    route = Graph.RootGraph.route,
+                    startDestination = Graph.GoalsGraph.route
+                ) {
+                    GoalsNavGraph(navController)
+                    BudgetNavGraph(navController)
+                    ChoresNavGraph(navController)
+                    NotesNavGraph(navController, onEvent = { onEvent(it) })
+                    TodoListNavGraph(navController)
 
-            NavHost(
-                modifier = Modifier
-                    .padding(it),
-                navController = navController,
-                route = Graph.RootGraph.route,
-                startDestination = Graph.GoalsGraph.route
-            ) {
-                GoalsNavGraph(navController)
-                BudgetNavGraph(navController)
-                ChoresNavGraph(navController)
-                NotesNavGraph(navController, onEvent = { onEvent(it) })
-                TodoListNavGraph(navController)
+                    composable(route = Screens.PickThemeScreen.route) {
 
-                composable(route = Screens.PickThemeScreen.route) {
+                    }
+                    composable(route = Screens.SettingsScreen.route) {
+
+                    }
+                    composable(route = Screens.TrackerScreen.route) {
+
+                    }
 
                 }
-                composable(route = Screens.SettingsScreen.route) {
-
-                }
-                composable(route = Screens.TrackerScreen.route) {
-
-                }
-
             }
         }
     }

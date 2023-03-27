@@ -1,11 +1,22 @@
 package com.ikcollab.handyhelper.app.navigation.graph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 import com.ikcollab.core.Constants
+import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoal
+import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalOneTimeEvent
+import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalViewModel
+import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoal
+import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalEvent
+import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalOneTimeEvent
+import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalViewModel
 import com.ikcollab.goals.goalStepsScreen.GoalStepsEvent
 import com.ikcollab.goals.goalStepsScreen.GoalStepsScreen
 import com.ikcollab.goals.goalStepsScreen.GoalStepsViewModel
@@ -13,9 +24,15 @@ import com.ikcollab.goals.goalsListScreen.GoalsListScreen
 import com.ikcollab.goals.goalsScreen.GoalsEvent
 import com.ikcollab.goals.goalsScreen.GoalsScreen
 import com.ikcollab.goals.goalsScreen.GoalsViewModel
+import com.ikcollab.handyhelper.app.navigation.NavigationEvent
 import com.ikcollab.handyhelper.app.navigation.Screens
+import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterialNavigationApi::class)
 fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
 
     navigation(
@@ -35,9 +52,34 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
                             )
                         )
                     }
+                    is GoalsEvent.OpenBottomSheet -> {
+                        navController.navigate(BottomSheets.AddGoalSheet.route)
+                    }
                     else -> viewModel.onEvent(event)
                 }
             })
+        }
+        bottomSheet(BottomSheets.AddGoalSheet.route) { backstackEntry ->
+            val viewModel = hiltViewModel<BottomSheetInsertGoalViewModel>()
+            val state = viewModel.state.collectAsState().value
+            LaunchedEffect(key1 = false, block = {
+                viewModel.flow.collect() { event ->
+                    when (event) {
+                        is BottomSheetInsertGoalOneTimeEvent.CloseBottomSheet -> {
+                            navController.popBackStack()
+                        }
+                    }
+                }
+            })
+            BottomSheetInsertGoal(
+                state = state,
+                onEvent = { event ->
+                    when (event) {
+                        else -> viewModel.onEvent(event)
+                    }
+                }
+
+            )
         }
         composable(
             route = Screens.GoalStepsScreen.route,
@@ -53,11 +95,50 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
             })
             GoalStepsScreen(state = state, onEvent = { event ->
                 when (event) {
+                    is GoalStepsEvent.OpenBottomSheet -> {
+                        navController.navigate(
+                            BottomSheets.AddStepGoalSheet.route.replace(
+                                "{${Constants.GOAL_ID_ARG}}",
+                                state.goal!!.id.toString(),
+                            )
+                        )
+                    }
                     else -> {
                         viewModel.onEvent(event)
                     }
                 }
             })
+        }
+        bottomSheet(
+            route = BottomSheets.AddStepGoalSheet.route,
+            arguments = listOf(navArgument(Constants.GOAL_ID_ARG) {
+                type = NavType.IntType
+            })
+        ) {
+
+            val viewModel = hiltViewModel<BottomSheetInsertStepGoalViewModel>()
+            val state = viewModel.state.collectAsState().value
+            LaunchedEffect(key1 = false, block = {
+                val goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
+                viewModel.onEvent(BottomSheetInsertStepGoalEvent.OnInit(goalId))
+
+                viewModel.flow.collect() { event ->
+                    when (event) {
+                        is BottomSheetInsertStepGoalOneTimeEvent.CloseBottomSheet -> {
+                            navController.popBackStack()
+                        }
+                    }
+                }
+            })
+            BottomSheetInsertStepGoal(
+                state = state,
+                onEvent = { event ->
+                    when (event) {
+                        else -> viewModel.onEvent(event)
+                    }
+                }
+
+            )
         }
         composable(route = Screens.GoalsListScreen.route) {
             GoalsListScreen()

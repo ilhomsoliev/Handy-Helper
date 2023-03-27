@@ -35,26 +35,6 @@ class GoalStepsViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000),
         GoalStepsState()
     )
-
-    fun getGoalById(goalId: Int) {
-
-    }
-
-    fun markAsCompleteStepGoal(stepGoalDto: StepGoalDto, onDone: () -> Unit) {
-
-    }
-
-    fun markAsNotCompleteStepGoal(stepGoalDto: StepGoalDto, onDone: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            insertStepGoalUseCase(
-                stepGoalDto.copy(
-                    isCompleted = false
-                )
-            )
-            onDone()
-        }
-    }
-
     fun onEvent(event: GoalStepsEvent) {
         when (event) {
             is GoalStepsEvent.OnInit -> {
@@ -102,7 +82,7 @@ class GoalStepsViewModel @Inject constructor(
         }
     }
 
-    fun updateGoal(goalId: Int) {
+    private fun updateGoal(goalId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(
