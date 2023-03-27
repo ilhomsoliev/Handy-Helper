@@ -27,11 +27,25 @@ fun DatePickerLabel(
         .clip(RoundedCornerShape(12.dp))
         .background(MaterialTheme.colors.primary)
         .clickable { onClick() }) {
-        Row(modifier = Modifier.padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.CalendarToday, contentDescription = null,tint = Color.Gray)
-            Text(modifier = Modifier.padding(start = 6.dp),text = date)
-            Icon(modifier = Modifier.padding(start = 6.dp),imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null, tint = Color.Gray)
+        Row(
+            modifier = Modifier.padding(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.CalendarToday,
+                contentDescription = null,
+                tint = Color.Gray
+            )
+            Text(
+                modifier = Modifier.padding(start = 6.dp),
+                text = date
+            )
+            Icon(
+                modifier = Modifier.padding(start = 6.dp),
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = Color.Gray
+            )
         }
     }
 }

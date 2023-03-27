@@ -16,10 +16,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavigation(navController: NavController) {
     val items = listOf(
         BottomNavItem.Goals,
-        BottomNavItem.ToDoList,
-        BottomNavItem.Tracker,
+       // BottomNavItem.ToDoList,
+       // BottomNavItem.Tracker,
         BottomNavItem.Notes,
-        BottomNavItem.Budget
+       // BottomNavItem.Budget
     )
     androidx.compose.material.BottomNavigation(
         backgroundColor = Color.White,

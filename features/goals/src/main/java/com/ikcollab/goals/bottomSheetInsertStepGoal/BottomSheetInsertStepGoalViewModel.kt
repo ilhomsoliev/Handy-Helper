@@ -36,6 +36,10 @@ class BottomSheetInsertStepGoalViewModel @Inject constructor(
                 }
             }
             is BottomSheetInsertStepGoalEvent.OnStepGoalValueChange -> {
+                if (event.value.endsWith('\n')) {
+                    onEvent(BottomSheetInsertStepGoalEvent.OnAddClick)
+                    return
+                }
                 _state.update {
                     it.copy(stepGoalValue = event.value)
                 }
@@ -53,7 +57,7 @@ class BottomSheetInsertStepGoalViewModel @Inject constructor(
                             id = null,
                             name = _state.value.stepGoalValue,
                             isCompleted = false,
-                            dateCreated = System.currentTimeMillis(),
+                            dateCreated = _state.value.deadline,
                             deadline = _state.value.deadline,
                             goalId = _state.value.goalId,
                         )

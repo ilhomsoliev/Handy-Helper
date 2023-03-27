@@ -24,6 +24,7 @@ fun GoalItem(
     start: Long,
     end: Long,
     stepsCount: Int,
+    days: Long,
     stepsCompletedCount: Int,
     daysLeft: Long,
     onClick: () -> Unit
@@ -47,7 +48,15 @@ fun GoalItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Start:")
+                Text(text = "Start:", fontSize = 18.sp)
+                Text(text = start.toMMDDYYYY())
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Deadline:", fontSize = 18.sp)
                 Text(text = end.toMMDDYYYY())
             }
             Row(
@@ -55,19 +64,11 @@ fun GoalItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Deadline:")
-                Text(text = end.toMMDDYYYY())
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = "Steps:")
+                Text(text = "Steps:", fontSize = 18.sp)
                 Text(text = "$stepsCompletedCount/$stepsCount")
             }
             ProgressIndicator(
-                progress = (stepsCompletedCount.toFloat() / if (stepsCount.toFloat() == 0f) 1f else stepsCount.toFloat()).toFloat()
+                progress = (stepsCompletedCount.toFloat() / if (stepsCount.toFloat() == 0f) 1f else stepsCount.toFloat())
             )
             // Bar
             Row(
@@ -75,11 +76,11 @@ fun GoalItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Days left:")
-                Text(text = "0/0")
+                Text(text = "Days left:", fontSize = 18.sp)
+                Text(text = "${days - daysLeft}/${days}")
             }
             ProgressIndicator(
-                progress = (stepsCompletedCount / if (stepsCount == 0) 1 else stepsCount).toFloat()
+                progress = 1f - (daysLeft.toFloat() / if (days.toFloat() == 0f) 1f else days.toFloat())
             )
         }
     }
