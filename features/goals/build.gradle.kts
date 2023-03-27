@@ -84,5 +84,7 @@ dependencies {
     // DataStore
     implementation(Dependencies.android.dataStore)
     // Date/Time Picker
-    implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
 }

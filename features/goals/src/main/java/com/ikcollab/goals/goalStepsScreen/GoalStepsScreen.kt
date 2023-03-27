@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SAVED_STATE_REGISTRY_OWNER_KEY
+import com.ikcollab.components.CustomFloatingActionButton
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.components.draggableScaffold.components.SwipeDoneTrash
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
@@ -35,115 +37,129 @@ fun GoalStepsScreen(
     val draggableState = rememberDismissState()
     val coroutineScope = rememberCoroutineScope()
 
-    if (state.steps.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Break your goal down into steps",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                )
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track."
-                )
-            }
-        }
-    }
-    state.goal?.let { goal ->
-        LazyColumn(
+    Scaffold(floatingActionButton = {
+        CustomFloatingActionButton(onInsert = {
+            onEvent(GoalStepsEvent.OpenBottomSheet)
+        })
+    }) {
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp)
+                .padding(it)
         ) {
-            item {
-                Text(text = goal.name, fontWeight = FontWeight.Bold, fontSize = 28.sp)
-            }
-            item {
-                GoalDiagram(
-                    modifier = Modifier,
-                    pending = goal.stepsCount - goal.completedStepsCount,
-                    completed = goal.completedStepsCount,
-                    totalSteps = goal.stepsCount
-                )
-            }
-            item {
-                Text(
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    text = "Pending:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 21.sp
-                )
-            }
-            items(state.steps.filter { !it.isCompleted }) { step ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeDoneTrash(onDoneClick = {
-                            onEvent(GoalStepsEvent.OnMarkAsCompletedClick(step.id!!))
-                            coroutineScope.launch {
-                                draggableState.reset()
-                            }
-                        }, onTrashClick = {
-                            onEvent(GoalStepsEvent.OnDeleteStepGoalClick(step.id!!))
-                            coroutineScope.launch {
-                                draggableState.reset()
-                            }
-                        })
-
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            // TODO
-                        })
-                    },
-                    contentOnTop = {
-                        StepGoalItem(
-                            isCompleted = step.isCompleted,
-                            stepGaolContent = step.name,
-                            deadline = step.dateCreated
+            if (state.steps.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Break your goal down into steps",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 22.sp
+                        )
+                        Text(
+                            textAlign = TextAlign.Center,
+                            text = "The steps of the goal are the transition from one phase to another. When the goal is too far way, steps act as signposts that allow you to track your progress and make sure you are on the right track."
                         )
                     }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                }
             }
-            item {
-                Text(
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    text = "Completed:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 21.sp
-                )
-            }
-            items(state.steps.filter { it.isCompleted }) { step ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeUndoneTrash(onUndoneClick = {
-                            onEvent(GoalStepsEvent.OnMarkNotAsCompletedClick(step.id!!))
-                            coroutineScope.launch {
-                                draggableState.reset()
-                            }
-                        }, onTrashClick = {
-                            onEvent(GoalStepsEvent.OnDeleteStepGoalClick(step.id!!))
-                            coroutineScope.launch {
-                                draggableState.reset()
-                            }
-                        })
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            // TODO
-                        })
-                    },
-                    contentOnTop = {
-                        StepGoalItem(
-                            isCompleted = step.isCompleted,
-                            stepGaolContent = step.name,
-                            deadline = step.dateCreated
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            state.goal?.let { goal ->
+                if (state.steps.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 12.dp)
+                    ) {
+                        item {
+                            Text(text = goal.name, fontWeight = FontWeight.Bold, fontSize = 28.sp)
+                        }
+                        item {
+                            GoalDiagram(
+                                modifier = Modifier,
+                                pending = goal.stepsCount - goal.completedStepsCount,
+                                completed = goal.completedStepsCount,
+                                totalSteps = goal.stepsCount
+                            )
+                        }
+                        item {
+                            Text(
+                                modifier = Modifier.padding(vertical = 6.dp),
+                                text = "Pending:",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 21.sp
+                            )
+                        }
+                        items(state.steps.filter { !it.isCompleted }) { step ->
+                            DraggableScaffold(
+                                contentUnderRight = {
+                                    SwipeDoneTrash(onDoneClick = {
+                                        onEvent(GoalStepsEvent.OnMarkAsCompletedClick(step.id!!))
+                                        coroutineScope.launch {
+                                            draggableState.reset()
+                                        }
+                                    }, onTrashClick = {
+                                        onEvent(GoalStepsEvent.OnDeleteStepGoalClick(step.id!!))
+                                        coroutineScope.launch {
+                                            draggableState.reset()
+                                        }
+                                    })
 
+                                },
+                                contentUnderLeft = {
+                                    SwipeEdit(onClick = {
+                                        // TODO
+                                    })
+                                },
+                                contentOnTop = {
+                                    StepGoalItem(
+                                        isCompleted = step.isCompleted,
+                                        stepGaolContent = step.name,
+                                        deadline = step.dateCreated
+                                    )
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                        item {
+                            Text(
+                                modifier = Modifier.padding(vertical = 6.dp),
+                                text = "Completed:",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 21.sp
+                            )
+                        }
+                        items(state.steps.filter { it.isCompleted }) { step ->
+                            DraggableScaffold(
+                                contentUnderRight = {
+                                    SwipeUndoneTrash(onUndoneClick = {
+                                        onEvent(GoalStepsEvent.OnMarkNotAsCompletedClick(step.id!!))
+                                        coroutineScope.launch {
+                                            draggableState.reset()
+                                        }
+                                    }, onTrashClick = {
+                                        onEvent(GoalStepsEvent.OnDeleteStepGoalClick(step.id!!))
+                                        coroutineScope.launch {
+                                            draggableState.reset()
+                                        }
+                                    })
+                                },
+                                contentUnderLeft = {
+                                    SwipeEdit(onClick = {
+                                        // TODO
+                                    })
+                                },
+                                contentOnTop = {
+                                    StepGoalItem(
+                                        isCompleted = step.isCompleted,
+                                        stepGaolContent = step.name,
+                                        deadline = step.dateCreated
+                                    )
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                        }
+                    }
+                }
             }
         }
     }

@@ -25,7 +25,6 @@ import javax.inject.Inject
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class NavigationViewModel @Inject constructor(
-    private val insertGoalUseCase: InsertGoalUseCase,
     private val insertFolderUseCase: InsertFolderUseCase,
     private val insertStepGoalUseCase: InsertStepGoalUseCase,
     private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
@@ -156,23 +155,7 @@ class NavigationViewModel @Inject constructor(
                 }
             }
             is NavigationEvent.InsertGoalToDatabase -> {
-                _state.value.apply {
-                    if (goalName.isEmpty()) return
-                    viewModelScope.launch {
-                        insertGoalUseCase(
-                            GoalDto(
-                                id = null,
-                                name = goalName,
-                                stepsCount = 0,
-                                completedStepsCount = 0,
-                                dateCreated = System.currentTimeMillis(),
-                                dateStart = goalStartDate,
-                                dateEnd = goalEndDate,
-                            )
-                        )
-                        onEvent(NavigationEvent.OnNewGoalNameChange(""))
-                    }
-                }
+
             }
             is NavigationEvent.InsertTodoTaskToDatabase -> {
                 _state.value.apply {

@@ -60,7 +60,7 @@ object TestVersions {
 }
 
 object ComposeVersions {
-    const val compose = "1.1.0"
+    const val compose = "1.3.0"
     const val material = "1.3.1"
     const val ui = "1.3.3"
     const val constraintLayout = "1.0.0-beta02"
