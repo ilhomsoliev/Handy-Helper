@@ -10,7 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ModalSheetTextField(
@@ -22,9 +25,10 @@ fun ModalSheetTextField(
     TextField(
         modifier = modifier.clip(RoundedCornerShape(6.dp)),
         value = value,
+        textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight(500)),
         onValueChange = onValueChange,
         placeholder = {
-            Text(text = hint)
+            Text(text = hint, fontSize = 18.sp)
         },
         colors = TextFieldDefaults.textFieldColors(
             disabledTextColor = Color.Transparent,

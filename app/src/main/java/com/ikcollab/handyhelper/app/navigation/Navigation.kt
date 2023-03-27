@@ -38,6 +38,7 @@ import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
 import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
 import kotlinx.coroutines.launch
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
@@ -130,184 +131,187 @@ fun Navigation(
     ) {
         ModalBottomSheetLayout(bottomSheetNavigator) {
 
-        Scaffold(scaffoldState = scaffoldState,
-            topBar = {
-                TopAppBar(title = {
-                    when (currentScreen) {
-                        Screens.SearchNotesScreen.route -> {
-                            CustomSearchNotesTextField(
-                                value = state.searchState,
-                                onValueChange = {
-                                    if (it.length <= 20)
-                                        onEvent(NavigationEvent.OnSearchNotes(it))
-                                },
-                                placeholder = "Search notes"
-                            )
-                        }
-                        else -> {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text =
-                                    when (currentScreen) {
-                                        Screens.GoalsScreen.route -> "Goals"
-                                        Screens.GoalsListScreen.route -> "Goals"
-                                        Screens.ChoresScreen.route -> "To-Do list"
-                                        Screens.TrackerScreen.route -> "Habit Tracker"
-                                        Screens.NotesScreen.route -> "Notes"
-                                        Screens.BudgetScreen.route -> "Budget"
-                                        Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
-                                        Screens.AddNoteScreen.route -> if (WHICH_NOTE.value == EDIT_NOTE) "Edit note" else "Add note"
-                                        else -> ""
+            Scaffold(scaffoldState = scaffoldState,
+                topBar = {
+                    TopAppBar(title = {
+                        when (currentScreen) {
+                            Screens.SearchNotesScreen.route -> {
+                                CustomSearchNotesTextField(
+                                    value = state.searchState,
+                                    onValueChange = {
+                                        if (it.length <= 20)
+                                            onEvent(NavigationEvent.OnSearchNotes(it))
                                     },
-                                    color = MaterialTheme.colors.onBackground
+                                    placeholder = "Search notes"
                                 )
                             }
+                            else -> {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text =
+                                        when (currentScreen) {
+                                            Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route,Screens.GoalsListScreen.route -> "Goals"
+                                            Screens.ChoresScreen.route -> "To-Do list"
+                                            Screens.TrackerScreen.route -> "Habit Tracker"
+                                            Screens.NotesScreen.route -> "Notes"
+                                            Screens.BudgetScreen.route -> "Budget"
+                                            Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
+                                            Screens.AddNoteScreen.route -> if (WHICH_NOTE.value == EDIT_NOTE) "Edit note" else "Add note"
+                                            else -> ""
+                                        },
+                                        color = MaterialTheme.colors.onBackground
+                                    )
+                                }
+                            }
                         }
-                    }
-                }, navigationIcon = {
-                    if (currentScreen != Screens.GoalsListScreen.route &&
-                        currentScreen != Screens.AddNoteScreen.route &&
+                    }, navigationIcon = {
+                        if (currentScreen != Screens.GoalsListScreen.route &&
+                            currentScreen != Screens.AddNoteScreen.route &&
+                            currentScreen != Screens.FoldersNoteScreen.route &&
+                            currentScreen != Screens.GoalStepsScreen.route &&
+                            currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                            currentScreen != BottomSheets.AddStepGoalSheet.route &&
+                            currentScreen != Screens.SearchNotesScreen.route &&
+                            currentScreen != Screens.TodoCategoryScreen.route
+                        ) {
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            }) {
+                                Icon(
+                                    Icons.Filled.Menu,
+                                    null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = {
+                                navController.popBackStack()
+                            }) {
+                                if (currentScreen == Screens.FoldersNoteScreen.route ||
+                                    currentScreen == Screens.ShowDetailsOfNoteScreen.route
+                                )
+                                    Icon(
+                                        Icons.Filled.Close,
+                                        null,
+                                        tint = MaterialTheme.colors.onBackground
+                                    )
+                                else
+                                    Icon(
+                                        Icons.Filled.ArrowBackIos,
+                                        null,
+                                        tint = MaterialTheme.colors.onBackground
+                                    )
+                            }
+                        }
+                    }, actions = {
+                        when (currentScreen) {
+                            Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route -> {
+                                IconButton(onClick = {
+                                    coroutineScope.launch {
+                                        navController.navigate(Screens.GoalsListScreen.route)
+                                    }
+                                }) {
+                                    Icon(
+                                        Icons.Filled.ListAlt,
+                                        null,
+                                        tint = MaterialTheme.colors.onBackground
+                                    )
+                                }
+                            }
+                            Screens.GoalsListScreen.route -> {}
+                            Screens.AddNoteScreen.route -> {}
+                            Screens.ShowDetailsOfNoteScreen.route -> {}
+                            Screens.GoalStepsScreen.route, BottomSheets.AddStepGoalSheet.route -> {}
+                            Screens.TodoListScreen.route -> {
+                                IconButton(onClick = {
+                                    coroutineScope.launch {
+                                        navController.navigate(Screens.TodoCategoryScreen.route)
+                                    }
+                                }) {
+                                    Icon(
+                                        Icons.Filled.ListAlt,
+                                        null,
+                                        tint = MaterialTheme.colors.onBackground
+                                    )
+                                }
+                            }
+                            Screens.SearchNotesScreen.route -> {}
+                            Screens.TodoCategoryScreen.route -> {}
+                            else -> {
+                                IconButton(onClick = {
+                                    coroutineScope.launch {
+                                        navController.navigate(Screens.SearchNotesScreen.route)
+                                    }
+                                }) {
+                                    Icon(
+                                        Icons.Filled.Search,
+                                        null,
+                                        tint = MaterialTheme.colors.onBackground
+                                    )
+                                }
+                            }
+                        }
+                    },
+                        backgroundColor = MaterialTheme.colors.background
+                    )
+                },
+                drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                         currentScreen != Screens.FoldersNoteScreen.route &&
+                        currentScreen != Screens.AddNoteScreen.route &&
+                        currentScreen != Screens.GoalStepsScreen.route &&
+                        currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
+                        currentScreen != Screens.TodoCategoryScreen.route &&
+                        currentScreen != Screens.SearchNotesScreen.route,
+                drawerContent = {
+                    DrawerContent()
+                },
+                bottomBar = {
+                    if (currentScreen != Screens.GoalsListScreen.route &&
+                        currentScreen != Screens.FoldersNoteScreen.route &&
+                        currentScreen != Screens.AddNoteScreen.route &&
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
                         currentScreen != Screens.SearchNotesScreen.route &&
+                        currentScreen != BottomSheets.AddStepGoalSheet.route &&
                         currentScreen != Screens.TodoCategoryScreen.route
                     ) {
-                        IconButton(onClick = {
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }) {
-                            Icon(
-                                Icons.Filled.Menu,
-                                null,
-                                tint = MaterialTheme.colors.onBackground
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            if (currentScreen == Screens.FoldersNoteScreen.route ||
-                                currentScreen == Screens.ShowDetailsOfNoteScreen.route
-                            )
-                                Icon(
-                                    Icons.Filled.Close,
-                                    null,
-                                    tint = MaterialTheme.colors.onBackground
-                                )
-                            else
-                                Icon(
-                                    Icons.Filled.ArrowBackIos,
-                                    null,
-                                    tint = MaterialTheme.colors.onBackground
-                                )
-                        }
-                    }
-                }, actions = {
-                    when (currentScreen) {
-                        Screens.GoalsScreen.route -> {
-                            IconButton(onClick = {
-                                coroutineScope.launch {
-                                    navController.navigate(Screens.GoalsListScreen.route)
-                                }
-                            }) {
-                                Icon(
-                                    Icons.Filled.ListAlt,
-                                    null,
-                                    tint = MaterialTheme.colors.onBackground
-                                )
-                            }
-                        }
-                        Screens.GoalsListScreen.route -> {}
-                        Screens.AddNoteScreen.route -> {}
-                        Screens.ShowDetailsOfNoteScreen.route -> {}
-                        Screens.GoalStepsScreen.route -> {}
-                        Screens.TodoListScreen.route -> {
-                            IconButton(onClick = {
-                                coroutineScope.launch {
-                                    navController.navigate(Screens.TodoCategoryScreen.route)
-                                }
-                            }) {
-                                Icon(
-                                    Icons.Filled.ListAlt,
-                                    null,
-                                    tint = MaterialTheme.colors.onBackground
-                                )
-                            }
-                        }
-                        Screens.SearchNotesScreen.route -> {}
-                        Screens.TodoCategoryScreen.route -> {}
-                        else -> {
-                            IconButton(onClick = {
-                                coroutineScope.launch {
-                                    navController.navigate(Screens.SearchNotesScreen.route)
-                                }
-                            }) {
-                                Icon(
-                                    Icons.Filled.Search,
-                                    null,
-                                    tint = MaterialTheme.colors.onBackground
-                                )
-                            }
-                        }
+                        com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(
+                            navController = navController
+                        )
                     }
                 },
-                    backgroundColor = MaterialTheme.colors.background
-                )
-            },
-            drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
-                    currentScreen != Screens.FoldersNoteScreen.route &&
-                    currentScreen != Screens.AddNoteScreen.route &&
-                    currentScreen != Screens.GoalStepsScreen.route &&
-                    currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                    currentScreen != Screens.TodoCategoryScreen.route &&
-                    currentScreen != Screens.SearchNotesScreen.route,
-            drawerContent = {
-                DrawerContent()
-            },
-            bottomBar = {
-                if (currentScreen != Screens.GoalsListScreen.route &&
-                    currentScreen != Screens.FoldersNoteScreen.route &&
-                    currentScreen != Screens.AddNoteScreen.route &&
-                    currentScreen != Screens.GoalStepsScreen.route &&
-                    currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
-                    currentScreen != Screens.SearchNotesScreen.route &&
-                    currentScreen != Screens.TodoCategoryScreen.route
-                ) {
-                    com.ikcollab.handyhelper.app.navigation.bottomBar.BottomNavigation(navController = navController)
-                }
-            },
-            floatingActionButton = {
-                when (currentScreen) {
-                    Screens.NotesScreen.route -> CustomFloatingActionButton(
-                        onInsert = {
-                            coroutineScope.launch {
-                                //modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                            }
-                            stateOfKeyboard.value = true
-                            onEvent(NavigationEvent.OnFolderIdChange(-1))
-                        },
-                        onEdit = {
-                            coroutineScope.launch {
-                                navController.navigate(
-                                    Screens.AddNoteScreen.route.replace(
-                                        "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                        "-1/-1"
+                floatingActionButton = {
+                    when (currentScreen) {
+                        Screens.NotesScreen.route -> CustomFloatingActionButton(
+                            onInsert = {
+                                coroutineScope.launch {
+                                    //modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                }
+                                stateOfKeyboard.value = true
+                                onEvent(NavigationEvent.OnFolderIdChange(-1))
+                            },
+                            onEdit = {
+                                coroutineScope.launch {
+                                    navController.navigate(
+                                        Screens.AddNoteScreen.route.replace(
+                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
+                                            "-1/-1"
+                                        )
                                     )
-                                )
-                            }
-                            WHICH_NOTE.value = ADD_NOTE
-                            FOLDER_ID_IS_NULL.value = true
-                        },
-                        isMultiple = true
-                    )
+                                }
+                                WHICH_NOTE.value = ADD_NOTE
+                                FOLDER_ID_IS_NULL.value = true
+                            },
+                            isMultiple = true
+                        )
+                    }
                 }
-            }
-        ) { it ->
+            ) { it ->
                 NavHost(
                     modifier = Modifier
                         .padding(it),
@@ -319,6 +323,7 @@ fun Navigation(
                     BudgetNavGraph(navController)
                     ChoresNavGraph(navController)
                     NotesNavGraph(navController, onEvent = { onEvent(it) })
+
                     TodoListNavGraph(navController)
 
                     composable(route = Screens.PickThemeScreen.route) {

@@ -13,6 +13,7 @@ import com.ikcollab.components.ModalSheetDefaultStick
 import com.ikcollab.components.ModalSheetTextField
 import com.ikcollab.components.SendIcon
 import com.ikcollab.components.datePicker.DatePicker
+import com.ikcollab.core.toCurrentInMillis
 import com.ikcollab.core.toMMDDYYYY
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import java.time.LocalDate
@@ -50,9 +51,11 @@ fun BottomSheetInsertStepGoal(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DatePickerLabel(date = state.deadline.toMMDDYYYY(), onClick = {
-                calendarState.show()
-            })
+            DatePickerLabel(
+                date = if (state.deadline == 0L) "Deadline" else state.deadline.toMMDDYYYY(),
+                onClick = {
+                    calendarState.show()
+                })
             SendIcon(
                 modifier = Modifier
                     .focusTarget(),
@@ -63,6 +66,6 @@ fun BottomSheetInsertStepGoal(
         }
     }
     DatePicker(calendarState) {
-        onEvent(BottomSheetInsertStepGoalEvent.OnDeadlineChange(it.toEpochDay()))
+        onEvent(BottomSheetInsertStepGoalEvent.OnDeadlineChange(it.toCurrentInMillis()))
     }
 }

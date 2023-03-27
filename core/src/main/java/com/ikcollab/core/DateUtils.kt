@@ -2,20 +2,31 @@ package com.ikcollab.core
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun Long.toMMDDYYYY():String{
-    return DateTimeFormatter.ofPattern("MM/dd/yyyy")
+fun Long.toMMDDYYYY(): String {
+    val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    return sdf.format(Date(this))
+    /*return DateTimeFormatter.ofPattern("MM/dd/yyyy")
         .withZone(ZoneId.systemDefault())
-        .format(Instant.ofEpochMilli(this))
+        .format(Instant.ofEpochMilli(this))*/
+}
+
+fun Long.toMMMDD(): String {
+    val sdf = SimpleDateFormat("MMM dd", Locale.getDefault())
+    return sdf.format(Date(this))
+    /*return DateTimeFormatter.ofPattern("MMM dd")
+        .withZone(ZoneId.systemDefault())
+        .format(Instant.ofEpochMilli(this))*/
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Long.toMMMDD():String{
-    return DateTimeFormatter.ofPattern("MMM dd")
-        .withZone(ZoneId.systemDefault())
-        .format(Instant.ofEpochMilli(this))
+fun LocalDate.toCurrentInMillis(): Long {
+    val zonedDateTime = this.atStartOfDay(ZoneId.systemDefault())
+    return zonedDateTime.toInstant().toEpochMilli()
 }

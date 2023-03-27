@@ -24,6 +24,7 @@ import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.components.draggableScaffold.components.SwipeDoneTrash
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeUndoneTrash
+import com.ikcollab.core.toMMMDD
 import com.ikcollab.goals.components.GoalDiagram
 import com.ikcollab.goals.components.StepGoalItem
 import kotlinx.coroutines.launch
@@ -113,7 +114,7 @@ fun GoalStepsScreen(
                                     StepGoalItem(
                                         isCompleted = step.isCompleted,
                                         stepGaolContent = step.name,
-                                        deadline = step.dateCreated
+                                        deadline = if(step.dateCreated == 0L) "" else step.dateCreated.toMMMDD()
                                     )
                                 }
                             )
@@ -151,7 +152,7 @@ fun GoalStepsScreen(
                                     StepGoalItem(
                                         isCompleted = step.isCompleted,
                                         stepGaolContent = step.name,
-                                        deadline = step.dateCreated
+                                        deadline = if(step.dateCreated == 0L) "" else step.dateCreated.toMMMDD()
                                     )
                                 }
                             )

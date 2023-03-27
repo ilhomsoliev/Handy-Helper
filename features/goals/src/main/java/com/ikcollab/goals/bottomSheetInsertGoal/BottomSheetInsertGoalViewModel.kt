@@ -1,7 +1,9 @@
 package com.ikcollab.goals.bottomSheetInsertGoal
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ikcollab.core.toMMDDYYYY
 import com.ikcollab.domain.usecase.goals.goal.InsertGoalUseCase
 import com.ikcollab.domain.usecase.todo_list.todo.InsertTodoUseCase
 import com.ikcollab.model.dto.goals.GoalDto
@@ -44,7 +46,22 @@ class BottomSheetInsertGoalViewModel @Inject constructor(
                     channel.send(BottomSheetInsertGoalOneTimeEvent.CloseBottomSheet)
                 }
             }
+            is BottomSheetInsertGoalEvent.OnStartTimeChange -> {
+                Log.d("Hello", event.value.toMMDDYYYY())
+                _state.update {
+                    it.copy(goalStartDate = event.value)
+                }
+            }
+            is BottomSheetInsertGoalEvent.OnEndTimeChange -> {
+                _state.update {
+                    it.copy(goalEndDate = event.value)
+                }
+            }
             is BottomSheetInsertGoalEvent.OnNewGoalNameChange -> {
+                if (event.value.endsWith('\n')) {
+                    onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
+                    return
+                }
                 _state.update {
                     it.copy(goalName = event.value)
                 }
