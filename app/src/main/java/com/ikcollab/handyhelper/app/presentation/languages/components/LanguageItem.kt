@@ -27,16 +27,22 @@ fun LanguageItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp).padding(vertical = 8.dp),
+                .padding(horizontal = 12.dp)
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = if (isActive) Arrangement.SpaceBetween else Arrangement.Start
         ) {
-            Text(text = name,fontSize = 16.sp, fontWeight = if (isActive) FontWeight.Bold else null)
+            Text(
+                text = name,
+                fontSize = 16.sp,
+                fontWeight = if (isActive) FontWeight.Bold else null,
+                color = MaterialTheme.colors.onBackground
+            )
             if (isActive) {
                 Icon(
                     imageVector = Icons.Default.Done,
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary
+                    tint = MaterialTheme.colors.secondary
                 )
             }
         }

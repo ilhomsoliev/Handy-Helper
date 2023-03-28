@@ -33,8 +33,15 @@ fun GoalWithStepsItem(
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colors.primary)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-            Text(text = goalName, fontWeight = FontWeight.Bold, fontSize = 21.sp)
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)) {
+            Text(
+                text = goalName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 21.sp,
+                color = MaterialTheme.colors.onPrimary
+            )
             steps.filter { !it.isCompleted }.forEach {
                 DraggableScaffold(
                     contentUnderRight = {
@@ -90,13 +97,18 @@ fun GoalSubStepItem(
     content: String,
     isCompleted: Boolean,
 ) {
-    Row(modifier = Modifier.fillMaxWidth().background(Color.White), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Box(
             modifier = Modifier
                 .size(4.dp)
                 .clip(CircleShape)
                 .background(Color.Black)
-                //.padding(end = 16.dp)
+            //.padding(end = 16.dp)
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),

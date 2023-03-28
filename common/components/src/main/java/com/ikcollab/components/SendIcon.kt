@@ -28,7 +28,11 @@ fun SendIcon(
         onClick = {
             onClick()
         }) {
-        Icon(imageVector = Icons.Default.Send, contentDescription = null)
+        Icon(
+            imageVector = Icons.Default.Send,
+            contentDescription = null,
+            tint = MaterialTheme.colors.onSecondary
+        )
     }
 
 }
