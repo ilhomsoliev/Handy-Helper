@@ -18,11 +18,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DrawerContent() {
+fun DrawerContent(
+    openLanguagesScreen: () -> Unit,
+    openSettingsScreen: () -> Unit,
+    openDonationsLink: () -> Unit,
+    openGithubPage: () -> Unit,
+    shareApp: () -> Unit,
+    sendEmail: () -> Unit,
+) {
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.background)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
         Text(
             modifier = Modifier.padding(12.dp),
             text = "Handy Helper",
@@ -30,80 +39,94 @@ fun DrawerContent() {
             color = MaterialTheme.colors.onBackground
         )
         Divider()
-        DrawerItem(
+        /*DrawerItem(
             "Dark Mode",
             icon = Icons.Default.Mode,
             onClick = {  },
-        )
-        DrawerItem(
-            "Themes",
-            icon = Icons.Default.Palette,
-            onClick = {  },
-        )
+        )*/
+        /* DrawerItem(
+             "Themes",
+             icon = Icons.Default.Palette,
+             onClick = {  },
+         )*/
         DrawerItem(
             "Language",
             icon = Icons.Default.Language,
-            onClick = {  },
+            onClick = {
+                openLanguagesScreen()
+            },
         )
         DrawerItem(
             "Settings",
-            icon = Icons.Default.Archive,
-            onClick = {  },
+            icon = Icons.Default.Settings,
+            onClick = {
+                openSettingsScreen()
+            },
         )
         DrawerItem(
             "Donations",
+            icon = Icons.Default.VolunteerActivism,
+            onClick = {
+                openDonationsLink()
+            },
+        )
+        DrawerItem(
+            "Contribute",
             icon = Icons.Default.Favorite,
-            onClick = {  },
+            onClick = {
+                openGithubPage()
+            },
         )
         Divider()
         DrawerItem(
             "Share",
-            icon = Icons.Default.Settings,
-            onClick = {  },
-        )
-        DrawerItem(
-            "FAQ",
-            icon = Icons.Default.Settings,
-            onClick = {  },
+            icon = Icons.Default.Share,
+            onClick = {
+                shareApp()
+            },
         )
         DrawerItem(
             "Feedback",
-            icon = Icons.Default.Settings,
-            onClick = {  },
+            icon = Icons.Default.Chat,
+            onClick = {
+                sendEmail()
+            },
         )
         DrawerItem(
             "Rate Us",
-            icon = Icons.Default.Settings,
-            onClick = {  },
+            icon = Icons.Default.Star,
+            onClick = { },
         )
     }
 }
 
 @Composable
 fun DrawerItem(text: String, icon: ImageVector, onClick: () -> Unit) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-            .clickable {
-                onClick()
-            }) {
-            Box(
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+        .clickable {
+            onClick()
+        }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp)
+                .clip(RoundedCornerShape(6.dp))
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .padding(8.dp)
             ) {
-                Row( modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = "",
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = text    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "",
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = text)
             }
         }
+    }
 
 }
