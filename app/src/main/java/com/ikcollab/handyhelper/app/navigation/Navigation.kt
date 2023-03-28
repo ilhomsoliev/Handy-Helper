@@ -11,13 +11,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -39,6 +39,11 @@ import com.ikcollab.todolist.components.bottomSheet.BottomSheetInsertTodoTask
 import kotlinx.coroutines.launch
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
+import com.ikcollab.handyhelper.app.presentation.languages.LanguagesEvent
+import com.ikcollab.handyhelper.app.presentation.languages.LanguagesScreen
+import com.ikcollab.handyhelper.app.presentation.languages.LanguagesViewModel
+import com.ikcollab.handyhelper.app.presentation.settings.SettingsScreen
+import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
@@ -51,6 +56,8 @@ fun Navigation(
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
+    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     val scaffoldState = rememberScaffoldState()
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
@@ -153,11 +160,13 @@ fun Navigation(
                                     Text(
                                         text =
                                         when (currentScreen) {
-                                            Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route,Screens.GoalsListScreen.route -> "Goals"
+                                            Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route, Screens.GoalsListScreen.route -> "Goals"
                                             Screens.ChoresScreen.route -> "To-Do list"
                                             Screens.TrackerScreen.route -> "Habit Tracker"
                                             Screens.NotesScreen.route -> "Notes"
                                             Screens.BudgetScreen.route -> "Budget"
+                                            Screens.LanguagesScreen.route -> "Languages"
+                                            Screens.SettingsScreen.route -> "Settings"
                                             Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
                                             Screens.AddNoteScreen.route -> if (WHICH_NOTE.value == EDIT_NOTE) "Edit note" else "Add note"
                                             else -> ""
@@ -175,6 +184,8 @@ fun Navigation(
                             currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
                             currentScreen != BottomSheets.AddStepGoalSheet.route &&
                             currentScreen != Screens.SearchNotesScreen.route &&
+                            currentScreen != Screens.LanguagesScreen.route &&
+                            currentScreen != Screens.SettingsScreen.route &&
                             currentScreen != Screens.TodoCategoryScreen.route
                         ) {
                             IconButton(onClick = {
@@ -242,6 +253,8 @@ fun Navigation(
                             }
                             Screens.SearchNotesScreen.route -> {}
                             Screens.TodoCategoryScreen.route -> {}
+                            Screens.LanguagesScreen.route -> {}
+                            Screens.SettingsScreen.route -> {}
                             else -> {
                                 IconButton(onClick = {
                                     coroutineScope.launch {
@@ -262,13 +275,46 @@ fun Navigation(
                 },
                 drawerGesturesEnabled = currentScreen != Screens.GoalsListScreen.route &&
                         currentScreen != Screens.FoldersNoteScreen.route &&
+                        currentScreen != Screens.LanguagesScreen.route &&
+                        currentScreen != Screens.SettingsScreen.route &&
                         currentScreen != Screens.AddNoteScreen.route &&
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
                         currentScreen != Screens.TodoCategoryScreen.route &&
                         currentScreen != Screens.SearchNotesScreen.route,
                 drawerContent = {
-                    DrawerContent()
+                    DrawerContent(
+                        openLanguagesScreen = {
+                            navController.navigate(Screens.LanguagesScreen.route)
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
+                        openSettingsScreen = {
+                            navController.navigate(Screens.SettingsScreen.route)
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
+                        openDonationsLink = {
+                            uriHandler.openUri("https://www.buymeacoffee.com/ilhomsoliev")
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
+                        openGithubPage = {
+                            uriHandler.openUri("https://github.com/ilhomsoliev/Handy-Helper")
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.close()
+                            }
+                        },
+                        shareApp = {
+
+                        },
+                        sendEmail = {
+
+                        },
+                    )
                 },
                 bottomBar = {
                     if (currentScreen != Screens.GoalsListScreen.route &&
@@ -277,6 +323,8 @@ fun Navigation(
                         currentScreen != Screens.GoalStepsScreen.route &&
                         currentScreen != Screens.ShowDetailsOfNoteScreen.route &&
                         currentScreen != Screens.SearchNotesScreen.route &&
+                        currentScreen != Screens.LanguagesScreen.route &&
+                        currentScreen != Screens.SettingsScreen.route &&
                         currentScreen != BottomSheets.AddStepGoalSheet.route &&
                         currentScreen != Screens.TodoCategoryScreen.route
                     ) {
@@ -334,6 +382,36 @@ fun Navigation(
                     }
                     composable(route = Screens.TrackerScreen.route) {
 
+                    }
+                    composable(route = Screens.LanguagesScreen.route) {
+                        val viewModel = hiltViewModel<LanguagesViewModel>()
+                        LanguagesScreen(
+                            state = viewModel.state.collectAsState().value,
+                            onEvent = { event ->
+                                when (event) {
+                                    is LanguagesEvent.OnBackClick -> {
+                                        navController.popBackStack()
+                                    }
+                                    is LanguagesEvent.OnLanguageItemClick -> {
+                                        val locale = Locale(event.shortcut)
+                                        Locale.setDefault(locale)
+                                        val resources = context.resources
+                                        val configuration = resources.configuration
+                                        configuration.locale = locale
+                                        resources.updateConfiguration(
+                                            configuration,
+                                            resources.displayMetrics
+                                        )
+                                        viewModel.onEvent(event)
+                                    }
+                                    else -> {
+                                        viewModel.onEvent(event)
+                                    }
+                                }
+                            })
+                    }
+                    composable(route = Screens.SettingsScreen.route) {
+                        SettingsScreen()
                     }
 
                 }

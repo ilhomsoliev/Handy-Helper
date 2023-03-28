@@ -1,6 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id(GradlePlugin.ANDROID_LIBRARY)
+    id(GradlePlugin.ORG_KOTLIN_ANDROID)
+    id(GradlePlugin.KAPT)
+
 }
 
 android {
@@ -49,4 +51,12 @@ dependencies {
     implementation(Dependencies.compose.viewModel)
     implementation(Dependencies.compose.constraintLayout)
     implementation(Dependencies.compose.uiToolingPreview)
+    // DataStore
+    implementation(Dependencies.android.dataStore)
+    // Hilt
+    implementation(Dependencies.android.hilt.android)
+    kapt(Dependencies.android.hilt.androidCompiler)
+    kapt(Dependencies.android.hilt.compiler)
+    implementation(Dependencies.android.hilt.navigation)
+
 }

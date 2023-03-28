@@ -6,6 +6,7 @@ sealed class Screens(val route: String) {
     object BudgetScreen : Screens("HomeScreen")
     object ChoresScreen : Screens("ChoresScreen")
     object GoalsScreen : Screens("GoalsScreen")
+    object LanguagesScreen : Screens("LanguagesScreen")
     object GoalStepsScreen : Screens("GoalsStepsScreen/{${Constants.GOAL_ID_ARG}}")
     object GoalsListScreen : Screens("GoalsListScreen")
     object NotesScreen : Screens("NotesScreen")
