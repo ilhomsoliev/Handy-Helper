@@ -7,10 +7,7 @@ import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategor
 import com.ikcollab.domain.usecase.budget.story.InsertBudgetStoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,8 +25,24 @@ class BottomSheetAddStoryBudgetViewModel @Inject constructor(
     val flow = channel.receiveAsFlow()
     fun onEvent(event: BottomSheetAddStoryBudgetEvent) {
         when (event) {
-            is BottomSheetAddStoryBudgetEvent.OnLoad->{
+            is BottomSheetAddStoryBudgetEvent.OnLoad -> {
 
+            }
+            is BottomSheetAddStoryBudgetEvent.OnDateChange -> {
+                _state.update {
+                    it.copy(date = event.value)
+                }
+            }
+            is BottomSheetAddStoryBudgetEvent.OnCommentChange -> {
+                _state.update {
+                    it.copy(comment = event.value)
+                }
+            }
+            is BottomSheetAddStoryBudgetEvent.OnAmountChange -> {
+
+                _state.update {
+                    it.copy(amount = if (event.value.isEmpty()) 0 else event.value.toInt())
+                }
             }
             else -> {
 

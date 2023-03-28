@@ -14,11 +14,8 @@ import com.ikcollab.components.DatePickerLabel
 import com.ikcollab.components.ModalSheetDefaultStick
 import com.ikcollab.components.ModalSheetTextField
 import com.ikcollab.components.SendIcon
-import com.ikcollab.components.datePicker.DatePicker
 import com.ikcollab.core.toCurrentInMillis
 import com.ikcollab.core.toMMDDYYYY
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
-import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -26,7 +23,6 @@ fun BottomSheetInsertStepGoal(
     state: BottomSheetInsertStepGoalState,
     onEvent: (BottomSheetInsertStepGoalEvent) -> Unit,
 ) {
-    val calendarState = rememberSheetState()
 
     Column(
         modifier = Modifier
@@ -56,8 +52,8 @@ fun BottomSheetInsertStepGoal(
         ) {
             DatePickerLabel(
                 date = if (state.deadline == 0L) "Deadline" else state.deadline.toMMDDYYYY(),
-                onClick = {
-                    calendarState.show()
+                onDatePick = {
+                    onEvent(BottomSheetInsertStepGoalEvent.OnDeadlineChange(it))
                 })
             SendIcon(
                 modifier = Modifier
@@ -68,7 +64,5 @@ fun BottomSheetInsertStepGoal(
             )
         }
     }
-    DatePicker(calendarState) {
-        onEvent(BottomSheetInsertStepGoalEvent.OnDeadlineChange(it.toCurrentInMillis()))
-    }
+
 }

@@ -17,16 +17,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ikcollab.components.datePicker.DatePicker
+import com.ikcollab.core.toCurrentInMillis
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import java.time.LocalDate
 
 @Composable
 fun DatePickerLabel(
     date: String,
-    onClick: () -> Unit,
+    onDatePick: (Long) -> Unit,
 ) {
+    val calendarState = rememberSheetState()
+
     Box(modifier = Modifier
         .clip(RoundedCornerShape(12.dp))
         .background(MaterialTheme.colors.primary)
-        .clickable { onClick() }) {
+        .clickable {
+            calendarState.show()
+        }) {
         Row(
             modifier = Modifier.padding(6.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -47,5 +55,8 @@ fun DatePickerLabel(
                 tint = Color.Gray
             )
         }
+    }
+    DatePicker(calendarState) {
+        onDatePick(it.toCurrentInMillis())
     }
 }

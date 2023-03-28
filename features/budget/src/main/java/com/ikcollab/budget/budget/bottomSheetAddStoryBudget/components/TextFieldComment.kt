@@ -1,7 +1,10 @@
-package com.ikcollab.components
+package com.ikcollab.budget.budget.bottomSheetAddStoryBudget.components
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -12,28 +15,36 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ModalSheetTextField(
+fun TextFieldComment(
     modifier: Modifier = Modifier,
     value: String,
-    hint: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     TextField(
-        modifier = modifier.clip(RoundedCornerShape(6.dp)),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(MaterialTheme.colors.primary),
         value = value,
         textStyle = TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight(500),
-            color = MaterialTheme.colors.onBackground,
-
+            color = MaterialTheme.colors.onPrimary,
         ),
         onValueChange = onValueChange,
         placeholder = {
-            Text(text = hint, fontSize = 18.sp)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Comment",
+                fontSize = 18.sp
+            )
         },
         colors = TextFieldDefaults.textFieldColors(
             disabledTextColor = Color.Transparent,
@@ -43,4 +54,5 @@ fun ModalSheetTextField(
             disabledIndicatorColor = Color.Transparent
         )
     )
+
 }
