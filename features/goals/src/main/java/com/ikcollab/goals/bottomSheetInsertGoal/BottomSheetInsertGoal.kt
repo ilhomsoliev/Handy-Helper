@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +35,8 @@ fun BottomSheetInsertGoal(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ModalSheetDefaultStick(
@@ -72,12 +75,17 @@ fun BottomSheetInsertGoal(
 
             })
 
-        Button(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp, horizontal = 12.dp), shape = RoundedCornerShape(12.dp), onClick = {
-            onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
-        }) {
-            Text(modifier = Modifier.padding(4.dp),fontSize = 18.sp, text = "Add")
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 6.dp, horizontal = 12.dp),
+            shape = RoundedCornerShape(12.dp),
+            onClick = {
+                onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+        ) {
+            Text(modifier = Modifier.padding(4.dp), fontSize = 18.sp, text = "Add")
         }
     }
 }

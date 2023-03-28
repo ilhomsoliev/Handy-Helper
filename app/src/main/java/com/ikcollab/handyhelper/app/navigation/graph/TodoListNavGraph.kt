@@ -6,20 +6,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ikcollab.handyhelper.app.navigation.NavigationEvent
 import com.ikcollab.handyhelper.app.navigation.Screens
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryEvent
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreen
-import com.ikcollab.todolist.todoCategoryScreen.TodoCategoryScreenViewModel
-import com.ikcollab.todolist.todoListScreen.TodoListEvent
-import com.ikcollab.todolist.todoListScreen.TodoListScreen
-import com.ikcollab.todolist.todoListScreen.TodoListScreenViewModel
-import kotlinx.coroutines.launch
+import com.ikcollab.todolist.todoCategory.TodoCategoryEvent
+import com.ikcollab.todolist.todoCategory.TodoCategoryScreen
+import com.ikcollab.todolist.todoCategory.TodoCategoryScreenViewModel
+import com.ikcollab.todolist.todoList.TodoListEvent
+import com.ikcollab.todolist.todoList.TodoListScreen
+import com.ikcollab.todolist.todoList.TodoListViewModel
 
 fun NavGraphBuilder.TodoListNavGraph(navController: NavController) {
     navigation(route = Graph.TodoListGraph.route, startDestination = Screens.TodoListScreen.route) {
         composable(route = Screens.TodoListScreen.route) {
-            val viewModel = hiltViewModel<TodoListScreenViewModel>()
+            val viewModel = hiltViewModel<TodoListViewModel>()
             TodoListScreen(viewModel.state.collectAsState().value, onEvent = { event ->
                 when (event) {
                     is TodoListEvent.OpenBottomSheet -> {

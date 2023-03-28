@@ -122,9 +122,10 @@ fun DrawerItem(text: String, icon: ImageVector, onClick: () -> Unit) {
                 Icon(
                     imageVector = icon,
                     contentDescription = "",
+                    tint = MaterialTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = text)
+                Text(text = text, color = MaterialTheme.colors.onBackground)
             }
         }
     }
