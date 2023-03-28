@@ -22,6 +22,7 @@
             <option value="$PROJECT_DIR$/data/repository" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/budget" />
             <option value="$PROJECT_DIR$/features/goals" />
             <option value="$PROJECT_DIR$/features/notes" />
             <option value="$PROJECT_DIR$/features/todoList" />

@@ -26,7 +26,6 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 class NavigationViewModel @Inject constructor(
     private val insertFolderUseCase: InsertFolderUseCase,
-    private val insertStepGoalUseCase: InsertStepGoalUseCase,
     private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
     private val insertTodoUseCase: InsertTodoUseCase,
 ) : ViewModel() {
@@ -37,30 +36,13 @@ class NavigationViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000),
         NavigationState()
     )
-
     fun onEvent(event: NavigationEvent) {
         when (event) {
-            is NavigationEvent.OnNewGoalNameChange -> {
-                _state.update {
-                    it.copy(
-                        goalName = event.value
-                    )
-                }
+            is NavigationEvent.StartOverExpenses->{
+                //TODO
             }
-            is NavigationEvent.OnNewStepGoalNameChange -> {
-                _state.update {
-                    it.copy(
-                        stepGoalName = event.value
-                    )
-                }
-            }
-
-            is NavigationEvent.OnNewStepGoalIdChange -> {
-                _state.update {
-                    it.copy(
-                        stepGoalId = event.value
-                    )
-                }
+            is NavigationEvent.StartOverIncome->{
+                //TODO
             }
             is NavigationEvent.OnFolderNameChange -> {
                 _state.update {
@@ -73,27 +55,6 @@ class NavigationViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         todoCategoryName = event.value
-                    )
-                }
-            }
-            is NavigationEvent.OnNewGoalStartDateChange -> {
-                _state.update {
-                    it.copy(
-                        goalStartDate = event.value
-                    )
-                }
-            }
-            is NavigationEvent.OnNewStepGoalDeadlineChange -> {
-                _state.update {
-                    it.copy(
-                        stepGoalDeadline = event.value
-                    )
-                }
-            }
-            is NavigationEvent.OnNewGoalEndDateChange -> {
-                _state.update {
-                    it.copy(
-                        goalEndDate = event.value
                     )
                 }
             }
@@ -134,29 +95,6 @@ class NavigationViewModel @Inject constructor(
                 onEvent(NavigationEvent.OnTodoCategoryNameChange(""))
             }
 
-            is NavigationEvent.InsertStepGoalToDatabase -> {
-                _state.value.apply {
-                    if (stepGoalName.isEmpty() && stepGoalId != -1) return
-                    viewModelScope.launch {
-                        insertStepGoalUseCase(
-                            StepGoalDto(
-                                id = null,
-                                name = stepGoalName,
-                                isCompleted = false,
-                                dateCreated = System.currentTimeMillis(),
-                                deadline = stepGoalDeadline,
-                                goalId = stepGoalId,
-                            )
-                        )
-                        onEvent(NavigationEvent.OnNewStepGoalDeadlineChange(System.currentTimeMillis()))
-                        onEvent(NavigationEvent.OnNewStepGoalNameChange(""))
-                    }
-                    onEvent(NavigationEvent.OnTodoCategoryNameChange(""))
-                }
-            }
-            is NavigationEvent.InsertGoalToDatabase -> {
-
-            }
             is NavigationEvent.InsertTodoTaskToDatabase -> {
                 _state.value.apply {
                     if (todoTaskName.isEmpty()) return
@@ -197,6 +135,9 @@ class NavigationViewModel @Inject constructor(
                         searchState = event.value
                     )
                 }
+            }
+            else ->{
+
             }
         }
     }

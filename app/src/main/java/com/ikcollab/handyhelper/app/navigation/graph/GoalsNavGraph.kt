@@ -17,18 +17,15 @@ import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoal
 import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalEvent
 import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalOneTimeEvent
 import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalViewModel
-import com.ikcollab.goals.goalStepsScreen.GoalStepsEvent
-import com.ikcollab.goals.goalStepsScreen.GoalStepsScreen
-import com.ikcollab.goals.goalStepsScreen.GoalStepsViewModel
-import com.ikcollab.goals.goalsListScreen.GoalsListScreen
-import com.ikcollab.goals.goalsScreen.GoalsEvent
-import com.ikcollab.goals.goalsScreen.GoalsScreen
-import com.ikcollab.goals.goalsScreen.GoalsViewModel
-import com.ikcollab.handyhelper.app.navigation.NavigationEvent
+import com.ikcollab.goals.goalSteps.GoalStepsEvent
+import com.ikcollab.goals.goalSteps.GoalStepsScreen
+import com.ikcollab.goals.goalSteps.GoalStepsViewModel
+import com.ikcollab.goals.goalsList.GoalsListScreen
+import com.ikcollab.goals.goals.GoalsEvent
+import com.ikcollab.goals.goals.GoalsScreen
+import com.ikcollab.goals.goals.GoalsViewModel
 import com.ikcollab.handyhelper.app.navigation.Screens
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)

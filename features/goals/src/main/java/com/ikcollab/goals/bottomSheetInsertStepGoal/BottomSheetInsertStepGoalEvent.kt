@@ -1,7 +1,5 @@
 package com.ikcollab.goals.bottomSheetInsertStepGoal
 
-import com.ikcollab.goals.goalStepsScreen.GoalStepsEvent
-
 sealed class BottomSheetInsertStepGoalEvent {
     data class OnStepGoalValueChange(val value: String) : BottomSheetInsertStepGoalEvent()
     object OnAddClick : BottomSheetInsertStepGoalEvent()

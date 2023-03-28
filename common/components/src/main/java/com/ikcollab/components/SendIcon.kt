@@ -21,9 +21,13 @@ fun SendIcon(
     onClick: () -> Unit,
 ) {
 
-    IconButton(modifier = modifier.clip(CircleShape).background(MaterialTheme.colors.primary), onClick = {
-        onClick()
-    }) {
+    IconButton(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(MaterialTheme.colors.secondary),
+        onClick = {
+            onClick()
+        }) {
         Icon(imageVector = Icons.Default.Send, contentDescription = null)
     }
 

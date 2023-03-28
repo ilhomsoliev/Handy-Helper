@@ -56,6 +56,7 @@ dependencies {
     implementation(project(mapOf("path" to ":features:notes")))
     implementation(project(mapOf("path" to ":features:todoList")))
     implementation(project(mapOf("path" to ":features:goals")))
+    implementation(project(mapOf("path" to ":features:budget")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)

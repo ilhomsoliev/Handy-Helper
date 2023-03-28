@@ -55,11 +55,16 @@ fun ModalSheetDatePicker(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = MaterialTheme.colors.onPrimary
+            )
             Row(modifier = Modifier.clickable {
                 calendarState.show()
             }, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = value)
+                Text(text = value, color = MaterialTheme.colors.onPrimary)
                 Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
             }
         }
