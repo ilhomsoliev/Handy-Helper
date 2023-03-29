@@ -52,6 +52,9 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             val state = viewModel.state.collectAsState().value
             BudgetCategoryScreen(state = state, onEvent = { event ->
                 when (event) {
+                    is BudgetCategoryEvent.OnEditClick->{
+
+                    }
                     is BudgetCategoryEvent.OpenBottomSheet -> {
                         navController.navigate(
                             BottomSheets.AddBudgetCategorySheet.route.replace(

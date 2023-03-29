@@ -3,6 +3,7 @@ package com.ikcollab.budget.budget.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,24 +17,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ikcollab.core.toMMDDYYYY
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
+import com.ikcollab.model.dto.budget.BudgetStoryDto
 
 @Composable
 fun ExpensesScreen(
     categories: List<BudgetCategoryDto>,
+    stories: List<BudgetStoryDto>,
     total: String,
     balance: String,
-    onAddClick:()->Unit,
+    onAddClick: () -> Unit,
 ) {
-    Scaffold(
-        //modifier = Modifier.background(MaterialTheme.colors.background),
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                onAddClick()
-            }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
-            }
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(onClick = {
+            onAddClick()
         }) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+        }
+    }) {
         LazyColumn(
             modifier = Modifier
                 .padding(it)
@@ -49,7 +51,7 @@ fun ExpensesScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(12.dp)
                     ) {
                         categories.forEach { category ->
                             CategoryAddItem(
@@ -113,10 +115,17 @@ fun ExpensesScreen(
                     text = "Story",
                     fontSize = 20.sp,
                 )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            items(stories) { story ->
+                BudgetStoryItem(
+                    category = story.categoryName,
+                    comment = story.comment,
+                    amount = "$${story.value}",
+                    date = story.dateCreated.toMMDDYYYY()
+                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
-
     }
-
-
 }

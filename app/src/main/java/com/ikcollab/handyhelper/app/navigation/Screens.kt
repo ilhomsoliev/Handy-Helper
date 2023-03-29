@@ -66,3 +66,17 @@ fun doesScreenHaveBottomBar(currentScreen: String) =
             currentScreen != BottomSheets.AddStepGoalSheet.route &&
             currentScreen != BottomSheets.AddBudgetCategorySheet.route &&
             currentScreen != Screens.TodoCategoryScreen.route
+
+fun getTopBarTitle(currentScreen: String) = when (currentScreen) {
+    Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route, Screens.GoalsListScreen.route -> "Goals"
+    Screens.ChoresScreen.route -> "To-Do list"
+    Screens.TrackerScreen.route -> "Habit Tracker"
+    Screens.NotesScreen.route -> "Notes"
+    Screens.BudgetScreen.route, BottomSheets.AddBudgetStorySheet.route -> "Budget"
+    Screens.BudgetCategoryScreen.route, BottomSheets.AddBudgetCategorySheet.route -> "Categories"
+    Screens.LanguagesScreen.route -> "Languages"
+    Screens.SettingsScreen.route -> "Settings"
+    Screens.FoldersNoteScreen.route -> Constants.FOLDER_NAME.value
+    Screens.AddNoteScreen.route -> if (Constants.WHICH_NOTE.value == Constants.EDIT_NOTE) "Edit note" else "Add note"
+    else -> ""
+}

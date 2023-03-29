@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun BudgetCategoryItem(
@@ -30,7 +31,7 @@ fun BudgetCategoryItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(6.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Spacer(modifier = Modifier.width(12.dp))
@@ -40,7 +41,7 @@ fun BudgetCategoryItem(
                     .border(3.dp, MaterialTheme.colors.secondary, CircleShape)
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text(text = text)
+            Text(text = text, fontSize = 20.sp)
         }
     }
 }

@@ -10,12 +10,12 @@ import com.ikcollab.model.local.budget.INCOME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BudgetCategoryViewModel @Inject constructor(
     private val getBudgetCategoriesByTypeUseCase: GetBudgetCategoriesByTypeUseCase,
-    private val insertBudgetCategoryUseCase: InsertBudgetCategoryUseCase,
     private val deleteBudgetCategoryByIdUseCase: DeleteBudgetCategoryByIdUseCase,
 ) : ViewModel() {
 
@@ -43,7 +43,9 @@ class BudgetCategoryViewModel @Inject constructor(
     fun onEvent(event: BudgetCategoryEvent) {
         when (event) {
             is BudgetCategoryEvent.DeleteCategory -> {
-
+                viewModelScope.launch {
+                    deleteBudgetCategoryByIdUseCase(event.id)
+                }
             }
             else -> {
 

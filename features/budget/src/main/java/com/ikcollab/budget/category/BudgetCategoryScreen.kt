@@ -50,6 +50,12 @@ fun BudgetCategoryScreen(
                         categories = state.expensesCategories,
                         onAddClick = {
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(EXPENSES_TYPE))
+                        },
+                        onDeleteClick = {
+                            onEvent(BudgetCategoryEvent.DeleteCategory(it))
+                        },
+                        onEditClick = {
+                            onEvent(BudgetCategoryEvent.OnEditClick(it))
                         }
                     )
                 }
@@ -58,6 +64,12 @@ fun BudgetCategoryScreen(
                         categories = state.incomeCategories,
                         onAddClick = {
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(INCOME_TYPE))
+                        },
+                        onDeleteClick = {
+                            onEvent(BudgetCategoryEvent.DeleteCategory(it))
+                        },
+                        onEditClick = {
+                            onEvent(BudgetCategoryEvent.OnEditClick(it))
                         }
                     )
                 }

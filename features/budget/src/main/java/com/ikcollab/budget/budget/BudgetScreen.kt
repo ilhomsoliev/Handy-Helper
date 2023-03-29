@@ -1,6 +1,5 @@
 package com.ikcollab.budget.budget
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,15 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import com.ikcollab.budget.budget.components.ExpensesScreen
-import com.ikcollab.budget.budget.components.IncomeScreen
 import com.ikcollab.components.customTabs.CustomTab
-import com.ikcollab.components.theme.AntiFlashWhite
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import com.ikcollab.model.local.budget.INCOME_TYPE
 import kotlinx.coroutines.launch
@@ -62,7 +57,8 @@ fun BudgetScreen(
                         balance = "0.0",
                         onAddClick = {
                             onEvent(BudgetEvent.OpenBottomSheet(EXPENSES_TYPE))
-                        }
+                        },
+                        stories = state.expensesStories
                     )
                 }
                 1 -> {
@@ -72,7 +68,8 @@ fun BudgetScreen(
                         balance = "0.0",
                         onAddClick = {
                             onEvent(BudgetEvent.OpenBottomSheet(INCOME_TYPE))
-                        }
+                        },
+                        stories = state.incomeStories
                     )
                     /*IncomeScreen(
                         categories = state.incomeCategories,

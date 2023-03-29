@@ -11,7 +11,7 @@ import javax.inject.Inject
 class DeleteBudgetCategoryByIdUseCase @Inject constructor(
     private val repository: BudgetRepository
 ) {
-    suspend operator fun invoke(budgetCategoryDto: BudgetCategoryDto) {
-        repository.deleteBudgetCategory(budgetCategoryDto.toBudgetCategoryEntity())
+    suspend operator fun invoke(id:Int) {
+        repository.deleteCategoryById(id)
     }
 }

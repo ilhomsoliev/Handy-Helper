@@ -11,7 +11,7 @@ data class BudgetStoryEntity(
     
     @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_COMMENT) val comment: String,
-    @ColumnInfo(name = COLUMN_VALUE) val value: String,
+    @ColumnInfo(name = COLUMN_VALUE) val value: Int,
     @ColumnInfo(name = COLUMN_TYPE) val type: String,
     @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
     @ColumnInfo(name = COLUMN_CATEGORY_ID) val categoryId: Int,

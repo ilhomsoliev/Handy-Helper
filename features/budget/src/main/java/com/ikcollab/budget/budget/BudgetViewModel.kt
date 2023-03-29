@@ -1,8 +1,11 @@
 package com.ikcollab.budget.budget
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoriesByTypeUseCase
+import com.ikcollab.domain.usecase.budget.story.GetBudgetStoriesByCategoryIdUseCase
+import com.ikcollab.domain.usecase.budget.story.GetBudgetStoriesByTypeUseCase
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import com.ikcollab.model.local.budget.INCOME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,8 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BudgetViewModel @Inject constructor(
     private val getBudgetCategoriesByTypeUseCase: GetBudgetCategoriesByTypeUseCase,
+    private val getBudgetStoriesByTypeUseCase: GetBudgetStoriesByTypeUseCase,
+) : ViewModel() {
 
-    ) : ViewModel() {
     private val _state = MutableStateFlow(BudgetState())
     val state = _state.stateIn(
         viewModelScope,
@@ -32,6 +36,19 @@ class BudgetViewModel @Inject constructor(
         getBudgetCategoriesByTypeUseCase(INCOME_TYPE).onEach { list ->
             _state.update {
                 it.copy(incomeCategories = list)
+            }
+        }.launchIn(viewModelScope)
+
+        getBudgetStoriesByTypeUseCase(EXPENSES_TYPE).onEach { list ->
+            _state.update {
+                it.copy(expensesStories = list)
+            }
+            Log.d("Hello", list.toString())
+        }.launchIn(viewModelScope)
+
+        getBudgetStoriesByTypeUseCase(INCOME_TYPE).onEach { list ->
+            _state.update {
+                it.copy(incomeStories = list)
             }
         }.launchIn(viewModelScope)
     }

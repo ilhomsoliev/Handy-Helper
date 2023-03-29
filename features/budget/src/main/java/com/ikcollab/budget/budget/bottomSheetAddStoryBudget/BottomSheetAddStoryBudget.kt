@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.ikcollab.budget.budget.bottomSheetAddStoryBudget.components.PickCategoryDialog
 import com.ikcollab.budget.budget.bottomSheetAddStoryBudget.components.TextFieldAmount
 import com.ikcollab.budget.budget.bottomSheetAddStoryBudget.components.TextFieldComment
 import com.ikcollab.components.DatePickerLabel
@@ -27,6 +28,16 @@ fun BottomSheetAddStoryBudget(
     state: BottomSheetAddStoryBudgetState,
     onEvent: (BottomSheetAddStoryBudgetEvent) -> Unit,
 ) {
+
+    if (state.isDialogActive) {
+        PickCategoryDialog(categories = state.categories, onCategoryPicked = {
+            onEvent(BottomSheetAddStoryBudgetEvent.OnCategoryPicked(it))
+            onEvent(BottomSheetAddStoryBudgetEvent.OnDialogStatusChange(false))
+        }) {
+            onEvent(BottomSheetAddStoryBudgetEvent.OnDialogStatusChange(false))
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,16 +60,21 @@ fun BottomSheetAddStoryBudget(
                 onEvent(BottomSheetAddStoryBudgetEvent.OnCommentChange(it))
             }
         )
-        Box(modifier = Modifier.fillMaxWidth()){
+        Box(modifier = Modifier.fillMaxWidth()) {
             Row(modifier = Modifier
                 .padding(top = 12.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colors.primary)
-                .padding(4.dp)
                 .clickable {
 
-                }) {
-                Text(text = "Choose a category", color = MaterialTheme.colors.onPrimary)
+                    onEvent(BottomSheetAddStoryBudgetEvent.OnDialogStatusChange(true))
+                }
+                .padding(4.dp)
+            ) {
+                Text(
+                    text = if (state.pickedCategory == null) "Choose a category" else state.pickedCategory.name,
+                    color = MaterialTheme.colors.onPrimary
+                )
                 Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
             }
         }
@@ -74,7 +90,7 @@ fun BottomSheetAddStoryBudget(
                 onEvent(BottomSheetAddStoryBudgetEvent.OnDateChange(it))
             }
             SendIcon {
-
+                onEvent(BottomSheetAddStoryBudgetEvent.OnAddClick)
             }
         }
 

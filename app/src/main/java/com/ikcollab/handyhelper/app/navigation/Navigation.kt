@@ -166,20 +166,7 @@ fun Navigation(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text =
-                                            when (currentScreen) {
-                                                Screens.GoalsScreen.route, BottomSheets.AddGoalSheet.route, Screens.GoalsListScreen.route -> "Goals"
-                                                Screens.ChoresScreen.route -> "To-Do list"
-                                                Screens.TrackerScreen.route -> "Habit Tracker"
-                                                Screens.NotesScreen.route -> "Notes"
-                                                Screens.BudgetScreen.route -> "Budget"
-                                                Screens.BudgetCategoryScreen.route, BottomSheets.AddBudgetCategorySheet.route -> "Categories"
-                                                Screens.LanguagesScreen.route -> "Languages"
-                                                Screens.SettingsScreen.route -> "Settings"
-                                                Screens.FoldersNoteScreen.route -> FOLDER_NAME.value
-                                                Screens.AddNoteScreen.route -> if (WHICH_NOTE.value == EDIT_NOTE) "Edit note" else "Add note"
-                                                else -> ""
-                                            },
+                                            text = getTopBarTitle(currentScreen),
                                             color = MaterialTheme.colors.onBackground
                                         )
                                     }
@@ -225,13 +212,13 @@ fun Navigation(
                                 Screens.SettingsScreen.route -> {}
                                 Screens.BudgetCategoryScreen.route -> {}
                                 BottomSheets.AddBudgetCategorySheet.route -> {}
-                                Screens.BudgetScreen.route -> {
+                                Screens.BudgetScreen.route, BottomSheets.AddBudgetStorySheet.route -> {
                                     CustomIconButton(icon = Icons.Filled.MoreVert) {
                                         isDropDownMenuActive = true
                                     }
                                     // TODO Transform this function into BudgetSreen
                                     DropdownMenu(
-                                        modifier = Modifier.background(Color.Gray),
+                                        modifier = Modifier.background(MaterialTheme.colors.primary),
                                         offset = DpOffset(0.dp, 0.dp),
                                         expanded = isDropDownMenuActive,
                                         onDismissRequest = { isDropDownMenuActive = false }
@@ -242,7 +229,10 @@ fun Navigation(
                                                 navController.navigate(Screens.BudgetCategoryScreen.route)
                                                 isDropDownMenuActive = false
                                             }) {
-                                            Text(text = "Category Management")
+                                            Text(
+                                                text = "Category Management",
+                                                color = MaterialTheme.colors.onPrimary
+                                            )
                                         }
                                         DropdownMenuItem(
                                             modifier = Modifier.fillMaxWidth(),
@@ -250,7 +240,10 @@ fun Navigation(
                                                 onEvent(NavigationEvent.StartOverExpenses)
                                                 isDropDownMenuActive = false
                                             }) {
-                                            Text(text = "Start Over (expenses)")
+                                            Text(
+                                                text = "Start Over (expenses)",
+                                                color = MaterialTheme.colors.onPrimary
+                                            )
                                         }
                                         DropdownMenuItem(
                                             modifier = Modifier.fillMaxWidth(),
@@ -258,7 +251,10 @@ fun Navigation(
                                                 onEvent(NavigationEvent.StartOverIncome)
                                                 isDropDownMenuActive = false
                                             }) {
-                                            Text(text = "Start over (income)")
+                                            Text(
+                                                text = "Start over (income)",
+                                                color = MaterialTheme.colors.onPrimary
+                                            )
                                         }
                                         DropdownMenuItem(
                                             modifier = Modifier.fillMaxWidth(),
@@ -266,7 +262,10 @@ fun Navigation(
                                                 // Change currency Dialog
                                                 isDropDownMenuActive = false
                                             }) {
-                                            Text(text = "Change currency")
+                                            Text(
+                                                text = "Change currency",
+                                                color = MaterialTheme.colors.onPrimary
+                                            )
                                         }
                                     }
                                 }
