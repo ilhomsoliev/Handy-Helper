@@ -1,19 +1,16 @@
 package com.ikcollab.handyhelper.app.navigation.bottomBar
 
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ikcollab.components.theme.AntiFlashWhite
 
 
 @Composable

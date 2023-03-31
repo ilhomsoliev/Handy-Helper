@@ -1,10 +1,13 @@
 package com.ikcollab.budget.budget.bottomSheetAddStoryBudget
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryOneTimeEvent
 import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryState
 import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoriesByTypeUseCase
+import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoryByIdUseCase
+import com.ikcollab.domain.usecase.budget.story.GetBudgetStoryByIdUseCase
 import com.ikcollab.domain.usecase.budget.story.InsertBudgetStoryUseCase
 import com.ikcollab.model.dto.budget.BudgetStoryDto
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BottomSheetAddStoryBudgetViewModel @Inject constructor(
     private val getBudgetCategoriesByTypeUseCase: GetBudgetCategoriesByTypeUseCase,
-    private val insertBudgetStoryUseCase: InsertBudgetStoryUseCase
+    private val insertBudgetStoryUseCase: InsertBudgetStoryUseCase,
+    private val getBudgetStoryByIdUseCase: GetBudgetStoryByIdUseCase,
+    private val getBudgetCategoryById: GetBudgetCategoryByIdUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BottomSheetAddStoryBudgetState())
@@ -28,15 +33,35 @@ class BottomSheetAddStoryBudgetViewModel @Inject constructor(
     private val channel = Channel<BottomSheetAddStoryBudgetOneTimeEvent>()
     val flow = channel.receiveAsFlow()
 
-    init {
-    }
-
     fun onEvent(event: BottomSheetAddStoryBudgetEvent) {
         when (event) {
             is BottomSheetAddStoryBudgetEvent.OnLoad -> {
-                _state.update {
-                    it.copy(type = event.type)
+                viewModelScope.launch {
+                    if (event.storyId != null) {
+                        val story = getBudgetStoryByIdUseCase(event.storyId)
+                        _state.update {
+                            it.copy(story = story)
+                        }
+                        return@launch
+                    }
+                    if (event.categoryId != null) {
+                        val category = getBudgetCategoryById(event.categoryId)
+                        Log.d("Hello", category.toString())
+                        _state.update {
+                            it.copy(
+                                story = _state.value.story.copy(
+                                    categoryId = event.categoryId,
+                                    categoryName = category?.name ?: ""
+                                )
+                            )
+                        }
+                        return@launch
+                    }
+                    _state.update {
+                        it.copy(story = _state.value.story.copy(type = event.type))
+                    }
                 }
+
                 getBudgetCategoriesByTypeUseCase(event.type).onEach { list ->
                     _state.update {
                         it.copy(categories = list)
@@ -50,39 +75,35 @@ class BottomSheetAddStoryBudgetViewModel @Inject constructor(
             }
             is BottomSheetAddStoryBudgetEvent.OnCategoryPicked -> {
                 _state.update {
-                    it.copy(pickedCategory = event.value)
+                    it.copy(
+                        story = _state.value.story.copy(
+                            categoryId = event.value.id!!,
+                            categoryName = event.value.name
+                        )
+                    )
                 }
             }
             is BottomSheetAddStoryBudgetEvent.OnDateChange -> {
                 _state.update {
-                    it.copy(date = event.value)
+                    it.copy(story = _state.value.story.copy(dateCreated = event.value))
                 }
             }
             is BottomSheetAddStoryBudgetEvent.OnCommentChange -> {
                 _state.update {
-                    it.copy(comment = event.value)
+                    it.copy(story = _state.value.story.copy(comment = event.value))
                 }
             }
             is BottomSheetAddStoryBudgetEvent.OnAmountChange -> {
                 _state.update {
-                    it.copy(amount = if (event.value.isEmpty()) 0 else event.value.toInt())
+                    it.copy(story = _state.value.story.copy(value = if (event.value.isEmpty()) 0 else event.value.toInt()))
                 }
             }
             is BottomSheetAddStoryBudgetEvent.OnAddClick -> {
-                if (_state.value.amount == 0 || _state.value.pickedCategory?.id == null) return
+                if (_state.value.story.value == 0 || _state.value.story.categoryId == -1) return
                 viewModelScope.launch {
-                    val budgetStory = BudgetStoryDto(
-                        comment = _state.value.comment,
-                        value = _state.value.amount,
-                        type = _state.value.type,
-                        categoryId = _state.value.pickedCategory!!.id!!,
-                        categoryName = "",
-                        dateCreated = System.currentTimeMillis()
-                    )
-                    insertBudgetStoryUseCase(budgetStory)
+                    insertBudgetStoryUseCase(_state.value.story)
                     channel.send(BottomSheetAddStoryBudgetOneTimeEvent.CloseBottomSheet)
                 }
-
             }
             else -> {
 

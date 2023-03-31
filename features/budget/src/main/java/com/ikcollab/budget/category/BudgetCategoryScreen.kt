@@ -55,7 +55,7 @@ fun BudgetCategoryScreen(
                             onEvent(BudgetCategoryEvent.DeleteCategory(it))
                         },
                         onEditClick = {
-                            onEvent(BudgetCategoryEvent.OnEditClick(it))
+                            onEvent(BudgetCategoryEvent.OnEditClick(EXPENSES_TYPE, it))
                         }
                     )
                 }
@@ -69,7 +69,7 @@ fun BudgetCategoryScreen(
                             onEvent(BudgetCategoryEvent.DeleteCategory(it))
                         },
                         onEditClick = {
-                            onEvent(BudgetCategoryEvent.OnEditClick(it))
+                            onEvent(BudgetCategoryEvent.OnEditClick(INCOME_TYPE, it))
                         }
                     )
                 }

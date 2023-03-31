@@ -22,7 +22,7 @@ fun CustomTab(
     selectedItemIndex: Int,
     items: List<String>,
     modifier: Modifier = Modifier,
-    tabWidth: Dp = 100.dp,
+    tabWidth: Dp = 110.dp,
     onClick: (index: Int) -> Unit,
 ) {
     val indicatorOffset: Dp by animateDpAsState(

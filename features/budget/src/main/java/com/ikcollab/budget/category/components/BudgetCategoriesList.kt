@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ikcollab.budget.category.components.BudgetCategoryItem
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
@@ -64,6 +65,13 @@ fun BudgetCategoriesList(
                     }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
+            }
+            item {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Swipe left to delete Goal, right to edit"
+                )
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,21 +18,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ikcollab.components.draggableScaffold.DraggableScaffold
+import com.ikcollab.components.draggableScaffold.components.SwipeEdit
+import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.toMMDDYYYY
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
 import com.ikcollab.model.dto.budget.BudgetStoryDto
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExpensesScreen(
     categories: List<BudgetCategoryDto>,
     stories: List<BudgetStoryDto>,
     total: String,
     balance: String,
-    onAddClick: () -> Unit,
+    onAddClick: (Int) -> Unit,
+    onEditClick: (Int) -> Unit,
+    onDeleteClick: (Int) -> Unit,
 ) {
+    val draggableState = rememberDismissState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(floatingActionButton = {
         FloatingActionButton(onClick = {
-            onAddClick()
+            onAddClick(-1)
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
@@ -57,7 +68,9 @@ fun ExpensesScreen(
                             CategoryAddItem(
                                 text = category.name,
                                 balance = "$0",
-                                onAddClick = { /*TODO*/ },
+                                onAddClick = {
+                                    onAddClick(category.id!!)
+                                },
                                 onClick = {
 
                                 })
@@ -118,12 +131,33 @@ fun ExpensesScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             items(stories) { story ->
-                BudgetStoryItem(
-                    category = story.categoryName,
-                    comment = story.comment,
-                    amount = "$${story.value}",
-                    date = story.dateCreated.toMMDDYYYY()
+                DraggableScaffold(
+                    contentUnderRight = {
+                        SwipeTrash {
+                            story.id?.let { it1 -> onDeleteClick(it1) }
+                            coroutineScope.launch {
+                                draggableState.reset()
+                            }
+                        }
+                    },
+                    contentUnderLeft = {
+                        SwipeEdit(onClick = {
+                            story.id?.let { it1 -> onEditClick(it1) }
+                            coroutineScope.launch {
+                                draggableState.reset()
+                            }
+                        })
+                    },
+                    contentOnTop = {
+                        BudgetStoryItem(
+                            category = story.categoryName,
+                            comment = story.comment,
+                            amount = "$${story.value}",
+                            date = story.dateCreated.toMMDDYYYY()
+                        )
+                    }
                 )
+
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }

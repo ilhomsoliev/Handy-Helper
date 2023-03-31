@@ -36,6 +36,7 @@ fun MyTabItem(
     )
     Text(
         modifier = Modifier
+            //.weight(1f)
             .clip(CircleShape)
             .clickable {
                 onClick()
@@ -45,6 +46,7 @@ fun MyTabItem(
                 vertical = 8.dp,
                 horizontal = 12.dp,
             ),
+        maxLines = 1,
         text = text,
         color = tabTextColor,
         textAlign = TextAlign.Center,

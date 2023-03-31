@@ -4,8 +4,11 @@ import com.ikcollab.core.Constants
 
 sealed class BottomSheets(val route: String) {
     object AddGoalSheet : BottomSheets("AddGoalSheet")
-    object AddBudgetCategorySheet : BottomSheets("AddBudgetCategorySheet/{${Constants.CATEGORY_TYPE_ID_ARG}}")
-    object AddBudgetStorySheet : BottomSheets("AddBudgetStorySheet/{${Constants.CATEGORY_TYPE_ID_ARG}}")
+    object AddBudgetCategorySheet :
+        BottomSheets("AddBudgetCategorySheet/{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}")
+
+    object AddBudgetStorySheet :
+        BottomSheets("AddBudgetStorySheet/{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.STORY_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}")
 
     object AddStepGoalSheet : BottomSheets("AddStepGoalSheet/{${Constants.GOAL_ID_ARG}}")
 }

@@ -56,9 +56,15 @@ fun BudgetScreen(
                         total = "0.0",
                         balance = "0.0",
                         onAddClick = {
-                            onEvent(BudgetEvent.OpenBottomSheet(EXPENSES_TYPE))
+                            onEvent(BudgetEvent.OpenBottomSheet(type = EXPENSES_TYPE, it))
                         },
-                        stories = state.expensesStories
+                        stories = state.expensesStories,
+                        onEditClick = {
+                            onEvent(BudgetEvent.OnEditStory(it))
+                        },
+                        onDeleteClick = {
+                            onEvent(BudgetEvent.DeleteStory(it))
+                        },
                     )
                 }
                 1 -> {
@@ -67,9 +73,16 @@ fun BudgetScreen(
                         total = "0.0",
                         balance = "0.0",
                         onAddClick = {
-                            onEvent(BudgetEvent.OpenBottomSheet(INCOME_TYPE))
+                            onEvent(BudgetEvent.OpenBottomSheet(INCOME_TYPE, it))
                         },
-                        stories = state.incomeStories
+                        stories = state.incomeStories,
+                        onEditClick = {
+                            onEvent(BudgetEvent.OnEditStory(it))
+                        },
+                        onDeleteClick = {
+                            onEvent(BudgetEvent.DeleteStory(it))
+
+                        },
                     )
                     /*IncomeScreen(
                         categories = state.incomeCategories,

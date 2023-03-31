@@ -1,7 +1,11 @@
 package com.ikcollab.budget.category.bottomSheetAddCategory
 
-data class BottomSheetAddCategoryState(
-    val categoryName:String = "",
-    val type:String = "",
+import com.ikcollab.model.dto.budget.BudgetCategoryDto
+import com.ikcollab.model.local.budget.EXPENSES_TYPE
 
+data class BottomSheetAddCategoryState(
+    val category: BudgetCategoryDto = BudgetCategoryDto(
+        null, "", System.currentTimeMillis(),
+        EXPENSES_TYPE
+    ),
 )

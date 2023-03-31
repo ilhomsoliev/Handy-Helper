@@ -42,5 +42,7 @@ object Constants {
     const val NOTE_ID_ARG = "NOTE_ID_ARG"
     const val GOAL_ID_ARG = "GOAL_ID_ARG"
     const val CATEGORY_TYPE_ID_ARG = "CATEGORY_TYPE_ID_ARG"
+    const val CATEGORY_ID_ARG = "CATEGORY_ID_ARG"
+    const val STORY_ID_ARG = "STORY_ID_ARG"
 
 }

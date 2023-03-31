@@ -49,13 +49,13 @@ fun BottomSheetAddStoryBudget(
             modifier = Modifier.padding(top = 16.dp)
         )
         TextFieldAmount(
-            value = if (state.amount == 0) "" else state.amount.toString(),
+            value = if (state.story.value == 0) "" else state.story.value.toString(),
             onValueChange = {
                 onEvent(BottomSheetAddStoryBudgetEvent.OnAmountChange(it))
             }
         )
         TextFieldComment(
-            value = state.comment,
+            value = state.story.comment,
             onValueChange = {
                 onEvent(BottomSheetAddStoryBudgetEvent.OnCommentChange(it))
             }
@@ -72,7 +72,7 @@ fun BottomSheetAddStoryBudget(
                 .padding(4.dp)
             ) {
                 Text(
-                    text = if (state.pickedCategory == null) "Choose a category" else state.pickedCategory.name,
+                    text = if (state.story.categoryName == "") "Choose a category" else state.story.categoryName,
                     color = MaterialTheme.colors.onPrimary
                 )
                 Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
@@ -86,7 +86,7 @@ fun BottomSheetAddStoryBudget(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DatePickerLabel(date = state.date.toMMDDYYYY()) {
+            DatePickerLabel(date = state.story.dateCreated.toMMDDYYYY()) {
                 onEvent(BottomSheetAddStoryBudgetEvent.OnDateChange(it))
             }
             SendIcon {

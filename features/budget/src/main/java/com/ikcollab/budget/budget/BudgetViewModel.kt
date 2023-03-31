@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoriesByTypeUseCase
+import com.ikcollab.domain.usecase.budget.story.DeleteBudgetStoryByIdUseCase
 import com.ikcollab.domain.usecase.budget.story.GetBudgetStoriesByCategoryIdUseCase
 import com.ikcollab.domain.usecase.budget.story.GetBudgetStoriesByTypeUseCase
+import com.ikcollab.model.dto.budget.BudgetStoryDto
+import com.ikcollab.model.local.budget.BudgetStoryEntity
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import com.ikcollab.model.local.budget.INCOME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +20,7 @@ import javax.inject.Inject
 class BudgetViewModel @Inject constructor(
     private val getBudgetCategoriesByTypeUseCase: GetBudgetCategoriesByTypeUseCase,
     private val getBudgetStoriesByTypeUseCase: GetBudgetStoriesByTypeUseCase,
+    private val deleteBudgetStoryByIdUseCase: DeleteBudgetStoryByIdUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BudgetState())
@@ -55,6 +59,11 @@ class BudgetViewModel @Inject constructor(
 
     fun onEvent(event: BudgetEvent) {
         when (event) {
+            is BudgetEvent.DeleteStory -> {
+                viewModelScope.launch {
+                    deleteBudgetStoryByIdUseCase(BudgetStoryDto(event.storyId))
+                }
+            }
             else -> {
 
             }

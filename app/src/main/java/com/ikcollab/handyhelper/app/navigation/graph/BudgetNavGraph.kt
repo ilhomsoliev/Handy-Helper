@@ -35,11 +35,19 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             val state = viewModel.state.collectAsState().value
             BudgetScreen(state = state, onEvent = { event ->
                 when (event) {
+                    is BudgetEvent.OnEditStory -> {
+                        navController.navigate(
+                            BottomSheets.AddBudgetStorySheet.route.replace(
+                                "{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.STORY_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}",
+                                " /${event.storyId}/-1"
+                            )
+                        )
+                    }
                     is BudgetEvent.OpenBottomSheet -> {
                         navController.navigate(
                             BottomSheets.AddBudgetStorySheet.route.replace(
-                                "{${Constants.CATEGORY_TYPE_ID_ARG}}",
-                                event.type
+                                "{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.STORY_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}",
+                                "${event.type}/-1/${event.categoryId}"
                             )
                         )
                     }
@@ -52,14 +60,19 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             val state = viewModel.state.collectAsState().value
             BudgetCategoryScreen(state = state, onEvent = { event ->
                 when (event) {
-                    is BudgetCategoryEvent.OnEditClick->{
-
+                    is BudgetCategoryEvent.OnEditClick -> {
+                        navController.navigate(
+                            BottomSheets.AddBudgetCategorySheet.route.replace(
+                                "{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}",
+                                "${event.type}/${event.id}"
+                            )
+                        )
                     }
                     is BudgetCategoryEvent.OpenBottomSheet -> {
                         navController.navigate(
                             BottomSheets.AddBudgetCategorySheet.route.replace(
-                                "{${Constants.CATEGORY_TYPE_ID_ARG}}",
-                                event.type
+                                "{${Constants.CATEGORY_TYPE_ID_ARG}}/{${Constants.CATEGORY_ID_ARG}}",
+                                "${event.type}/-1"
                             )
                         )
                     }
@@ -71,13 +84,22 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             route = BottomSheets.AddBudgetCategorySheet.route, arguments = listOf(
                 navArgument(Constants.CATEGORY_TYPE_ID_ARG) {
                     type = NavType.StringType
-                })
+                },
+                navArgument(Constants.CATEGORY_ID_ARG) {
+                    type = NavType.IntType
+                },
+            )
         ) {
             val viewModel = hiltViewModel<BottomSheetAddCategoryViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {
                 val type = it.arguments?.getString(Constants.CATEGORY_TYPE_ID_ARG) ?: ""
-                viewModel.onEvent(BottomSheetAddCategoryEvent.OnLoad(type))
+                val categoryId =
+                    if (it.arguments?.getInt(Constants.CATEGORY_ID_ARG) == -1) null else it.arguments?.getInt(
+                        Constants.CATEGORY_ID_ARG
+                    )
+
+                viewModel.onEvent(BottomSheetAddCategoryEvent.OnLoad(type, categoryId))
                 viewModel.flow.collect() { event ->
                     when (event) {
                         is BottomSheetAddCategoryOneTimeEvent.CloseBottomSheet -> {
@@ -96,13 +118,29 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             route = BottomSheets.AddBudgetStorySheet.route, arguments = listOf(
                 navArgument(Constants.CATEGORY_TYPE_ID_ARG) {
                     type = NavType.StringType
-                })
+                },
+                navArgument(Constants.STORY_ID_ARG) {
+                    type = NavType.IntType
+                },
+                navArgument(Constants.CATEGORY_ID_ARG) {
+                    type = NavType.IntType
+                },
+            )
         ) {
             val viewModel = hiltViewModel<BottomSheetAddStoryBudgetViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {
                 val type = it.arguments?.getString(Constants.CATEGORY_TYPE_ID_ARG) ?: ""
-                viewModel.onEvent(BottomSheetAddStoryBudgetEvent.OnLoad(type))
+                val storyId = if ((it.arguments?.getInt(Constants.STORY_ID_ARG)
+                        ?: -1) == -1
+                ) null else it.arguments?.getInt(Constants.STORY_ID_ARG)
+                val categoryId =
+                    if ((it.arguments?.getInt(Constants.CATEGORY_ID_ARG)
+                            ?: -1) == -1
+                    ) null else it.arguments?.getInt(
+                        Constants.CATEGORY_ID_ARG
+                    )
+                viewModel.onEvent(BottomSheetAddStoryBudgetEvent.OnLoad(type, storyId, categoryId))
                 viewModel.flow.collect() { event ->
                     when (event) {
                         is BottomSheetAddStoryBudgetOneTimeEvent.CloseBottomSheet -> {
