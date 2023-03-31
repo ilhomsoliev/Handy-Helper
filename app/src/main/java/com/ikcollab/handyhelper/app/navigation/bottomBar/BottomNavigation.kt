@@ -39,10 +39,10 @@ fun BottomNavigation(navController: NavController) {
                 selected = currentRoute == item.screen_route,
                 onClick = {
                     navController.navigate(item.screen_route) {
-
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {
-                                saveState = true
+                                // TODO
+                              //  saveState = true
                             }
                         }
                         launchSingleTop = true

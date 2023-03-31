@@ -2,6 +2,7 @@ package com.ikcollab.goals.goals
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikcollab.components.CustomFloatingActionButton
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
+import com.ikcollab.components.draggableScaffold.ExpandState
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
+import com.ikcollab.components.draggableScaffold.rememberDraggableScaffoldState
 import com.ikcollab.goals.components.GoalItem
 import com.ikcollab.model.dto.goals.GoalDto
 import kotlinx.coroutines.launch
@@ -35,7 +38,7 @@ fun GoalsScreen(
     state: GoalsState,
     onEvent: (GoalsEvent) -> Unit,
 ) {
-    val draggableState = rememberDismissState()
+    //val draggableState = rememberDraggableScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(floatingActionButton = {
@@ -60,17 +63,22 @@ fun GoalsScreen(
                         .padding(it)
                 ) {
                     items(state.goals) { goal: GoalDto ->
+                        val draggableDismissState = rememberDismissState()
+
                         DraggableScaffold(
                             contentUnderRight = {
                                 SwipeTrash(onTrashClick = {
                                     onEvent(GoalsEvent.OnDeleteStepGoalClick(goal.id!!))
                                     coroutineScope.launch {
-                                        draggableState.reset()
+                                        draggableDismissState.reset()
                                     }
                                 })
                             },
                             contentUnderLeft = {
                                 SwipeEdit(onClick = {
+                                    coroutineScope.launch {
+                                        draggableDismissState.reset()
+                                    }
                                     // TODO
                                 })
                             },
