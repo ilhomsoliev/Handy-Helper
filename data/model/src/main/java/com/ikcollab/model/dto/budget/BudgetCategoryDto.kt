@@ -6,3 +6,11 @@ data class BudgetCategoryDto(
     val dateCreated: Long,
     val type: String,
 )
+
+data class BudgetCategoryWithSumDto(
+    val id: Int? = null,
+    val name: String,
+    val dateCreated: Long,
+    val type: String,
+    val sum: Double,
+)

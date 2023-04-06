@@ -41,13 +41,12 @@ fun IncomeScreen(
                 ) {
                     categories.forEach { category ->
 
-                        CategoryAddItem(
+                       /* CategoryAddItem(
                             text = category.name,
-                            balance = "$0",
-                            onAddClick = { /*TODO*/ },
+                            onAddClick = { *//*TODO*//* },
                             onClick = {
 
-                            })
+                            }, getStorySumByType = get)*/
                     }
                     Column {
                         Row() {

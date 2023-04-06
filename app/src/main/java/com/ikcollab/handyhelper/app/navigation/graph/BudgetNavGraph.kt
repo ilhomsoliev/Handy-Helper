@@ -8,10 +8,6 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 import com.ikcollab.budget.budget.BudgetEvent
-import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategory
-import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryEvent
-import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryOneTimeEvent
-import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryViewModel
 import com.ikcollab.budget.budget.BudgetScreen
 import com.ikcollab.budget.budget.BudgetViewModel
 import com.ikcollab.budget.budget.bottomSheetAddStoryBudget.BottomSheetAddStoryBudget
@@ -21,9 +17,11 @@ import com.ikcollab.budget.budget.bottomSheetAddStoryBudget.BottomSheetAddStoryB
 import com.ikcollab.budget.category.BudgetCategoryEvent
 import com.ikcollab.budget.category.BudgetCategoryScreen
 import com.ikcollab.budget.category.BudgetCategoryViewModel
+import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategory
+import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryEvent
+import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryOneTimeEvent
+import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryViewModel
 import com.ikcollab.core.Constants
-import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalOneTimeEvent
-import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoalViewModel
 import com.ikcollab.handyhelper.app.navigation.Screens
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 
@@ -53,7 +51,7 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
                     }
                     else -> viewModel.onEvent(event)
                 }
-            })
+            }, viewModel.getStorySumByCategoryId)
         }
         composable(route = Screens.BudgetCategoryScreen.route) {
             val viewModel = hiltViewModel<BudgetCategoryViewModel>()

@@ -3,6 +3,7 @@ package com.ikcollab.budget.category.bottomSheetAddCategory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ikcollab.budget.category.BudgetCategoryState
+import com.ikcollab.core.showLog
 import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoryByIdUseCase
 import com.ikcollab.domain.usecase.budget.category.InsertBudgetCategoryUseCase
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
@@ -42,6 +43,7 @@ class BottomSheetAddCategoryViewModel @Inject constructor(
                                 category = getBudgetCategoryByIdUseCase(event.id)!!,
                             )
                         }
+                        _state.value.category.showLog()
                     }
                     return
                 }
@@ -68,6 +70,7 @@ class BottomSheetAddCategoryViewModel @Inject constructor(
             is BottomSheetAddCategoryEvent.OnAddClick -> {
                 if (_state.value.category.name.isEmpty() && _state.value.category.type.isEmpty()) return
                 viewModelScope.launch {
+                    _state.value.category.showLog()
                     insertBudgetCategoryUseCase(_state.value.category)
                     channel.send(BottomSheetAddCategoryOneTimeEvent.CloseBottomSheet)
                 }

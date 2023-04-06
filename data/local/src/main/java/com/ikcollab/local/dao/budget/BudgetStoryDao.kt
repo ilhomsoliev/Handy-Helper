@@ -10,16 +10,25 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BudgetStoryDao : BaseDao<BudgetStoryEntity> {
     @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
-    fun getBudgetStoriesByType(type:String): Flow<List<BudgetStoryEntity>>
+    fun getBudgetStoriesByType(type: String): Flow<List<BudgetStoryEntity>>
 
     @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE category_id = :categoryId")
-    fun getBudgetStoriesByCategoryId(categoryId:Int): Flow<List<BudgetStoryEntity>>
+    fun getBudgetStoriesByCategoryId(categoryId: Int): Flow<List<BudgetStoryEntity>>
+
+    @Query("SELECT SUM(value) FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
+    fun getSumByType(type: String): Flow<Double?>
+
+    @Query("SELECT SUM(value) FROM ${BudgetStoryEntity.TABLE_NAME} WHERE category_id = :id")
+    fun getSumByCategoryId(id: Int): Flow<Double?>
 
     @Query("SELECT * FROM ${BudgetStoryEntity.TABLE_NAME} WHERE id = :storyId")
     suspend fun getBudgetStoryById(storyId: Int): BudgetStoryEntity?
 
     @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
-    suspend fun deleteAllBudgetStoriesByType(type:String)
+    suspend fun deleteAllStoriesByType(type: String)
+
+    @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
+    suspend fun deleteAllBudgetStoriesByType(type: String)
 
     @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE id = :storyId")
     suspend fun deleteStoryById(storyId: Int)

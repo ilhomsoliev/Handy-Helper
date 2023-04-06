@@ -13,6 +13,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.ikcollab.budget.budget.components.ExpensesScreen
 import com.ikcollab.components.customTabs.CustomTab
+import com.ikcollab.domain.usecase.budget.story.GetStorySumByCategoryId
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import com.ikcollab.model.local.budget.INCOME_TYPE
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 fun BudgetScreen(
     state: BudgetState,
     onEvent: (BudgetEvent) -> Unit,
+    getStorySumByCategoryId: GetStorySumByCategoryId
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -53,8 +55,8 @@ fun BudgetScreen(
                 0 -> {
                     ExpensesScreen(
                         categories = state.expensesCategories,
-                        total = "0.0",
-                        balance = "0.0",
+                        total = state.totalSumExpense.toString(),
+                        balance = (state.totalSumIncome - state.totalSumExpense).toString(),
                         onAddClick = {
                             onEvent(BudgetEvent.OpenBottomSheet(type = EXPENSES_TYPE, it))
                         },
@@ -65,13 +67,14 @@ fun BudgetScreen(
                         onDeleteClick = {
                             onEvent(BudgetEvent.DeleteStory(it))
                         },
+                        getStorySumByType = getStorySumByCategoryId
                     )
                 }
                 1 -> {
                     ExpensesScreen(
                         categories = state.incomeCategories,
-                        total = "0.0",
-                        balance = "0.0",
+                        total = state.totalSumIncome.toString(),
+                        balance = "",
                         onAddClick = {
                             onEvent(BudgetEvent.OpenBottomSheet(INCOME_TYPE, it))
                         },
@@ -83,6 +86,7 @@ fun BudgetScreen(
                             onEvent(BudgetEvent.DeleteStory(it))
 
                         },
+                        getStorySumByType = getStorySumByCategoryId
                     )
                     /*IncomeScreen(
                         categories = state.incomeCategories,

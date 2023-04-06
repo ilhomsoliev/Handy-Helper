@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ikcollab.domain.usecase.budget.story.DeleteBudgetStoryByIdUseCase
 import com.ikcollab.domain.usecase.goals.goal.InsertGoalUseCase
 import com.ikcollab.domain.usecase.goals.stepGoal.InsertStepGoalUseCase
 import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
@@ -28,6 +29,8 @@ class NavigationViewModel @Inject constructor(
     private val insertFolderUseCase: InsertFolderUseCase,
     private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
     private val insertTodoUseCase: InsertTodoUseCase,
+    private val deleteBudgetStoryByIdUseCase: DeleteBudgetStoryByIdUseCase
+
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NavigationState())

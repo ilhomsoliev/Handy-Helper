@@ -8,8 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,8 +21,13 @@ import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.toMMDDYYYY
+import com.ikcollab.domain.usecase.budget.story.GetStorySumByCategoryId
+import com.ikcollab.domain.usecase.budget.story.GetStorySumByType
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
+import com.ikcollab.model.dto.budget.BudgetCategoryWithSumDto
 import com.ikcollab.model.dto.budget.BudgetStoryDto
+import com.ikcollab.model.local.budget.EXPENSES_TYPE
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -36,6 +40,8 @@ fun ExpensesScreen(
     onAddClick: (Int) -> Unit,
     onEditClick: (Int) -> Unit,
     onDeleteClick: (Int) -> Unit,
+    getStorySumByType: GetStorySumByCategoryId
+
 ) {
     val draggableState = rememberDismissState()
     val coroutineScope = rememberCoroutineScope()
@@ -67,13 +73,13 @@ fun ExpensesScreen(
                         categories.forEach { category ->
                             CategoryAddItem(
                                 text = category.name,
-                                balance = "$0",
+
                                 onAddClick = {
                                     onAddClick(category.id!!)
                                 },
                                 onClick = {
 
-                                })
+                                }, categoryId = category.id!!, getStorySumByType = getStorySumByType)
                         }
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Spacer(modifier = Modifier.height(12.dp))
