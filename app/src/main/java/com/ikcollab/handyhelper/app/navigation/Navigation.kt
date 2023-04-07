@@ -1,6 +1,7 @@
 package com.ikcollab.handyhelper.app.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -49,6 +50,7 @@ import com.ikcollab.handyhelper.app.presentation.languages.LanguagesScreen
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesViewModel
 import com.ikcollab.handyhelper.app.presentation.settings.SettingsScreen
 import com.ikcollab.components.theme.AntiFlashWhite
+import kotlinx.coroutines.flow.flow
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,7 +66,6 @@ fun Navigation(
     val navController = rememberNavController(bottomSheetNavigator)
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
-
     val scaffoldState = rememberScaffoldState()
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val stateOfKeyboard = remember {
@@ -92,23 +93,6 @@ fun Navigation(
         sheetContent = {
             Box(Modifier.defaultMinSize(minHeight = 1.dp)) {
                 when (currentScreen) {
-                    Screens.NotesScreen.route -> {
-                        CustomInsertFolderItem(
-                            value = state.folderName,
-                            onValueChange = {
-                                onEvent(NavigationEvent.OnFolderNameChange(it))
-                            },
-                            onClick = {
-                                onEvent(NavigationEvent.InsertFolder)
-                                coroutineScope.launch {
-                                    modalSheetState.hide()
-                                }
-                            },
-                            placeholder = "Name of Folder...",
-                            modifier = Modifier.padding(bottom = 150.dp),
-                            stateOfKeyboard = stateOfKeyboard
-                        )
-                    }
                     Screens.TodoCategoryScreen.route -> {
                         CustomInsertFolderItem(
                             value = state.todoCategoryName,
@@ -322,32 +306,6 @@ fun Navigation(
                         )
                     }
                 },
-                floatingActionButton = {
-                    when (currentScreen) {
-                        Screens.NotesScreen.route -> CustomFloatingActionButton(
-                            onInsert = {
-                                coroutineScope.launch {
-                                    //modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                                }
-                                stateOfKeyboard.value = true
-                                onEvent(NavigationEvent.OnFolderIdChange(-1))
-                            },
-                            onEdit = {
-                                coroutineScope.launch {
-                                    navController.navigate(
-                                        Screens.AddNoteScreen.route.replace(
-                                            "{${FOLDER_ID_ARG}}/{${NOTE_ID_ARG}}",
-                                            "-1/-1"
-                                        )
-                                    )
-                                }
-                                WHICH_NOTE.value = ADD_NOTE
-                                FOLDER_ID_IS_NULL.value = true
-                            },
-                            isMultiple = true
-                        )
-                    }
-                }
             ) { it ->
                 NavHost(
                     modifier = Modifier
@@ -362,7 +320,7 @@ fun Navigation(
 
                     ChoresNavGraph(navController)
 
-                    NotesNavGraph(navController, onEvent = { onEvent(it) })
+                    NotesNavGraph(navController,state)
 
                     TodoListNavGraph(navController)
 

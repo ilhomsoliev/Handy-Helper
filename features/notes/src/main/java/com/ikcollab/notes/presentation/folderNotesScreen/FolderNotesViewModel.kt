@@ -2,6 +2,7 @@ package com.ikcollab.notes.presentation.folderNotesScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ikcollab.domain.usecase.notes.folder.GetFolderByIdUseCase
 import com.ikcollab.domain.usecase.notes.note.DeleteNoteByIdUseCase
 import com.ikcollab.domain.usecase.notes.note.GetNotesByFolderIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FolderNotesViewModel @Inject constructor(
     private val getNotesByFolderIdUseCase: GetNotesByFolderIdUseCase,
-    private val deleteNoteByIdUseCase: DeleteNoteByIdUseCase
+    private val deleteNoteByIdUseCase: DeleteNoteByIdUseCase,
+    private val getFolderByIdUseCase: GetFolderByIdUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(FolderNotesState())
     val state = _state.stateIn(
@@ -48,7 +50,11 @@ class FolderNotesViewModel @Inject constructor(
                     it.copy(noteId = event.noteId)
                 }
             }
-
+            is FolderNotesEvent.GetFolderById ->{
+                _state.update {
+                    it.copy()
+                }
+            }
             else -> {}
         }
     }

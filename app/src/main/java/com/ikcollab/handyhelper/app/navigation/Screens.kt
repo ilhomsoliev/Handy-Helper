@@ -76,7 +76,7 @@ fun getTopBarTitle(currentScreen: String) = when (currentScreen) {
     Screens.BudgetCategoryScreen.route, BottomSheets.AddBudgetCategorySheet.route -> "Categories"
     Screens.LanguagesScreen.route -> "Languages"
     Screens.SettingsScreen.route -> "Settings"
-    Screens.FoldersNoteScreen.route -> Constants.FOLDER_NAME.value
+    Screens.FoldersNoteScreen.route -> Constants.MAIN_FOLDER_NAME.value
     Screens.AddNoteScreen.route -> if (Constants.WHICH_NOTE.value == Constants.EDIT_NOTE) "Edit note" else "Add note"
     else -> ""
 }

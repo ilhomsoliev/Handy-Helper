@@ -11,7 +11,7 @@ data class NoteEntity(
     @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_TITLE) val title: String,
     @ColumnInfo(name = COLUMN_DESCRIPTION) val description: String,
-    @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long,
+    @ColumnInfo(name = COLUMN_DATE_CREATED) val dateCreated: Long = 0L,
     @ColumnInfo(name = COLUMN_FOLDER_ID) val folderId: Int,
 ) {
     companion object{

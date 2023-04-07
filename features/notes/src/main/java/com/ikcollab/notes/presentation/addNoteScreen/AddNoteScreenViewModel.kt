@@ -71,7 +71,7 @@ class AddNoteScreenViewModel @Inject constructor(
             }
             is AddNoteScreenEvent.OnDateChange ->{
                 _state.update {
-                    it.copy(note = _state.value.note?.copy(dateCreated = if (event.value == "") System.currentTimeMillis() else SimpleDateFormat("yyyy-MM-dd").parse(event.value).time))
+                    it.copy(note = _state.value.note?.copy(dateCreated = event.value))
                 }
             }
             is AddNoteScreenEvent.OnFolderChange ->{
