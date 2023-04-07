@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ikcollab.components.CustomDialog
 import com.ikcollab.components.CustomFloatingActionButton
@@ -143,6 +144,12 @@ fun NotesScreen(
                     Spacer(modifier = Modifier.height(5.dp))
                 }
                 item {
+                    Spacer(modifier = Modifier.height(25.dp))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Swipe left to delete Note, right to edit"
+                    )
                     Spacer(modifier = Modifier.height(25.dp))
                 }
                 items(state.notes.filter { it.folderId == -1 }) { note ->
