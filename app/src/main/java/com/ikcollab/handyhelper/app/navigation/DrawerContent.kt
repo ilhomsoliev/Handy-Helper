@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun DrawerContent(
     openLanguagesScreen: () -> Unit,
@@ -99,7 +100,6 @@ fun DrawerContent(
         )
     }
 }
-
 @Composable
 fun DrawerItem(text: String, icon: ImageVector, onClick: () -> Unit) {
     Box(modifier = Modifier

@@ -1,6 +1,7 @@
 package com.ikcollab.core
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -29,4 +30,8 @@ fun Long.toMMMDD(): String {
 fun LocalDate.toCurrentInMillis(): Long {
     val zonedDateTime = this.atStartOfDay(ZoneId.systemDefault())
     return zonedDateTime.toInstant().toEpochMilli()
+}
+
+fun Any.showLog(tag: String = "Hello") {
+    Log.d(tag, this.toString())
 }

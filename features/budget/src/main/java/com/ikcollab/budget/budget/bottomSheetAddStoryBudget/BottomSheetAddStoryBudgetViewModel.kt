@@ -10,6 +10,7 @@ import com.ikcollab.domain.usecase.budget.category.GetBudgetCategoryByIdUseCase
 import com.ikcollab.domain.usecase.budget.story.GetBudgetStoryByIdUseCase
 import com.ikcollab.domain.usecase.budget.story.InsertBudgetStoryUseCase
 import com.ikcollab.model.dto.budget.BudgetStoryDto
+import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -46,12 +47,12 @@ class BottomSheetAddStoryBudgetViewModel @Inject constructor(
                     }
                     if (event.categoryId != null) {
                         val category = getBudgetCategoryById(event.categoryId)
-                        Log.d("Hello", category.toString())
                         _state.update {
                             it.copy(
                                 story = _state.value.story.copy(
                                     categoryId = event.categoryId,
-                                    categoryName = category?.name ?: ""
+                                    categoryName = category?.name ?: "",
+                                    type = category?.type ?: EXPENSES_TYPE
                                 )
                             )
                         }

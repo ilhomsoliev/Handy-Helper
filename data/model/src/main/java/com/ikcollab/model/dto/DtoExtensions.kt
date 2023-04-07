@@ -1,6 +1,7 @@
 package com.ikcollab.model.dto
 
 import com.ikcollab.model.dto.budget.BudgetCategoryDto
+import com.ikcollab.model.dto.budget.BudgetCategoryWithSumDto
 import com.ikcollab.model.dto.budget.BudgetStoryDto
 import com.ikcollab.model.dto.goals.GoalDto
 import com.ikcollab.model.dto.goals.GoalWithStepsDto
@@ -34,7 +35,7 @@ fun NoteDto.toNoteEntity() = NoteEntity(
     folderId = folderId,
 )
 
-fun FolderEntity.toFolderDto(notesCount:Int) = FolderDto(
+fun FolderEntity.toFolderDto(notesCount: Int) = FolderDto(
     id = id,
     name = name,
     dateCreated = dateCreated,
@@ -149,6 +150,14 @@ fun BudgetCategoryEntity.toBudgetCategoryDto() = BudgetCategoryDto(
     name = name,
     dateCreated = dateCreated,
     type = type,
+)
+
+fun BudgetCategoryEntity.toBudgetCategoryWithSumDto(sum: Double) = BudgetCategoryWithSumDto(
+    id = id,
+    name = name,
+    dateCreated = dateCreated,
+    type = type,
+    sum = sum
 )
 
 fun BudgetCategoryDto.toBudgetCategoryEntity() = BudgetCategoryEntity(

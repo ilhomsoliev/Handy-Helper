@@ -28,6 +28,9 @@ class BudgetRepository @Inject constructor(
     suspend fun deleteBudgetCategory(budgetCategoryEntity: BudgetCategoryEntity) =
         budgetCategoryDao.delete(budgetCategoryEntity)
 
+   /* suspend fun deleteAllStoriesByType(type: String) =
+        budgetCategoryDao.deleteAllBudgetStoriesByType(budgetCategoryEntity)
+*/
     suspend fun deleteStoryById(storyId: Int) = budgetStoryDao.deleteStoryById(storyId)
     suspend fun deleteCategoryById(categoryId: Int) =
         budgetCategoryDao.deleteCategoryById(categoryId)
@@ -47,5 +50,9 @@ class BudgetRepository @Inject constructor(
     fun getStoriesByType(type: String): Flow<List<BudgetStoryEntity>> =
         budgetStoryDao.getBudgetStoriesByType(type)
 
+    fun getStorySumByCategoryId(id: Int): Flow<Double?> =
+        budgetStoryDao.getSumByCategoryId(id)
+
+    fun getStorySumByType(type: String): Flow<Double?> = budgetStoryDao.getSumByType(type)
     //fun getFolders(): Flow<List<FolderEntity>> = budgetCategoryDao.getFolders()
 }
