@@ -9,4 +9,6 @@ data class NavigationState constructor(
     val todoTaskName: String = "",
     val todoTaskDeadline: Long = System.currentTimeMillis(),
     val todoCategoryId: Int = -1,
+    val isDeleteBudgetExpenseTypeDialogActive: Boolean = false,
+    val isDeleteBudgetIncomeTypeDialogActive: Boolean = false,
 )

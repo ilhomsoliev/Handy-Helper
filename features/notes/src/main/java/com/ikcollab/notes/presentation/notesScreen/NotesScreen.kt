@@ -30,7 +30,7 @@ import java.sql.Date
 @Composable
 fun NotesScreen(
     state: NotesState,
-    onEvent: (NotesEvent)->Unit
+    onEvent: (NotesEvent) -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -54,7 +54,7 @@ fun NotesScreen(
         {
             isFolderDialogState.value = false
         },
-        isDialogOpen = isFolderDialogState,
+        isDialogOpen = isFolderDialogState.value,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
@@ -69,7 +69,7 @@ fun NotesScreen(
             isNoteDialogState.value = false
         },
         cancelBtnClick = { isNoteDialogState.value = false },
-        isDialogOpen = isNoteDialogState,
+        isDialogOpen = isNoteDialogState.value,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {

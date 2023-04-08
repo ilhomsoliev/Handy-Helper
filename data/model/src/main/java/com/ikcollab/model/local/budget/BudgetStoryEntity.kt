@@ -16,7 +16,6 @@ import androidx.room.PrimaryKey
 )
 data class BudgetStoryEntity(
     @PrimaryKey(autoGenerate = true)
-
     @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_COMMENT) val comment: String,
     @ColumnInfo(name = COLUMN_VALUE) val value: Int,

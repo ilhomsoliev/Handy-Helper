@@ -22,15 +22,15 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun CustomDialog(
     text: String,
-    description:String,
+    description: String,
     okBtnClick: () -> Unit,
     cancelBtnClick: () -> Unit,
-    isDialogOpen:MutableState<Boolean>,
-    okBtnText:String,
-    cancelBtnText:String,
-    onDismissRequest:()->Unit
-){
-    if(isDialogOpen.value){
+    isDialogOpen: Boolean,
+    okBtnText: String,
+    cancelBtnText: String,
+    onDismissRequest: () -> Unit
+) {
+    if (isDialogOpen) {
         Dialog(onDismissRequest = onDismissRequest) {
             Column(
                 modifier = Modifier
@@ -67,7 +67,7 @@ fun CustomDialog(
                             .clip(RoundedCornerShape(10.dp))
                             .weight(1f),
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
-                        onClick =  cancelBtnClick
+                        onClick = cancelBtnClick
                     ) {
                         Text(text = cancelBtnText, fontSize = 18.sp)
                     }

@@ -44,7 +44,7 @@ fun FoldersNoteScreen(
             isDialogState.value = false
         },
         cancelBtnClick = { isDialogState.value = false },
-        isDialogOpen = isDialogState,
+        isDialogOpen = isDialogState.value,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {

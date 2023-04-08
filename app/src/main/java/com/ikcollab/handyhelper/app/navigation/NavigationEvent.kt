@@ -11,7 +11,8 @@ sealed class NavigationEvent {
     object StartOverIncome : NavigationEvent()
     data class OnTodoCategoryIdChange(val value: Int) : NavigationEvent()
     data class OnTodoNameChange(val value: String) : NavigationEvent()
-
+    data class OnDeleteExpenseDialogChange(val value: Boolean) : NavigationEvent()
+    data class OnDeleteIncomeDialogChange(val value: Boolean) : NavigationEvent()
 
 
 }
