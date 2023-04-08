@@ -1,5 +1,6 @@
 package com.ikcollab.handyhelper.app.navigation.graph
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
@@ -25,19 +26,22 @@ import com.ikcollab.goals.goalsList.GoalsListScreen
 import com.ikcollab.goals.goals.GoalsEvent
 import com.ikcollab.goals.goals.GoalsScreen
 import com.ikcollab.goals.goals.GoalsViewModel
+import com.ikcollab.handyhelper.app.ads.showInterstitial
 import com.ikcollab.handyhelper.app.navigation.Screens
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialNavigationApi::class)
-fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController, context: Context) {
 
     navigation(
         route = Graph.GoalsGraph.route,
         startDestination = Screens.GoalsScreen.route
     ) {
         composable(route = Screens.GoalsScreen.route) {
+            showInterstitial(context) {}
+
             val viewModel = hiltViewModel<GoalsViewModel>()
             val state = viewModel.state.collectAsState().value
             GoalsScreen(state = state, onEvent = { event ->
@@ -107,6 +111,8 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
                 type = NavType.IntType
             })
         ) {
+            showInterstitial(context) {}
+
             val viewModel = hiltViewModel<GoalStepsViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {

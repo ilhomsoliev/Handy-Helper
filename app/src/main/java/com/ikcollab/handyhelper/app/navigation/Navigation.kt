@@ -34,6 +34,8 @@ import com.ikcollab.handyhelper.app.presentation.languages.LanguagesEvent
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesScreen
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesViewModel
 import com.ikcollab.components.theme.AntiFlashWhite
+import com.ikcollab.handyhelper.app.ads.adCount
+import com.ikcollab.handyhelper.app.ads.showInterstitial
 import com.ilhomsoliev.settings.SettingsScreen
 import com.ilhomsoliev.settings.SettingsViewModel
 import java.util.*
@@ -55,7 +57,7 @@ fun Navigation(
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val coroutineScope = rememberCoroutineScope()
     var isDropDownMenuActive by remember { mutableStateOf(false) }
-
+    val isPurchased = remember { mutableStateOf(false) }
 
     CustomDialog(
         text = "Attention",
@@ -282,13 +284,15 @@ fun Navigation(
                 route = Graph.RootGraph.route,
                 startDestination = Graph.BudgetGraph.route
             ) {
-                GoalsNavGraph(navController)
 
-                BudgetNavGraph(navController)
+
+                GoalsNavGraph(navController, context)
+
+                BudgetNavGraph(navController, context)
 
                 ChoresNavGraph(navController)
 
-                NotesNavGraph(navController, state)
+                NotesNavGraph(navController, state, context)
 
                 TodoListNavGraph(navController)
 
@@ -308,9 +312,11 @@ fun Navigation(
                         }
                     )
                 }
+
                 composable(route = Screens.TrackerScreen.route) {
 
                 }
+
                 composable(route = Screens.LanguagesScreen.route) {
                     val viewModel = hiltViewModel<LanguagesViewModel>()
                     LanguagesScreen(

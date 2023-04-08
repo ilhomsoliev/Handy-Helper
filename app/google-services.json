@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "485414872314",
+    "project_id": "handy-helper-5504f",
+    "storage_bucket": "handy-helper-5504f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485414872314:android:b0684ad4f0115cf0975543",
+        "android_client_info": {
+          "package_name": "com.ikcollab.handyhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485414872314-adc9culg7ukl02m7en66b8krbodf937b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbe3t8MnCkRwFePBxc6oNIoDFETj9ZKY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485414872314-adc9culg7ukl02m7en66b8krbodf937b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

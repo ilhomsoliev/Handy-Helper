@@ -3,6 +3,8 @@ plugins {
     id(GradlePlugin.KOTLIN_ANDROID)
     id(GradlePlugin.KAPT)
     id(GradlePlugin.DAGGER_HILT)
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -104,4 +106,11 @@ dependencies {
     implementation(Dependencies.android.prettyTime)
     implementation(Dependencies.android.dataStore)
     implementation ("com.google.accompanist:accompanist-navigation-material:0.30.0")
+    // Ads
+    implementation(Dependencies.googleServices.ads)
+    //Firebase
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.4")
+    implementation(platform("com.google.firebase:firebase-bom:31.3.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 }

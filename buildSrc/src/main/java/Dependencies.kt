@@ -23,6 +23,8 @@ object MapDependencies{
 object GoogleServicesDependencies {
     const val location =
         "com.google.android.gms:play-services-location:${Versions.googleServices.location}"
+    const val ads = "com.google.android.gms:play-services-ads:21.5.0"
+
 }
 
 object PagingDependencies {
