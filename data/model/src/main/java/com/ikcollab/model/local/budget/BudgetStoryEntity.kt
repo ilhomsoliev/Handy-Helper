@@ -3,12 +3,20 @@ package com.ikcollab.model.local.budget
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = BudgetStoryEntity.TABLE_NAME)
+@Entity(
+    tableName = BudgetStoryEntity.TABLE_NAME,
+    foreignKeys = arrayOf(ForeignKey(entity = BudgetCategoryEntity::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("category_id"),
+        onDelete = ForeignKey.CASCADE))
+)
 data class BudgetStoryEntity(
     @PrimaryKey(autoGenerate = true)
-    
+
     @ColumnInfo(name = COLUMN_ID) val id: Int? = null,
     @ColumnInfo(name = COLUMN_COMMENT) val comment: String,
     @ColumnInfo(name = COLUMN_VALUE) val value: Int,

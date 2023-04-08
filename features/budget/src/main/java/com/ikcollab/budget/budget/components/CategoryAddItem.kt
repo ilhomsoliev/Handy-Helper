@@ -24,12 +24,14 @@ fun CategoryAddItem(
     getStorySumByType: GetStorySumByCategoryId
 ) {
     var sum by remember { mutableStateOf(0.0) }
+
     val coroutine = rememberCoroutineScope()
     LaunchedEffect(key1 = false, block = {
         getStorySumByType(categoryId).onEach {
             sum = it ?: 0.0
         }.launchIn(coroutine)
     })
+
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
