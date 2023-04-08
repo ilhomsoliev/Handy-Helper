@@ -4,18 +4,16 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ikcollab.domain.usecase.budget.story.DeleteBudgetStoryByIdUseCase
-import com.ikcollab.domain.usecase.goals.goal.InsertGoalUseCase
-import com.ikcollab.domain.usecase.goals.stepGoal.InsertStepGoalUseCase
-import com.ikcollab.domain.usecase.notes.folder.InsertFolderUseCase
+import com.ikcollab.domain.usecase.InsertAllPresetEntitiesUseCase
+import com.ikcollab.domain.usecase.budget.story.DeleteStoriesByTypeUseCase
 import com.ikcollab.domain.usecase.todo_list.todo.InsertTodoUseCase
 import com.ikcollab.domain.usecase.todo_list.todoCategory.InsertTodoCategoryUseCase
-import com.ikcollab.model.dto.goals.GoalDto
-import com.ikcollab.model.dto.goals.StepGoalDto
-import com.ikcollab.model.dto.note.FolderDto
 import com.ikcollab.model.dto.todo_list.TodoCategoryDto
 import com.ikcollab.model.dto.todo_list.TodoDto
+import com.ikcollab.model.local.budget.EXPENSES_TYPE
+import com.ikcollab.model.local.budget.INCOME_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -28,8 +26,8 @@ import javax.inject.Inject
 class NavigationViewModel @Inject constructor(
     private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
     private val insertTodoUseCase: InsertTodoUseCase,
-    private val deleteBudgetStoryByIdUseCase: DeleteBudgetStoryByIdUseCase
-
+    private val deleteStoriesByTypeUseCase: DeleteStoriesByTypeUseCase,
+    private val insertAllPresetEntitiesUseCase: InsertAllPresetEntitiesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NavigationState())
@@ -38,10 +36,18 @@ class NavigationViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000),
         NavigationState()
     )
+
+    init {
+       /* viewModelScope.launch {
+            insertAllPresetEntitiesUseCase()
+        }*/
+    }
     fun onEvent(event: NavigationEvent) {
         when (event) {
-            is NavigationEvent.StartOverExpenses->{
-                //TODO
+            is NavigationEvent.StartOverExpenses -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    deleteStoriesByTypeUseCase(EXPENSES_TYPE)
+                }
             }
             is NavigationEvent.OnTodoCategoryNameChange -> {
                 _state.update {
@@ -50,8 +56,20 @@ class NavigationViewModel @Inject constructor(
                     )
                 }
             }
-            is NavigationEvent.StartOverIncome->{
-                //TODO
+            is NavigationEvent.StartOverIncome -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    deleteStoriesByTypeUseCase(INCOME_TYPE)
+                }
+            }
+            is NavigationEvent.OnDeleteExpenseDialogChange -> {
+                _state.update {
+                    it.copy(isDeleteBudgetExpenseTypeDialogActive = event.value)
+                }
+            }
+            is NavigationEvent.OnDeleteIncomeDialogChange -> {
+                _state.update {
+                    it.copy(isDeleteBudgetIncomeTypeDialogActive = event.value)
+                }
             }
             is NavigationEvent.InsertTodoCategory -> {
                 val name = _state.value.todoCategoryName
@@ -104,14 +122,14 @@ class NavigationViewModel @Inject constructor(
                     )
                 }
             }
-            is NavigationEvent.OnSearchNotes->{
+            is NavigationEvent.OnSearchNotes -> {
                 _state.update {
                     it.copy(
                         searchState = event.value
                     )
                 }
             }
-            else ->{
+            else -> {
 
             }
         }

@@ -30,6 +30,7 @@ class BudgetRepository @Inject constructor(
         budgetCategoryDao.deleteAllBudgetStoriesByType(budgetCategoryEntity)
 */
     suspend fun deleteStoryById(storyId: Int) = budgetStoryDao.deleteStoryById(storyId)
+    suspend fun deleteStoriesByType(type: String) = budgetStoryDao.deleteStoriesByType(type)
     suspend fun deleteCategoryById(categoryId: Int) =
         budgetCategoryDao.deleteCategoryById(categoryId)
 
