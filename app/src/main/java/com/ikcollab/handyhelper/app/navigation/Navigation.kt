@@ -33,8 +33,9 @@ import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesEvent
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesScreen
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesViewModel
-import com.ikcollab.handyhelper.app.presentation.settings.SettingsScreen
 import com.ikcollab.components.theme.AntiFlashWhite
+import com.ilhomsoliev.settings.SettingsScreen
+import com.ilhomsoliev.settings.SettingsViewModel
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -295,7 +296,17 @@ fun Navigation(
 
                 }
                 composable(route = Screens.SettingsScreen.route) {
-
+                    val viewModel = hiltViewModel<SettingsViewModel>()
+                    SettingsScreen(
+                        state = viewModel.state.collectAsState().value,
+                        onEvent = { event ->
+                            when (event) {
+                                else -> {
+                                    viewModel.onEvent(event)
+                                }
+                            }
+                        }
+                    )
                 }
                 composable(route = Screens.TrackerScreen.route) {
 
@@ -327,10 +338,6 @@ fun Navigation(
                             }
                         })
                 }
-                composable(route = Screens.SettingsScreen.route) {
-                    SettingsScreen()
-                }
-
             }
         }
     }
