@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -36,14 +37,16 @@ fun CustomDialog(
                     .clip(RoundedCornerShape(10.dp))
                     .fillMaxWidth()
                     .background(MaterialTheme.colors.primary)
-                    .padding(10.dp)
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = text,
                     fontSize = 18.sp,
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.onBackground,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
@@ -51,6 +54,7 @@ fun CustomDialog(
                     fontSize = 17.sp,
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.onBackground,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(

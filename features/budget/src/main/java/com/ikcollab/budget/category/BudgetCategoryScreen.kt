@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +14,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.ikcollab.budget.category.components.BudgetCategoriesList
+import com.ikcollab.components.CustomDialog
 import com.ikcollab.components.customTabs.CustomTab
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
 import com.ikcollab.model.local.budget.INCOME_TYPE
@@ -25,6 +28,30 @@ fun BudgetCategoryScreen(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val isCategoryDialogState = remember {
+        mutableStateOf(false)
+    }
+    val deleteCategoryId = remember {
+        mutableStateOf(-1)
+    }
+    val deleteCategoryName = remember {
+        mutableStateOf("")
+    }
+    CustomDialog(
+        text = "Attention",
+        description = "You are deleting a category:\n '${deleteCategoryName.value}'. All expense records in this category will also be deleted",
+        okBtnClick =
+        {
+            onEvent(BudgetCategoryEvent.DeleteCategory(deleteCategoryId.value))
+            isCategoryDialogState.value = false
+        },
+        cancelBtnClick = { isCategoryDialogState.value = false },
+        isDialogOpen = isCategoryDialogState,
+        okBtnText = "Delete",
+        cancelBtnText = "Cancel"
+    ) {
+        isCategoryDialogState.value = false
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,8 +78,10 @@ fun BudgetCategoryScreen(
                         onAddClick = {
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(EXPENSES_TYPE))
                         },
-                        onDeleteClick = {
-                            onEvent(BudgetCategoryEvent.DeleteCategory(it))
+                        onDeleteClick = { id,name->
+                            isCategoryDialogState.value = true
+                            deleteCategoryId.value = id
+                            deleteCategoryName.value = name
                         },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(EXPENSES_TYPE, it))
@@ -65,8 +94,10 @@ fun BudgetCategoryScreen(
                         onAddClick = {
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(INCOME_TYPE))
                         },
-                        onDeleteClick = {
-                            onEvent(BudgetCategoryEvent.DeleteCategory(it))
+                        onDeleteClick = { id,name->
+                            isCategoryDialogState.value = true
+                            deleteCategoryId.value = id
+                            deleteCategoryName.value = name
                         },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(INCOME_TYPE, it))
