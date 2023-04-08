@@ -10,7 +10,6 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,13 +20,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.ikcollab.core.toMMDDYYYY
-import com.ikcollab.core.toMMMDD
 
 @Composable
 fun StepGoalItem(
     isCompleted: Boolean,
-    stepGaolContent: String,
+    stepGoalContent: String,
     deadline: String,
 ) {
     Box(
@@ -62,7 +59,7 @@ fun StepGoalItem(
                 }
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = stepGaolContent,
+                    text = stepGoalContent,
                     fontFamily = FontFamily.SansSerif,
                     color = if (isCompleted) Color.Gray else Color.Unspecified,
                     style = if (isCompleted) TextStyle(textDecoration = TextDecoration.LineThrough) else LocalTextStyle.current

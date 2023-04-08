@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ikcollab.components.CustomFloatingActionButton
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.components.draggableScaffold.components.SwipeDoneTrash
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
@@ -110,7 +109,7 @@ fun GoalStepsScreen(
                                 contentOnTop = {
                                     StepGoalItem(
                                         isCompleted = step.isCompleted,
-                                        stepGaolContent = step.name,
+                                        stepGoalContent = step.name,
                                         deadline = if (step.dateCreated == 0L) "" else step.dateCreated.toMMMDD()
                                     )
                                 }
@@ -148,7 +147,7 @@ fun GoalStepsScreen(
                                 contentOnTop = {
                                     StepGoalItem(
                                         isCompleted = step.isCompleted,
-                                        stepGaolContent = step.name,
+                                        stepGoalContent = step.name,
                                         deadline = if (step.dateCreated == 0L) "" else step.dateCreated.toMMMDD()
                                     )
                                 }

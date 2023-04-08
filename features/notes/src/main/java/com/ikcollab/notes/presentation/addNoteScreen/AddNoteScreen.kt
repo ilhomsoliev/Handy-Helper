@@ -118,7 +118,6 @@ fun AddNoteScreen(
                                 selectedCategory.value = categoryName
                                 folderIdNull.value = response?.id ?: -1
                                 onEvent(AddNoteScreenEvent.OnFolderChange(folderIdNull.value))
-                                Log.e("FOLDERIDNULL", "${folderIdNull.value}")
                             })
                     }
                 }

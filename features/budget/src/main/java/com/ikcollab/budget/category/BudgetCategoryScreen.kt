@@ -28,9 +28,6 @@ fun BudgetCategoryScreen(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val isCategoryDialogState = remember {
-        mutableStateOf(false)
-    }
     val deleteCategoryId = remember {
         mutableStateOf(-1)
     }
@@ -43,14 +40,14 @@ fun BudgetCategoryScreen(
         okBtnClick =
         {
             onEvent(BudgetCategoryEvent.DeleteCategory(deleteCategoryId.value))
-            isCategoryDialogState.value = false
+            state.isCategoryDialogState = false
         },
-        cancelBtnClick = { isCategoryDialogState.value = false },
-        isDialogOpen = isCategoryDialogState.value,
+        cancelBtnClick = { state.isCategoryDialogState = false },
+        isDialogOpen = state.isCategoryDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        isCategoryDialogState.value = false
+        state.isCategoryDialogState = false
     }
     Column(
         modifier = Modifier
@@ -79,7 +76,7 @@ fun BudgetCategoryScreen(
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(EXPENSES_TYPE))
                         },
                         onDeleteClick = { id,name->
-                            isCategoryDialogState.value = true
+                            state.isCategoryDialogState = true
                             deleteCategoryId.value = id
                             deleteCategoryName.value = name
                         },
@@ -95,7 +92,7 @@ fun BudgetCategoryScreen(
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(INCOME_TYPE))
                         },
                         onDeleteClick = { id,name->
-                            isCategoryDialogState.value = true
+                            state.isCategoryDialogState = true
                             deleteCategoryId.value = id
                             deleteCategoryName.value = name
                         },

@@ -70,7 +70,7 @@ fun BudgetCategoriesList(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "Swipe left to delete Goal, right to edit"
+                    text = "Swipe left to delete Category, right to edit"
                 )
             }
         }

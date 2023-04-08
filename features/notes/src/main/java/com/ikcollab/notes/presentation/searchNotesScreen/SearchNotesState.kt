@@ -8,5 +8,6 @@ data class SearchNotesState(
     val folders: List<FolderDto> = emptyList(),
     val folderId: Int = -1,
     val noteId: Int = -1,
-    val search:String = ""
+    val search:String = "",
+    var isDialogState:Boolean = false
 )
