@@ -47,6 +47,21 @@ class BudgetCategoryViewModel @Inject constructor(
                     deleteBudgetCategoryByIdUseCase(event.id)
                 }
             }
+            is BudgetCategoryEvent.OnCategoryIdChange ->{
+                _state.update {
+                    it.copy(deleteCategoryId = event.id)
+                }
+            }
+            is BudgetCategoryEvent.OnCategoryNameChange ->{
+                _state.update {
+                    it.copy(deleteCategoryName = event.name)
+                }
+            }
+            is BudgetCategoryEvent.OnCategoryDialogStateChange ->{
+                _state.update {
+                    it.copy(isCategoryDialogState = event.state)
+                }
+            }
             else -> {
 
             }

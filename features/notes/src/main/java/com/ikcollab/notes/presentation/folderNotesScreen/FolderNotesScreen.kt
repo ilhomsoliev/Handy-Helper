@@ -38,14 +38,15 @@ fun FoldersNoteScreen(
         okBtnClick =
         {
             onEvent(FolderNotesEvent.DeleteNoteById)
-            state.isDialogState = false
+            onEvent(FolderNotesEvent.OnDialogStateChange(false))
         },
-        cancelBtnClick = { state.isDialogState = false },
+        cancelBtnClick = { onEvent(FolderNotesEvent.OnDialogStateChange(false))
+        },
         isDialogOpen = state.isDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        state.isDialogState = false
+        onEvent(FolderNotesEvent.OnDialogStateChange(false))
     }
     Scaffold(floatingActionButton = {
         FloatingActionButton(backgroundColor = MaterialTheme.colors.secondary, onClick = {
@@ -65,7 +66,7 @@ fun FoldersNoteScreen(
                     DraggableScaffold(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
-                                state.isDialogState = true
+                                onEvent(FolderNotesEvent.OnDialogStateChange(true))
                                 onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
                             })
                         },

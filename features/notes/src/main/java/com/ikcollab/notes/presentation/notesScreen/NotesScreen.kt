@@ -42,17 +42,17 @@ fun NotesScreen(
         okBtnClick = {
             onEvent(NotesEvent.DeleteFolder)
             onEvent(NotesEvent.DeleteAllNotesByFolderId)
-            state.isFolderDialogState = false
+            onEvent(NotesEvent.OnFolderDialogStateChange(false))
         },
         cancelBtnClick =
         {
-            state.isFolderDialogState = false
+            onEvent(NotesEvent.OnFolderDialogStateChange(false))
         },
         isDialogOpen = state.isFolderDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        state.isFolderDialogState = false
+        onEvent(NotesEvent.OnFolderDialogStateChange(false))
     }
     CustomDialog(
         text = "Attention",
@@ -60,14 +60,14 @@ fun NotesScreen(
         okBtnClick =
         {
             onEvent(NotesEvent.DeleteNoteById)
-            state.isNoteDialogState = false
+            onEvent(NotesEvent.OnNoteDialogStateChange(false))
         },
-        cancelBtnClick = { state.isNoteDialogState = false },
+        cancelBtnClick = { onEvent(NotesEvent.OnNoteDialogStateChange(false)) },
         isDialogOpen = state.isNoteDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        state.isNoteDialogState = false
+        onEvent(NotesEvent.OnNoteDialogStateChange(false))
     }
     val isLoading = remember {
         mutableStateOf(false)
@@ -104,7 +104,7 @@ fun NotesScreen(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
-                                state.isFolderDialogState = true
+                                onEvent(NotesEvent.OnFolderDialogStateChange(true))
                             })
                         },
                         contentUnderLeft = {
@@ -145,7 +145,7 @@ fun NotesScreen(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnNoteIdChange(note.id!!))
-                                state.isNoteDialogState = true
+                                onEvent(NotesEvent.OnNoteDialogStateChange(true))
                             })
                         },
                         contentUnderLeft = {

@@ -7,6 +7,8 @@ sealed class NotesEvent {
     object GetFolders:NotesEvent()
     object DeleteFolder:NotesEvent()
     object DeleteNoteById:NotesEvent()
+    data class OnFolderDialogStateChange(val state: Boolean) : NotesEvent()
+    data class OnNoteDialogStateChange(val state: Boolean) : NotesEvent()
     data class OnFolderIdChange(val value: Int):NotesEvent()
     data class OnNoteIdChange(val value: Int):NotesEvent()
     object NavigateToEditNote: NotesEvent()

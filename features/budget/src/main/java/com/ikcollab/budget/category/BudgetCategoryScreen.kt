@@ -34,14 +34,14 @@ fun BudgetCategoryScreen(
         okBtnClick =
         {
             onEvent(BudgetCategoryEvent.DeleteCategory(state.deleteCategoryId))
-            state.isCategoryDialogState = false
+            onEvent(BudgetCategoryEvent.OnCategoryDialogStateChange(false))
         },
-        cancelBtnClick = { state.isCategoryDialogState = false },
+        cancelBtnClick = { onEvent(BudgetCategoryEvent.OnCategoryDialogStateChange(false)) },
         isDialogOpen = state.isCategoryDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        state.isCategoryDialogState = false
+        onEvent(BudgetCategoryEvent.OnCategoryDialogStateChange(false))
     }
     Column(
         modifier = Modifier
@@ -70,9 +70,9 @@ fun BudgetCategoryScreen(
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(EXPENSES_TYPE))
                         },
                         onDeleteClick = { id,name->
-                            state.isCategoryDialogState = true
-                            state.deleteCategoryId = id
-                            state.deleteCategoryName = name
+                            onEvent(BudgetCategoryEvent.OnCategoryDialogStateChange(true))
+                            onEvent(BudgetCategoryEvent.OnCategoryIdChange(id))
+                            onEvent(BudgetCategoryEvent.OnCategoryNameChange(name))
                         },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(EXPENSES_TYPE, it))
@@ -85,13 +85,13 @@ fun BudgetCategoryScreen(
                         onAddClick = {
                             onEvent(BudgetCategoryEvent.OpenBottomSheet(INCOME_TYPE))
                         },
-                        onDeleteClick = { id,name->
-                            state.isCategoryDialogState = true
-                            state.deleteCategoryId = id
-                            state.deleteCategoryName = name
-                        },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(INCOME_TYPE, it))
+                        },
+                        onDeleteClick = { id,name->
+                            onEvent(BudgetCategoryEvent.OnCategoryDialogStateChange(true))
+                            onEvent(BudgetCategoryEvent.OnCategoryIdChange(id))
+                            onEvent(BudgetCategoryEvent.OnCategoryNameChange(name))
                         }
                     )
                 }

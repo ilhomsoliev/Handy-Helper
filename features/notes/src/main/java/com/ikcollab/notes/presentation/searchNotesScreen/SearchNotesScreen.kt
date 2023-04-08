@@ -1,7 +1,6 @@
 package com.ikcollab.notes.presentation.searchNotesScreen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +18,6 @@ import com.ikcollab.notes.presentation.components.searchNote
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.sql.Date
-import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -27,8 +25,6 @@ fun SearchNotesScreen(
     state:SearchNotesState,
     onEvent: (SearchNotesEvent)->Unit,
 ) {
-
-
     val coroutineScope = rememberCoroutineScope()
     CustomDialog(
         text = "Attention",
@@ -36,14 +32,14 @@ fun SearchNotesScreen(
         okBtnClick =
         {
             onEvent(SearchNotesEvent.DeleteNoteById)
-            state.isDialogState = false
+            onEvent(SearchNotesEvent.OnDialogStateChange(false))
         },
-        cancelBtnClick = { state.isDialogState = false },
+        cancelBtnClick = { onEvent(SearchNotesEvent.OnDialogStateChange(false)) },
         isDialogOpen = state.isDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        state.isDialogState = false
+        onEvent(SearchNotesEvent.OnDialogStateChange(false))
     }
     Scaffold() {  _ ->
         Column(modifier = Modifier.fillMaxSize()) {
@@ -54,7 +50,7 @@ fun SearchNotesScreen(
                         DraggableScaffold(
                             contentUnderRight = {
                                 SwipeTrash(onTrashClick = {
-                                    state.isDialogState = true
+                                    onEvent(SearchNotesEvent.OnDialogStateChange(true))
                                     onEvent(SearchNotesEvent.OnNoteIdChange(note.id!!))
                                 })
                             },
