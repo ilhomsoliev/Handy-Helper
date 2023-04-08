@@ -11,6 +11,7 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.google.accompanist.navigation.material.bottomSheet
 import com.ikcollab.core.Constants
 import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoal
+import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalEvent
 import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalOneTimeEvent
 import com.ikcollab.goals.bottomSheetInsertGoal.BottomSheetInsertGoalViewModel
 import com.ikcollab.goals.bottomSheetInsertStepGoal.BottomSheetInsertStepGoal
@@ -49,14 +50,32 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
                             )
                         )
                     }
+                    is GoalsEvent.OnEditGoalClick -> {
+                        navController.navigate(
+                            BottomSheets.AddGoalSheet.route.replace(
+                                "{${Constants.GOAL_ID_ARG}}",
+                                event.id.toString(),
+                            )
+                        )
+                    }
                     is GoalsEvent.OpenBottomSheet -> {
-                        navController.navigate(BottomSheets.AddGoalSheet.route)
+                        navController.navigate(
+                            BottomSheets.AddGoalSheet.route.replace(
+                                "{${Constants.GOAL_ID_ARG}}",
+                                "-1",
+                            )
+                        )
                     }
                     else -> viewModel.onEvent(event)
                 }
             })
         }
-        bottomSheet(BottomSheets.AddGoalSheet.route) { backstackEntry ->
+        bottomSheet(
+            BottomSheets.AddGoalSheet.route,
+            arguments = listOf(navArgument(Constants.GOAL_ID_ARG) {
+                type = NavType.IntType
+            })
+        ) { backstackEntry ->
             val viewModel = hiltViewModel<BottomSheetInsertGoalViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {
@@ -67,6 +86,10 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController) {
                         }
                     }
                 }
+            })
+            LaunchedEffect(key1 = false, block = {
+                val goalId = backstackEntry.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
+                viewModel.onEvent(BottomSheetInsertGoalEvent.OnLoad(goalId))
             })
             BottomSheetInsertGoal(
                 state = state,

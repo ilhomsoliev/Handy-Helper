@@ -46,13 +46,9 @@ fun GoalWithStepsItem(
                 DraggableScaffold(
                     contentUnderRight = {
                         SwipeUndoneTrash(onUndoneClick = {
-                            /*viewModel.markAsNotCompleteStepGoal(it, onDone = {
-                                viewModel.getGoalById(goalId)
-                            })*/
+                            
                         }, onTrashClick = {
-                            /*viewModel.deleteStepGoal(it, onDone = {
-                                viewModel.getGoalById(goalId)
-                            })*/
+
                         })
                     },
                     contentUnderLeft = {

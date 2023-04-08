@@ -42,50 +42,52 @@ fun BottomSheetInsertGoal(
         ModalSheetDefaultStick(
             modifier = Modifier.padding(top = 16.dp)
         )
-        ModalSheetTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = 12.dp),
-            value = state.goalName,
-            hint = "Enter a goal",
-            onValueChange = {
-                onEvent(BottomSheetInsertGoalEvent.OnNewGoalNameChange(it))
+        state.goal?.let {
+            ModalSheetTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = 12.dp),
+                value = state.goal.name,
+                hint = "Enter a goal",
+                onValueChange = {
+                    onEvent(BottomSheetInsertGoalEvent.OnNewGoalNameChange(it))
+                }
+            )
+
+            ModalSheetDatePicker(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = 12.dp),
+                title = "Start",
+                value = state.goal.dateStart.toMMDDYYYY(),
+                onValueChange = {
+                    onEvent(BottomSheetInsertGoalEvent.OnStartTimeChange(it))
+                })
+
+            ModalSheetDatePicker(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = 12.dp),
+
+                title = "Deadline",
+                value = state.goal.dateEnd.toMMDDYYYY(),
+                onValueChange = {
+                    onEvent(BottomSheetInsertGoalEvent.OnEndTimeChange(it))
+
+                })
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = 12.dp),
+                shape = RoundedCornerShape(12.dp),
+                onClick = {
+                    onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+            ) {
+                Text(modifier = Modifier.padding(4.dp), fontSize = 18.sp, text = "Add")
             }
-        )
-
-        ModalSheetDatePicker(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = 12.dp),
-            title = "Start",
-            value = state.goalStartDate.toMMDDYYYY(),
-            onValueChange = {
-                onEvent(BottomSheetInsertGoalEvent.OnStartTimeChange(it))
-            })
-
-        ModalSheetDatePicker(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = 12.dp),
-
-            title = "Deadline",
-            value = state.goalEndDate.toMMDDYYYY(),
-            onValueChange = {
-                onEvent(BottomSheetInsertGoalEvent.OnEndTimeChange(it))
-
-            })
-
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = 12.dp),
-            shape = RoundedCornerShape(12.dp),
-            onClick = {
-                onEvent(BottomSheetInsertGoalEvent.InsertGoalToDatabase)
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
-        ) {
-            Text(modifier = Modifier.padding(4.dp), fontSize = 18.sp, text = "Add")
         }
     }
 }

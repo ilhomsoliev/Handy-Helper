@@ -1,8 +1,7 @@
 package com.ikcollab.goals.bottomSheetInsertGoal
 
-data class BottomSheetInsertGoalState(
-    val goalName: String = "",
-    val goalStartDate: Long = System.currentTimeMillis(),
-    val goalEndDate: Long = System.currentTimeMillis(),
+import com.ikcollab.model.dto.goals.GoalDto
 
-    )
+data class BottomSheetInsertGoalState(
+    val goal: GoalDto? = null,
+)

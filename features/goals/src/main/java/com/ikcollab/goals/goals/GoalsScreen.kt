@@ -38,7 +38,6 @@ fun GoalsScreen(
     state: GoalsState,
     onEvent: (GoalsEvent) -> Unit,
 ) {
-    //val draggableState = rememberDraggableScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(floatingActionButton = {
@@ -79,7 +78,7 @@ fun GoalsScreen(
                                     coroutineScope.launch {
                                         draggableDismissState.reset()
                                     }
-                                    // TODO
+                                    onEvent(GoalsEvent.OnEditGoalClick(goal.id!!))
                                 })
                             },
                             contentOnTop = {
