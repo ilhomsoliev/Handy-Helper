@@ -1,5 +1,6 @@
 package com.ikcollab.handyhelper.app.navigation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,12 +12,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
+import com.ikcollab.handyhelper.R.*
 
 @Composable
 fun DrawerContent(
@@ -33,12 +36,21 @@ fun DrawerContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        Text(
+        Row(
             modifier = Modifier.padding(12.dp),
-            text = "Handy Helper",
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onBackground
-        )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier.size(42.dp),
+                painter = painterResource(id = com.ikcollab.handyhelper.R.drawable.app_icon),
+                contentDescription = null
+            )
+            Text(
+                text = "Handy Helper",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground
+            )
+        }
         Divider()
         /*DrawerItem(
             "Dark Mode",
@@ -100,6 +112,7 @@ fun DrawerContent(
         )
     }
 }
+
 @Composable
 fun DrawerItem(text: String, icon: ImageVector, onClick: () -> Unit) {
     Box(modifier = Modifier

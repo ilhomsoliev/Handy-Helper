@@ -280,7 +280,7 @@ fun Navigation(
                     .padding(it),
                 navController = navController,
                 route = Graph.RootGraph.route,
-                startDestination = Graph.BudgetGraph.route
+                startDestination = Graph.GoalsGraph.route
             ) {
 
 
