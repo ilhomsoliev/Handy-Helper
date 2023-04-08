@@ -36,4 +36,7 @@ interface BudgetStoryDao : BaseDao<BudgetStoryEntity> {
 
     @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE id = :storyId")
     suspend fun deleteStoryById(storyId: Int)
+
+    @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
+    suspend fun deleteStoriesByType(type: String)
 }

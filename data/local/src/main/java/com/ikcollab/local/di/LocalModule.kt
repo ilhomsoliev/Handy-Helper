@@ -39,6 +39,7 @@ class LocalModule {
         @ApplicationContext context: Context
     ): HandyHelperDatabase {
         return Room.databaseBuilder(context, HandyHelperDatabase::class.java, dbname)
+            .createFromAsset("$dbname.db")
             .fallbackToDestructiveMigration()
             .build()
     }

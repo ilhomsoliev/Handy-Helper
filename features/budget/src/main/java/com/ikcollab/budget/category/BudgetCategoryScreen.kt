@@ -46,7 +46,7 @@ fun BudgetCategoryScreen(
             isCategoryDialogState.value = false
         },
         cancelBtnClick = { isCategoryDialogState.value = false },
-        isDialogOpen = isCategoryDialogState,
+        isDialogOpen = isCategoryDialogState.value,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
