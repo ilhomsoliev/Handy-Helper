@@ -12,6 +12,6 @@ data class NotesState (
     val folders: List<FolderDto> = emptyList(),
     val folderId:Int = -1,
     val noteId:Int = -1,
-    var isFolderDialogState:Boolean = false,
-    var isNoteDialogState:Boolean = false
+    val isFolderDialogState:Boolean = false,
+    val isNoteDialogState:Boolean = false
     )

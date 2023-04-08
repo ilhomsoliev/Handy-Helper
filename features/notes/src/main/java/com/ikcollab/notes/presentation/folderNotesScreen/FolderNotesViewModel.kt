@@ -55,6 +55,11 @@ class FolderNotesViewModel @Inject constructor(
                     it.copy()
                 }
             }
+            is FolderNotesEvent.OnDialogStateChange->{
+                _state.update {
+                    it.copy(isDialogState = event.state)
+                }
+            }
             else -> {}
         }
     }

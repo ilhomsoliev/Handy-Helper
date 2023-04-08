@@ -78,6 +78,16 @@ class NotesScreenViewModel @Inject constructor(
                     it.copy(noteId = event.value)
                 }
             }
+            is NotesEvent.OnNoteDialogStateChange->{
+                _state.update {
+                    it.copy(isNoteDialogState = event.state)
+                }
+            }
+            is NotesEvent.OnFolderDialogStateChange->{
+                _state.update {
+                    it.copy(isFolderDialogState = event.state)
+                }
+            }
             else ->{ }
         }
     }

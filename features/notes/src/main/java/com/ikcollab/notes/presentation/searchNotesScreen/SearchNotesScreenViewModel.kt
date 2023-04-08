@@ -42,6 +42,11 @@ class SearchNotesScreenViewModel @Inject constructor(
                     it.copy(noteId = event.noteId)
                 }
             }
+            is SearchNotesEvent.OnDialogStateChange->{
+                _state.update {
+                    it.copy(isDialogState = event.state)
+                }
+            }
             is SearchNotesEvent.DeleteNoteById ->{
                 viewModelScope.launch {
                     deleteNoteByIdUseCase.invoke(_state.value.noteId)
