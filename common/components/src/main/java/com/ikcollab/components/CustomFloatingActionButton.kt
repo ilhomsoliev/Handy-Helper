@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Colors
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -49,7 +51,7 @@ fun CustomFloatingActionButton(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 FloatingActionButton(
                     backgroundColor = Color.White,
-                    contentColor = Color.Yellow,
+                    contentColor = Color(0xFF44DDBF),
                     modifier = Modifier.size(50.dp),
                     onClick = onInsert
                 ) {
@@ -59,7 +61,7 @@ fun CustomFloatingActionButton(
                 Spacer(modifier = Modifier.height(8.dp))
                 FloatingActionButton(
                     backgroundColor = Color.White,
-                    contentColor = Color.Red,
+                    contentColor = MaterialTheme.colors.secondary,
                     modifier = Modifier.size(45.dp),
                     onClick = onEdit
                 ) {
@@ -78,7 +80,7 @@ fun CustomFloatingActionButton(
         }
         FloatingActionButton(
             contentColor = Color.White,
-            backgroundColor = Color.Red,
+            backgroundColor = MaterialTheme.colors.secondary,
             modifier = Modifier
                 .size(60.dp),
             onClick = {

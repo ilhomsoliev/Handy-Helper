@@ -10,24 +10,23 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ikcollab.components.CustomDialog
+import com.ikcollab.components.CustomFloatingActionButton
 import com.ikcollab.components.CustomLoadingIndicator
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
-import com.ikcollab.model.dto.note.NoteDto
 import com.ikcollab.notes.presentation.components.CustomNotesCategory
 import com.ikcollab.notes.presentation.components.CustomNotesItem
-import com.ikcollab.notes.presentation.folderNotesScreen.FolderNotesEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.sql.Date
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NotesScreen(
     state: NotesState,
@@ -84,87 +83,110 @@ fun NotesScreen(
         delay(100)
         isLoading.value = false
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        LazyColumn(
+    Scaffold(floatingActionButton = {
+        CustomFloatingActionButton(
+            onInsert = {
+                Constants.WHICH_FOLDER.value = Constants.ADD_FOLDER
+                onEvent(NotesEvent.OpenBottomSheetToAdd)
+            },
+            onEdit = {
+                Constants.WHICH_NOTE.value = Constants.ADD_NOTE
+                Constants.FOLDER_ID_IS_NULL.value = true
+                onEvent(NotesEvent.NavigateToAddNote)
+            },
+            isMultiple = true
+        )
+    }) {
+        Column(
             modifier = Modifier
-                .padding(top = 10.dp)
+                .fillMaxSize()
         ) {
-            items(state.folders) { folder ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeTrash(onTrashClick = {
-                            onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
-                            isFolderDialogState.value = true
-                        })
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            coroutineScope.launch {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+            ) {
+                items(state.folders) { folder ->
+                    DraggableScaffold(
+                        contentUnderRight = {
+                            SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
-                                Constants.FOLDER_NAME.value = folder.name
-                                delay(1)
-                                onEvent(NotesEvent.NavigateToEditFolder)
-                            }
-                        })
-                    },
-                    contentOnTop = {
-                        CustomNotesCategory(
-                            onClick = {
+                                isFolderDialogState.value = true
+                            })
+                        },
+                        contentUnderLeft = {
+                            SwipeEdit(onClick = {
                                 coroutineScope.launch {
                                     onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
-                                    delay(1)
-                                    onEvent(NotesEvent.NavigateToFoldersDetails)
                                     Constants.FOLDER_NAME.value = folder.name
+                                    delay(1)
+                                    Constants.WHICH_FOLDER.value = Constants.EDIT_FOLDER
+                                    onEvent(NotesEvent.NavigateToEditFolder)
                                 }
-                            },
-                            icon = Icons.Default.Folder,
-                            title = folder.name,
-                            number = folder.countOfNotes
-                        )
-                    },
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-            }
-            item {
-                Spacer(modifier = Modifier.height(25.dp))
-            }
-            items(state.notes.filter { it.folderId == -1 }) { note ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeTrash(onTrashClick = {
-                            onEvent(NotesEvent.OnNoteIdChange(note.id!!))
-                            isNoteDialogState.value = true
-                        })
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            coroutineScope.launch {
+                            })
+                        },
+                        contentOnTop = {
+                            CustomNotesCategory(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
+                                        delay(1)
+                                        onEvent(NotesEvent.NavigateToFoldersDetails)
+                                        Constants.FOLDER_NAME.value = folder.name
+                                        Constants.MAIN_FOLDER_NAME.value = folder.name
+                                    }
+                                },
+                                icon = Icons.Default.Folder,
+                                title = folder.name,
+                                number = folder.countOfNotes
+                            )
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
+                item {
+                    Spacer(modifier = Modifier.height(25.dp))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Swipe left to delete Note, right to edit"
+                    )
+                    Spacer(modifier = Modifier.height(25.dp))
+                }
+                items(state.notes.filter { it.folderId == -1 }) { note ->
+                    DraggableScaffold(
+                        contentUnderRight = {
+                            SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnNoteIdChange(note.id!!))
-                                delay(1)
-                                Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
-                                onEvent(NotesEvent.NavigateToAddNote)
-                            }
-                        })
-                    },
-                    contentOnTop = {
-                        CustomNotesItem(
-                            title = note.title,
-                            description = note.description,
-                            dateTime = Date(note.dateCreated).toString(),
-                            onItemClick = {
-                                onEvent(NotesEvent.OnNoteIdChange(note.id!!))
-                                onEvent(NotesEvent.NavigateToShowNotesDetails)
-                                Constants.NOTE_TITLE = note.title
-                                Constants.NOTE_DESCRIPTION = note.description
-                                Constants.NOTE_DATE_TIME = note.dateCreated
-                            }
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                                isNoteDialogState.value = true
+                            })
+                        },
+                        contentUnderLeft = {
+                            SwipeEdit(onClick = {
+                                coroutineScope.launch {
+                                    onEvent(NotesEvent.OnNoteIdChange(note.id!!))
+                                    delay(1)
+                                    Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
+                                    onEvent(NotesEvent.NavigateToEditNote)
+                                }
+                            })
+                        },
+                        contentOnTop = {
+                            CustomNotesItem(
+                                title = note.title,
+                                description = note.description,
+                                dateTime = Date(note.dateCreated).toString(),
+                                onItemClick = {
+                                    onEvent(NotesEvent.OnNoteIdChange(note.id!!))
+                                    onEvent(NotesEvent.NavigateToShowNotesDetails)
+                                    Constants.NOTE_TITLE = note.title
+                                    Constants.NOTE_DESCRIPTION = note.description
+                                    Constants.NOTE_DATE_TIME = note.dateCreated
+                                }
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }

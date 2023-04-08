@@ -30,6 +30,7 @@ object Constants {
 
     //Category of notes by folderName
     var FOLDER_NAME = mutableStateOf("FOLDER_NAME")
+    var MAIN_FOLDER_NAME = mutableStateOf("MAIN_FOLDER_NAME")
 
     //Note Details
     var NOTE_TITLE = "NOTE_TITLE"
@@ -39,6 +40,7 @@ object Constants {
 
     // ID ARGS
     const val FOLDER_ID_ARG = "FOLDER_ID_ARG"
+    const val FOLDER_NAME_ARG = "FOLDER_NAME_ARG"
     const val NOTE_ID_ARG = "NOTE_ID_ARG"
     const val GOAL_ID_ARG = "GOAL_ID_ARG"
     const val CATEGORY_TYPE_ID_ARG = "CATEGORY_TYPE_ID_ARG"

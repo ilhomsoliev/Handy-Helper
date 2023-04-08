@@ -1,11 +1,14 @@
 package com.ikcollab.notes.presentation.folderNotesScreen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
@@ -19,10 +22,10 @@ import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
 import com.ikcollab.core.Constants
 import com.ikcollab.notes.presentation.components.CustomNotesItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.sql.Date
-
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun FoldersNoteScreen(
     state: FolderNotesState,
@@ -47,65 +50,61 @@ fun FoldersNoteScreen(
     ) {
         isDialogState.value = false
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        LazyColumn(
-            modifier = Modifier.padding(top = 8.dp)
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(backgroundColor = MaterialTheme.colors.secondary, onClick = {
+            onEvent(FolderNotesEvent.NavigateToAddNote)
+        }) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+        }
+    }) { _ ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            items(state.notes) { note ->
-                DraggableScaffold(
-                    contentUnderRight = {
-                        SwipeTrash(onTrashClick = {
-                            isDialogState.value = true
-                            onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
-                        })
-                    },
-                    contentUnderLeft = {
-                        SwipeEdit(onClick = {
-                            Constants.WHICH_NOTE.value = Constants.EDIT_NOTE
-                            if (state.folderId == note.folderId) {
-                                coroutineScope.launch {
-                                    onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
-                                    onEvent(FolderNotesEvent.NavigateToEditNote)
-                                }
-                            }
-                        })
-                    },
-                    contentOnTop = {
-                        CustomNotesItem(
-                            title = note.title,
-                            description = note.description,
-                            dateTime = Date(note.dateCreated).toString(),
-                            onItemClick = {
+            LazyColumn(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                items(state.notes) { note ->
+                    DraggableScaffold(
+                        contentUnderRight = {
+                            SwipeTrash(onTrashClick = {
+                                isDialogState.value = true
                                 onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
-                                coroutineScope.launch {
+                            })
+                        },
+                        contentUnderLeft = {
+                            SwipeEdit(onClick = {
+                                Log.e("LOG","${state.folderId},${note.folderId}")
+                                if (state.folderId == note.folderId) {
+                                    coroutineScope.launch {
+                                        onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
+                                        delay(1)
+                                        onEvent(FolderNotesEvent.NavigateToEditNote)
+                                    }
+                                }
+                            })
+                        },
+                        contentOnTop = {
+                            CustomNotesItem(
+                                title = note.title,
+                                description = note.description,
+                                dateTime = Date(note.dateCreated).toString(),
+                                onItemClick = {
+                                    onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
+                                    coroutineScope.launch {
                                         Constants.NOTE_TITLE = note.title
                                         Constants.NOTE_DESCRIPTION = note.description
                                         Constants.NOTE_DATE_TIME = note.dateCreated
                                         onEvent(FolderNotesEvent.NavigateToShowDetails)
                                     }
-                            }
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                                }
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
+                }
             }
-        }
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(end = 25.dp, bottom = 25.dp),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        FloatingActionButton(backgroundColor = Color.Red, onClick = {
-            onEvent(FolderNotesEvent.NavigateToAddNote)
-        }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
     }
 }

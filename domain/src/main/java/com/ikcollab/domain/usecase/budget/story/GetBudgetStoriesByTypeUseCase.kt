@@ -15,7 +15,7 @@ class GetBudgetStoriesByTypeUseCase @Inject constructor(
     operator fun invoke(type: String): Flow<List<BudgetStoryDto>> {
         return repository.getStoriesByType(type = type).map { todos ->
             todos.sortedBy { it.dateCreated }.map {
-                it.toBudgetStoryDto(repository.getCategoryById(it.categoryId)!!.name)
+                it.toBudgetStoryDto(repository.getCategoryById(it.categoryId)?.name ?: "")
             }
         }
     }

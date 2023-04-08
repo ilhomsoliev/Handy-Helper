@@ -26,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 class NavigationViewModel @Inject constructor(
-    private val insertFolderUseCase: InsertFolderUseCase,
     private val insertTodoCategoryUseCase: InsertTodoCategoryUseCase,
     private val insertTodoUseCase: InsertTodoUseCase,
     private val deleteBudgetStoryByIdUseCase: DeleteBudgetStoryByIdUseCase
@@ -44,16 +43,6 @@ class NavigationViewModel @Inject constructor(
             is NavigationEvent.StartOverExpenses->{
                 //TODO
             }
-            is NavigationEvent.StartOverIncome->{
-                //TODO
-            }
-            is NavigationEvent.OnFolderNameChange -> {
-                _state.update {
-                    it.copy(
-                        folderName = event.value
-                    )
-                }
-            }
             is NavigationEvent.OnTodoCategoryNameChange -> {
                 _state.update {
                     it.copy(
@@ -61,25 +50,8 @@ class NavigationViewModel @Inject constructor(
                     )
                 }
             }
-            is NavigationEvent.InsertFolder -> {
-                val name = _state.value.folderName
-                val dateCreated = System.currentTimeMillis()
-                if (name.isEmpty()) return
-                viewModelScope.launch {
-                    insertFolderUseCase(
-                        FolderDto(
-                            name = name,
-                            dateCreated = dateCreated,
-                            id = if(_state.value.folderId!=-1) _state.value.folderId else null
-                        )
-                    )
-                }
-                onEvent(NavigationEvent.OnFolderNameChange(""))
-            }
-            is NavigationEvent.OnFolderIdChange->{
-                _state.update {
-                    it.copy(folderId = event.value)
-                }
+            is NavigationEvent.StartOverIncome->{
+                //TODO
             }
             is NavigationEvent.InsertTodoCategory -> {
                 val name = _state.value.todoCategoryName
