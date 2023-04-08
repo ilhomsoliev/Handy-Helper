@@ -28,18 +28,12 @@ fun BudgetCategoryScreen(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val deleteCategoryId = remember {
-        mutableStateOf(-1)
-    }
-    val deleteCategoryName = remember {
-        mutableStateOf("")
-    }
     CustomDialog(
         text = "Attention",
-        description = "You are deleting a category:\n '${deleteCategoryName.value}'. All expense records in this category will also be deleted",
+        description = "You are deleting a category:\n '${state.deleteCategoryName}'. All expense records in this category will also be deleted",
         okBtnClick =
         {
-            onEvent(BudgetCategoryEvent.DeleteCategory(deleteCategoryId.value))
+            onEvent(BudgetCategoryEvent.DeleteCategory(state.deleteCategoryId))
             state.isCategoryDialogState = false
         },
         cancelBtnClick = { state.isCategoryDialogState = false },
@@ -77,8 +71,8 @@ fun BudgetCategoryScreen(
                         },
                         onDeleteClick = { id,name->
                             state.isCategoryDialogState = true
-                            deleteCategoryId.value = id
-                            deleteCategoryName.value = name
+                            state.deleteCategoryId = id
+                            state.deleteCategoryName = name
                         },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(EXPENSES_TYPE, it))
@@ -93,8 +87,8 @@ fun BudgetCategoryScreen(
                         },
                         onDeleteClick = { id,name->
                             state.isCategoryDialogState = true
-                            deleteCategoryId.value = id
-                            deleteCategoryName.value = name
+                            state.deleteCategoryId = id
+                            state.deleteCategoryName = name
                         },
                         onEditClick = {
                             onEvent(BudgetCategoryEvent.OnEditClick(INCOME_TYPE, it))
