@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.ikcollab.handyhelper"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +57,7 @@ dependencies {
     implementation(project(mapOf("path" to ":features:todoList")))
     implementation(project(mapOf("path" to ":features:goals")))
     implementation(project(mapOf("path" to ":features:budget")))
+    implementation(project(mapOf("path" to ":features:settings")))
     // Android
     implementation(Dependencies.android.lifecycleRuntime)
     implementation(Dependencies.android.navigationRuntime)
