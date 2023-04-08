@@ -32,7 +32,6 @@ fun CustomFloatingActionButton(
     onEdit: () -> Unit = {}
 ) {
     var scope = rememberCoroutineScope()
-    var shapeState by remember { mutableStateOf(RoundedCornerShape(18.dp)) }
     var isSortVisible by remember {
         mutableStateOf(false)
     }
@@ -68,14 +67,6 @@ fun CustomFloatingActionButton(
                     Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                scope.launch {
-                    shapeState = CircleShape
-                }
-            }
-        }
-        scope.launch {
-            if (!isSortVisible) {
-                shapeState = RoundedCornerShape(18.dp)
             }
         }
         FloatingActionButton(
@@ -90,7 +81,7 @@ fun CustomFloatingActionButton(
                     onInsert()
                 }
             },
-            shape = shapeState
+            shape = CircleShape
         ) {
             Icon(
                 imageVector = if (!isSortVisible) Icons.Default.Add else Icons.Default.Remove,

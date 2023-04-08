@@ -4,8 +4,6 @@ import com.ikcollab.local.dao.budget.BudgetCategoryDao
 import com.ikcollab.local.dao.budget.BudgetStoryDao
 import com.ikcollab.model.local.budget.BudgetCategoryEntity
 import com.ikcollab.model.local.budget.BudgetStoryEntity
-import com.ikcollab.model.local.note.FolderEntity
-import com.ikcollab.model.local.note.NoteEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -52,6 +50,8 @@ class BudgetRepository @Inject constructor(
 
     fun getStorySumByCategoryId(id: Int): Flow<Double?> =
         budgetStoryDao.getSumByCategoryId(id)
+
+    suspend fun deleteAllBudgetByCategoryId(categoryId: Int) = budgetStoryDao.deleteAllBudgetByCategoryId(categoryId)
 
     fun getStorySumByType(type: String): Flow<Double?> = budgetStoryDao.getSumByType(type)
     //fun getFolders(): Flow<List<FolderEntity>> = budgetCategoryDao.getFolders()

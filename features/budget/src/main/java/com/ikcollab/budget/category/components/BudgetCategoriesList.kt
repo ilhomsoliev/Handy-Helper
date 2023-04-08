@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BudgetCategoriesList(
     categories: List<BudgetCategoryDto>,
-    onDeleteClick: (Int) -> Unit,
+    onDeleteClick: (Int,String) -> Unit,
     onEditClick: (Int) -> Unit,
     onAddClick: () -> Unit
 ) {
@@ -46,7 +46,7 @@ fun BudgetCategoriesList(
                 DraggableScaffold(
                     contentUnderRight = {
                         SwipeTrash {
-                            it.id?.let { it1 -> onDeleteClick(it1) }
+                            onDeleteClick(it.id!!,it.name)
                             coroutineScope.launch {
                                 draggableState.reset()
                             }

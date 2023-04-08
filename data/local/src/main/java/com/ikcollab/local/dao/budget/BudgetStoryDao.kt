@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.ikcollab.local.dao.ext.BaseDao
 import com.ikcollab.model.local.budget.BudgetStoryEntity
+import com.ikcollab.model.local.note.NoteEntity
 import com.ikcollab.model.local.todo_list.TodoCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,9 @@ interface BudgetStoryDao : BaseDao<BudgetStoryEntity> {
 
     @Query("SELECT SUM(value) FROM ${BudgetStoryEntity.TABLE_NAME} WHERE type = :type")
     fun getSumByType(type: String): Flow<Double?>
+
+    @Query("DELETE FROM ${BudgetStoryEntity.TABLE_NAME} WHERE category_id = :categoryId")
+    suspend fun deleteAllBudgetByCategoryId(categoryId: Int)
 
     @Query("SELECT SUM(value) FROM ${BudgetStoryEntity.TABLE_NAME} WHERE category_id = :id")
     fun getSumByCategoryId(id: Int): Flow<Double?>
