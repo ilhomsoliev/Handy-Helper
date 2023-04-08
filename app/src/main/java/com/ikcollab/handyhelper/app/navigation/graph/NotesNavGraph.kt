@@ -1,16 +1,19 @@
 package com.ikcollab.handyhelper.app.navigation.graph
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 import com.ikcollab.core.Constants
+import com.ikcollab.handyhelper.app.ads.showInterstitial
 import com.ikcollab.handyhelper.app.navigation.NavigationState
 import com.ikcollab.handyhelper.app.navigation.Screens
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
@@ -39,11 +42,13 @@ val stateSearch = mutableStateOf("")
 @OptIn(ExperimentalMaterialNavigationApi::class)
 fun NavGraphBuilder.NotesNavGraph(
     navController: NavController,
-    state:NavigationState
+    state:NavigationState,
+    context: Context,
 ) {
     stateSearch.value = state.searchState
     navigation(route = Graph.NotesGraph.route, startDestination = Screens.NotesScreen.route) {
         composable(route = Screens.NotesScreen.route) {
+            showInterstitial(context) {}
             val viewModel = hiltViewModel<NotesScreenViewModel>()
             val state = viewModel.state.collectAsState()
             LaunchedEffect(key1 = true) {
@@ -152,6 +157,7 @@ fun NavGraphBuilder.NotesNavGraph(
                 type = NavType.IntType
             })
         ) {
+            showInterstitial(context) {}
             val folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1
             val viewModel = hiltViewModel<FolderNotesViewModel>()
             LaunchedEffect(key1 = true) {
@@ -207,6 +213,8 @@ fun NavGraphBuilder.NotesNavGraph(
                 }
             )
         ) {
+            showInterstitial(context) {}
+
             val folderId = it.arguments?.getInt(Constants.FOLDER_ID_ARG) ?: -1
             val noteId = it.arguments?.getInt(Constants.NOTE_ID_ARG) ?: -1
             val viewModel = hiltViewModel<AddNoteScreenViewModel>()
@@ -238,11 +246,14 @@ fun NavGraphBuilder.NotesNavGraph(
                 }
             )
         ) {
+            showInterstitial(context) {}
             ShowDetailsOfNoteScreen()
         }
         composable(
             route = Screens.SearchNotesScreen.route
         ) {
+            showInterstitial(context) {}
+
             val viewModel = hiltViewModel<SearchNotesScreenViewModel>()
             val searchState = viewModel.state.collectAsState()
             viewModel.onEvent(SearchNotesEvent.OnSearchChange(stateSearch.value))

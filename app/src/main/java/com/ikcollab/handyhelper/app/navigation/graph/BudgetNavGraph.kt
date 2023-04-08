@@ -1,5 +1,6 @@
 package com.ikcollab.handyhelper.app.navigation.graph
 
+import android.content.Context
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,13 +23,15 @@ import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategor
 import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryOneTimeEvent
 import com.ikcollab.budget.category.bottomSheetAddCategory.BottomSheetAddCategoryViewModel
 import com.ikcollab.core.Constants
+import com.ikcollab.handyhelper.app.ads.showInterstitial
 import com.ikcollab.handyhelper.app.navigation.Screens
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
-fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
+fun NavGraphBuilder.BudgetNavGraph(navController: NavController, context:Context) {
     navigation(route = Graph.BudgetGraph.route, startDestination = Screens.BudgetScreen.route) {
         composable(route = Screens.BudgetScreen.route) {
+            showInterstitial(context) {}
             val viewModel = hiltViewModel<BudgetViewModel>()
             val state = viewModel.state.collectAsState().value
             BudgetScreen(state = state, onEvent = { event ->
@@ -54,6 +57,7 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
             }, viewModel.getStorySumByCategoryId)
         }
         composable(route = Screens.BudgetCategoryScreen.route) {
+            showInterstitial(context) {}
             val viewModel = hiltViewModel<BudgetCategoryViewModel>()
             val state = viewModel.state.collectAsState().value
             BudgetCategoryScreen(state = state, onEvent = { event ->
@@ -88,6 +92,7 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController) {
                 },
             )
         ) {
+            showInterstitial(context) {}
             val viewModel = hiltViewModel<BottomSheetAddCategoryViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {
