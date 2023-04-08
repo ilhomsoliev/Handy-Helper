@@ -32,7 +32,8 @@ fun loadInterstitial(context: Context) {
 fun showInterstitial(context: Context, onAdDismissed: () -> Unit) {
     val activity = context.findActivity()
 
-    if (mInterstitialAd != null && activity != null && adCount % 3 == 2) {
+    if (mInterstitialAd != null && activity != null && adCount % 5 == 4) {
+        adCount++
         mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(e: AdError) {
                 mInterstitialAd = null
@@ -46,8 +47,9 @@ fun showInterstitial(context: Context, onAdDismissed: () -> Unit) {
             }
         }
         mInterstitialAd?.show(activity)
+    } else {
+        adCount++
     }
-    adCount++
 }
 
 fun removeInterstitial() {

@@ -48,7 +48,6 @@ fun NavGraphBuilder.NotesNavGraph(
     stateSearch.value = state.searchState
     navigation(route = Graph.NotesGraph.route, startDestination = Screens.NotesScreen.route) {
         composable(route = Screens.NotesScreen.route) {
-            showInterstitial(context) {}
             val viewModel = hiltViewModel<NotesScreenViewModel>()
             val state = viewModel.state.collectAsState()
             LaunchedEffect(key1 = true) {

@@ -40,7 +40,6 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController, context: Con
         startDestination = Screens.GoalsScreen.route
     ) {
         composable(route = Screens.GoalsScreen.route) {
-            showInterstitial(context) {}
 
             val viewModel = hiltViewModel<GoalsViewModel>()
             val state = viewModel.state.collectAsState().value

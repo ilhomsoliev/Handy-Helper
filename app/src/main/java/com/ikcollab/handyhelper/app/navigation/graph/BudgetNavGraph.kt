@@ -31,7 +31,6 @@ import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
 fun NavGraphBuilder.BudgetNavGraph(navController: NavController, context:Context) {
     navigation(route = Graph.BudgetGraph.route, startDestination = Screens.BudgetScreen.route) {
         composable(route = Screens.BudgetScreen.route) {
-            showInterstitial(context) {}
             val viewModel = hiltViewModel<BudgetViewModel>()
             val state = viewModel.state.collectAsState().value
             BudgetScreen(state = state, onEvent = { event ->
@@ -57,7 +56,6 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController, context:Context
             }, viewModel.getStorySumByCategoryId)
         }
         composable(route = Screens.BudgetCategoryScreen.route) {
-            showInterstitial(context) {}
             val viewModel = hiltViewModel<BudgetCategoryViewModel>()
             val state = viewModel.state.collectAsState().value
             BudgetCategoryScreen(state = state, onEvent = { event ->
@@ -92,7 +90,6 @@ fun NavGraphBuilder.BudgetNavGraph(navController: NavController, context:Context
                 },
             )
         ) {
-            showInterstitial(context) {}
             val viewModel = hiltViewModel<BottomSheetAddCategoryViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {

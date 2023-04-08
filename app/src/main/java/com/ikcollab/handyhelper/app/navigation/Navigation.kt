@@ -22,22 +22,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.ikcollab.handyhelper.app.navigation.graph.*
-import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
-import kotlinx.coroutines.launch
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.ikcollab.components.CustomDialog
 import com.ikcollab.components.CustomIconButton
+import com.ikcollab.components.theme.AntiFlashWhite
 import com.ikcollab.handyhelper.app.navigation.bottomSheet.BottomSheets
+import com.ikcollab.handyhelper.app.navigation.graph.*
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesEvent
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesScreen
 import com.ikcollab.handyhelper.app.presentation.languages.LanguagesViewModel
-import com.ikcollab.components.theme.AntiFlashWhite
-import com.ikcollab.handyhelper.app.ads.adCount
-import com.ikcollab.handyhelper.app.ads.showInterstitial
+import com.ikcollab.notes.presentation.components.CustomSearchNotesTextField
 import com.ilhomsoliev.settings.SettingsScreen
 import com.ilhomsoliev.settings.SettingsViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
