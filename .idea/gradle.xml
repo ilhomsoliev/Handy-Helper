@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/features/budget" />
             <option value="$PROJECT_DIR$/features/goals" />
             <option value="$PROJECT_DIR$/features/notes" />
+            <option value="$PROJECT_DIR$/features/settings" />
             <option value="$PROJECT_DIR$/features/todoList" />
           </set>
         </option>
