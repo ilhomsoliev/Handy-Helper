@@ -35,12 +35,6 @@ fun NotesScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val isFolderDialogState = remember {
-        mutableStateOf(false)
-    }
-    val isNoteDialogState = remember {
-        mutableStateOf(false)
-    }
 
     CustomDialog(
         text = "Attention",
@@ -48,17 +42,17 @@ fun NotesScreen(
         okBtnClick = {
             onEvent(NotesEvent.DeleteFolder)
             onEvent(NotesEvent.DeleteAllNotesByFolderId)
-            isFolderDialogState.value = false
+            state.isFolderDialogState = false
         },
         cancelBtnClick =
         {
-            isFolderDialogState.value = false
+            state.isFolderDialogState = false
         },
-        isDialogOpen = isFolderDialogState,
+        isDialogOpen = state.isFolderDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        isFolderDialogState.value = false
+        state.isFolderDialogState = false
     }
     CustomDialog(
         text = "Attention",
@@ -66,14 +60,14 @@ fun NotesScreen(
         okBtnClick =
         {
             onEvent(NotesEvent.DeleteNoteById)
-            isNoteDialogState.value = false
+            state.isNoteDialogState = false
         },
-        cancelBtnClick = { isNoteDialogState.value = false },
-        isDialogOpen = isNoteDialogState,
+        cancelBtnClick = { state.isNoteDialogState = false },
+        isDialogOpen = state.isNoteDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        isNoteDialogState.value = false
+        state.isNoteDialogState = false
     }
     val isLoading = remember {
         mutableStateOf(false)
@@ -110,7 +104,7 @@ fun NotesScreen(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnFolderIdChange(folder.id!!))
-                                isFolderDialogState.value = true
+                                state.isFolderDialogState = true
                             })
                         },
                         contentUnderLeft = {
@@ -145,19 +139,13 @@ fun NotesScreen(
                 }
                 item {
                     Spacer(modifier = Modifier.height(25.dp))
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "Swipe left to delete Note, right to edit"
-                    )
-                    Spacer(modifier = Modifier.height(25.dp))
                 }
                 items(state.notes.filter { it.folderId == -1 }) { note ->
                     DraggableScaffold(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
                                 onEvent(NotesEvent.OnNoteIdChange(note.id!!))
-                                isNoteDialogState.value = true
+                                state.isNoteDialogState = true
                             })
                         },
                         contentUnderLeft = {

@@ -25,12 +25,12 @@ fun CustomDialog(
     description:String,
     okBtnClick: () -> Unit,
     cancelBtnClick: () -> Unit,
-    isDialogOpen:MutableState<Boolean>,
+    isDialogOpen:Boolean,
     okBtnText:String,
     cancelBtnText:String,
     onDismissRequest:()->Unit
 ){
-    if(isDialogOpen.value){
+    if(isDialogOpen){
         Dialog(onDismissRequest = onDismissRequest) {
             Column(
                 modifier = Modifier

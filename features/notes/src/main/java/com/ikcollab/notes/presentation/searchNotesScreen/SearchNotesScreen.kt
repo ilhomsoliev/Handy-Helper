@@ -27,9 +27,7 @@ fun SearchNotesScreen(
     state:SearchNotesState,
     onEvent: (SearchNotesEvent)->Unit,
 ) {
-    val isDialogState = remember {
-        mutableStateOf(false)
-    }
+
 
     val coroutineScope = rememberCoroutineScope()
     CustomDialog(
@@ -38,14 +36,14 @@ fun SearchNotesScreen(
         okBtnClick =
         {
             onEvent(SearchNotesEvent.DeleteNoteById)
-            isDialogState.value = false
+            state.isDialogState = false
         },
-        cancelBtnClick = { isDialogState.value = false },
-        isDialogOpen = isDialogState,
+        cancelBtnClick = { state.isDialogState = false },
+        isDialogOpen = state.isDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        isDialogState.value = false
+        state.isDialogState = false
     }
     Scaffold() {  _ ->
         Column(modifier = Modifier.fillMaxSize()) {
@@ -56,7 +54,7 @@ fun SearchNotesScreen(
                         DraggableScaffold(
                             contentUnderRight = {
                                 SwipeTrash(onTrashClick = {
-                                    isDialogState.value = true
+                                    state.isDialogState = true
                                     onEvent(SearchNotesEvent.OnNoteIdChange(note.id!!))
                                 })
                             },

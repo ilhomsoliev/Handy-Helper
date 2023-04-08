@@ -135,7 +135,6 @@ fun NavGraphBuilder.NotesNavGraph(
                 }
             })
             LaunchedEffect(key1 = true, block = {
-                Log.e("GGGG", "$folderId \n $folderName")
                 viewModel.onEvent(BottomSheetInsertFolderEvent.OnFolderNameChange(if (folderName == "FOLDER_ARG") "" else folderName))
                 viewModel.onEvent(BottomSheetInsertFolderEvent.OnFolderIdChange(folderId))
             })

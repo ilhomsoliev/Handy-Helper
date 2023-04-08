@@ -38,7 +38,7 @@ fun BottomSheetAddCategory(
                     .fillMaxWidth()
                     .padding(vertical = 6.dp),
                 value = state.category.name,
-                hint = "Enter a goal",
+                hint = "Enter a category",
                 onValueChange = {
                     onEvent(BottomSheetAddCategoryEvent.OnCategoryNameChange(it))
                 }

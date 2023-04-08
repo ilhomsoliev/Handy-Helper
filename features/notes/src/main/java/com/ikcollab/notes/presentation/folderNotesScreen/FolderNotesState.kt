@@ -8,5 +8,5 @@ data class FolderNotesState(
     val notes: List<NoteDto> = emptyList(),
     val folderId: Int = -1,
     val noteId: Int = -1,
-
+    var isDialogState:Boolean = false
 )

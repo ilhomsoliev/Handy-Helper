@@ -31,9 +31,6 @@ fun FoldersNoteScreen(
     state: FolderNotesState,
     onEvent: (FolderNotesEvent) -> Unit
 ) {
-    val isDialogState = remember {
-        mutableStateOf(false)
-    }
     val coroutineScope = rememberCoroutineScope()
     CustomDialog(
         text = "Attention",
@@ -41,14 +38,14 @@ fun FoldersNoteScreen(
         okBtnClick =
         {
             onEvent(FolderNotesEvent.DeleteNoteById)
-            isDialogState.value = false
+            state.isDialogState = false
         },
-        cancelBtnClick = { isDialogState.value = false },
-        isDialogOpen = isDialogState,
+        cancelBtnClick = { state.isDialogState = false },
+        isDialogOpen = state.isDialogState,
         okBtnText = "Delete",
         cancelBtnText = "Cancel"
     ) {
-        isDialogState.value = false
+        state.isDialogState = false
     }
     Scaffold(floatingActionButton = {
         FloatingActionButton(backgroundColor = MaterialTheme.colors.secondary, onClick = {
@@ -68,13 +65,12 @@ fun FoldersNoteScreen(
                     DraggableScaffold(
                         contentUnderRight = {
                             SwipeTrash(onTrashClick = {
-                                isDialogState.value = true
+                                state.isDialogState = true
                                 onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
                             })
                         },
                         contentUnderLeft = {
                             SwipeEdit(onClick = {
-                                Log.e("LOG","${state.folderId},${note.folderId}")
                                 if (state.folderId == note.folderId) {
                                     coroutineScope.launch {
                                         onEvent(FolderNotesEvent.OnNoteIdChange(note.id!!))
