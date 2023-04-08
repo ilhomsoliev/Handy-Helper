@@ -79,7 +79,8 @@ fun ExpensesScreen(
                                 },
                                 onClick = {
 
-                                }, categoryId = category.id!!, getStorySumByType = getStorySumByType)
+                                }, categoryId = category.id!!, getStorySumByType = getStorySumByType
+                            )
                         }
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Spacer(modifier = Modifier.height(12.dp))
@@ -103,25 +104,27 @@ fun ExpensesScreen(
                                     fontSize = 22.sp
                                 )
                             }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 14.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Balance:",
-                                    fontSize = 22.sp,
-                                    color = MaterialTheme.colors.onBackground,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Text(
-                                    text = balance,
-                                    color = MaterialTheme.colors.secondary,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 22.sp
-                                )
+                            if (balance.isNotEmpty()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 14.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "Balance:",
+                                        fontSize = 22.sp,
+                                        color = MaterialTheme.colors.onBackground,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    Text(
+                                        text = balance,
+                                        color = MaterialTheme.colors.secondary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 22.sp
+                                    )
+                                }
                             }
                         }
                     }
@@ -165,6 +168,9 @@ fun ExpensesScreen(
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
+            }
+            item{
+                Spacer(modifier = Modifier.height(62.dp))
             }
         }
     }

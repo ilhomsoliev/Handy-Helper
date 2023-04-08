@@ -1,9 +1,7 @@
 package com.ikcollab.budget.budget.bottomSheetAddStoryBudget.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -38,6 +36,7 @@ fun PickCategoryDialog(
                     text = "Choose a category",
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.onPrimary,
+                    fontSize = 22.sp,
                 )
                 categories.forEach {
                     Column(modifier = Modifier
@@ -51,6 +50,7 @@ fun PickCategoryDialog(
                             color = MaterialTheme.colors.onPrimary,
                         )
                         Divider()
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }

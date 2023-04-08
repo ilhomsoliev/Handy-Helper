@@ -46,7 +46,7 @@ fun CategoryAddItem(
         ) {
             Text(text = text)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = sum.toString())
+                Text(text = "$$sum")
                 Spacer(modifier = Modifier.width(6.dp))
                 AddIcon {
                     onAddClick()
