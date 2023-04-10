@@ -33,9 +33,9 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to get started.
 ## Screenshots
 
 <p float="left">
-<img src="https://play-lh.googleusercontent.com/NoNbiYDfYX_-F5XjOCCX-VuRN50JyfVkvRDFy8LdWHHKNCHSqqBa352ljznas5ZHPg=w1052-h592" width=400 height=700>
-<img src="https://play-lh.googleusercontent.com/TLEpqT7CcCo343_6nb0eloUb0MvZRB0m9uZeKU39y6B6pPeLfI1Ls6_f0YqIZYpGhFc=w1052-h592" width=400 height=700>
-  <img src="https://play-lh.googleusercontent.com/0GghgyFJVn8QVRNvtcTf-gxhyxbr7A8gKLeWuTRsTBH-NG4AeMiMqHDvjtZ-9bvhJAE=w1052-h592" width=400 height=700>
-    <img src="https://play-lh.googleusercontent.com/5HFuQXyzJfevFEA2FjEAtoPpy5nysMaFoP9PyOr-VDRMyB5bTWkyoZ8I4Wo6iixQtr4=w1052-h592" width=400 height=700>
+<img src="https://play-lh.googleusercontent.com/NoNbiYDfYX_-F5XjOCCX-VuRN50JyfVkvRDFy8LdWHHKNCHSqqBa352ljznas5ZHPg=w1052-h592" width=400 height=900>
+<img src="https://play-lh.googleusercontent.com/TLEpqT7CcCo343_6nb0eloUb0MvZRB0m9uZeKU39y6B6pPeLfI1Ls6_f0YqIZYpGhFc=w1052-h592" width=400 height=900>
+  <img src="https://play-lh.googleusercontent.com/0GghgyFJVn8QVRNvtcTf-gxhyxbr7A8gKLeWuTRsTBH-NG4AeMiMqHDvjtZ-9bvhJAE=w1052-h592" width=400 height=900>
+    <img src="https://play-lh.googleusercontent.com/5HFuQXyzJfevFEA2FjEAtoPpy5nysMaFoP9PyOr-VDRMyB5bTWkyoZ8I4Wo6iixQtr4=w1052-h592" width=400 height=900>
 </p>
 
