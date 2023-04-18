@@ -18,8 +18,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikcollab.components.draggableScaffold.DraggableScaffold
+import com.ikcollab.components.draggableScaffold.ExpandState
 import com.ikcollab.components.draggableScaffold.components.SwipeEdit
 import com.ikcollab.components.draggableScaffold.components.SwipeTrash
+import com.ikcollab.components.draggableScaffold.rememberDraggableScaffoldState
 import com.ikcollab.core.toMMDDYYYY
 import com.ikcollab.domain.usecase.budget.story.GetStorySumByCategoryId
 import com.ikcollab.domain.usecase.budget.story.GetStorySumByType
@@ -27,6 +29,7 @@ import com.ikcollab.model.dto.budget.BudgetCategoryDto
 import com.ikcollab.model.dto.budget.BudgetCategoryWithSumDto
 import com.ikcollab.model.dto.budget.BudgetStoryDto
 import com.ikcollab.model.local.budget.EXPENSES_TYPE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -43,7 +46,6 @@ fun ExpensesScreen(
     getStorySumByType: GetStorySumByCategoryId
 
 ) {
-    val draggableState = rememberDismissState()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(floatingActionButton = {
@@ -140,20 +142,24 @@ fun ExpensesScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             items(stories) { story ->
-                DraggableScaffold(
+                val draggableState = rememberDraggableScaffoldState(inputs = arrayOf())
+
+                DraggableScaffold(state = draggableState,
                     contentUnderRight = {
                         SwipeTrash {
                             story.id?.let { it1 -> onDeleteClick(it1) }
                             coroutineScope.launch {
-                                draggableState.reset()
+                                draggableState.animateToState(ExpandState.Collapsed)
+                                draggableState.setExpandState(ExpandState.Collapsed)
                             }
                         }
                     },
                     contentUnderLeft = {
                         SwipeEdit(onClick = {
                             story.id?.let { it1 -> onEditClick(it1) }
-                            coroutineScope.launch {
-                                draggableState.reset()
+                            coroutineScope.launch(Dispatchers.Main) {
+                                draggableState.setExpandState(ExpandState.Collapsed)
+                                draggableState.animateToState(ExpandState.Collapsed)
                             }
                         })
                     },
@@ -169,7 +175,7 @@ fun ExpensesScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(62.dp))
             }
         }

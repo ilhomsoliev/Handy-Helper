@@ -14,7 +14,7 @@ var adCount = 0
 fun loadInterstitial(context: Context) {
     InterstitialAd.load(
         context,
-        AdsConstants.INTERSTITIAL_AD_UNIT_TEST,
+        AdsConstants.INTERSTITIAL_AD_UNIT   ,
         AdRequest.Builder().build(),
         object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
