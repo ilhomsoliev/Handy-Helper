@@ -25,7 +25,7 @@ fun rememberDraggableScaffoldState(
     allowFullWidthSwipe: Boolean = false,
     key: String? = null,
     vararg inputs: Any
-    ): DraggableScaffoldState {
+): DraggableScaffoldState {
     return rememberSaveable(saver = Saver, inputs = inputs, key = key) {
         DraggableScaffoldState(
             defaultExpandState = defaultExpandState,

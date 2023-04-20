@@ -62,21 +62,22 @@ fun GoalsScreen(
                         .padding(it)
                 ) {
                     items(state.goals) { goal: GoalDto ->
-                        val draggableDismissState = rememberDismissState()
+                        val draggableDismissState = rememberDraggableScaffoldState()
 
                         DraggableScaffold(
+                            state = draggableDismissState,
                             contentUnderRight = {
                                 SwipeTrash(onTrashClick = {
                                     onEvent(GoalsEvent.OnDeleteStepGoalClick(goal.id!!))
                                     coroutineScope.launch {
-                                        draggableDismissState.reset()
+                                        draggableDismissState.animateToState(ExpandState.Collapsed)
                                     }
                                 })
                             },
                             contentUnderLeft = {
                                 SwipeEdit(onClick = {
                                     coroutineScope.launch {
-                                        draggableDismissState.reset()
+                                        draggableDismissState.animateToState(ExpandState.Collapsed)
                                     }
                                     onEvent(GoalsEvent.OnEditGoalClick(goal.id!!))
                                 })
