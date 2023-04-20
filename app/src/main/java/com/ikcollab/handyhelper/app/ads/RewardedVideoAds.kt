@@ -1,4 +1,4 @@
-package com.ilhomsoliev.askmeanything.ads
+package com.ikcollab.handyhelper.app.ads
 
 import android.app.Activity
 import android.content.Context

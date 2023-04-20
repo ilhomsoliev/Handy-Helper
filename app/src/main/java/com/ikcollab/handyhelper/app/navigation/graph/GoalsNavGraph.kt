@@ -110,11 +110,11 @@ fun NavGraphBuilder.GoalsNavGraph(navController: NavHostController, context: Con
                 type = NavType.IntType
             })
         ) {
-            showInterstitial(context) {}
 
             val viewModel = hiltViewModel<GoalStepsViewModel>()
             val state = viewModel.state.collectAsState().value
             LaunchedEffect(key1 = false, block = {
+                showInterstitial(context) {}
                 val goalId = it.arguments?.getInt(Constants.GOAL_ID_ARG) ?: -1
                 viewModel.onEvent(GoalStepsEvent.OnInit(goalId))
             })
